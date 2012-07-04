@@ -36,7 +36,7 @@ Prerequisite
 
 Download
 ========
-For download see https://github.com/znuny/CustomerMap/tree/master/build
+For download see https://github.com/znuny/Znuny4OTRS-CustomerMap/tree/master/build
 
 Commercial Support
 ==================
