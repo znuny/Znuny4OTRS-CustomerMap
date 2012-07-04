@@ -1,0 +1,215 @@
+# --
+# AgentDashboardCustomerMap.dtl - provides HTML for global dashboard
+# Copyright (C) 2001-2011 Martin Edenhofer, http://edenhofer.de/
+# Copyright (C) 2012 Znuny GmbH, http://znuny.com/
+# --
+# $Id: $
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<!-- dtl:block:ContentLargeCustomerMapData -->
+<script type="text/javascript" src="$Data{"MapsURL"}"></script>
+
+<!--dtl:js_on_document_complete-->
+<script language="JavaScript" type="text/javascript">
+var map;
+var geocoder;
+function initialize() {
+    var latlng = new google.maps.LatLng( $QData{"Latitude"}, $QData{"Longitude"} ),
+        UpdateTimeout,
+        Options = {
+            zoom: $QData{"Zoom"},
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+    geocoder = new google.maps.Geocoder();
+
+    map = new google.maps.Map(
+        document.getElementById("map_canvas"),
+        Options
+    );
+
+    // update latest map position
+    google.maps.event.addListener(map, 'zoom_changed', function() {
+        Update(map);
+    });
+    google.maps.event.addListener(map, 'dragend', function() {
+        Update(map);
+    });
+
+    function Update (map) {
+        window.clearTimeout(UpdateTimeout);
+        UpdateTimeout = window.setTimeout(function () {
+            var zoomLevel = map.getZoom();
+            var Center = map.getCenter();
+//console.log(Center);
+            Core.AJAX.FunctionCall(
+                Core.Config.Get('Baselink'),
+                'Action=AgentCustomerMap&Subaction=Update;Zoom=' + zoomLevel + ';Latitude=' + Center.lat() + ';Longitude=' + Center.lng(),
+                function() {},
+                'json'
+            );
+        }, 500);
+    }
+
+    // add items
+    Core.AJAX.FunctionCall(
+        Core.Config.Get('Baselink'),
+        'Action=AgentCustomerMap&Subaction=Data',
+        function (Data) {
+            if (!Data) {
+                alert("ERROR: Invalid JSON: " + Data);
+            }
+            else {
+                var DataH = new Array();
+                var DataV = new Array();
+                var Size  = 0.001;
+#console.log(Data);
+                for ( F=0;F<Data.length;F++ ) {
+                    if ( DataV[Data[F][0]] && DataH[Data[F][1]] ) {
+                        DataV[Data[F][0]] = Number( DataV[Data[F][0]] ) + Number(Size);
+                        DataH[Data[F][1]] = Number( DataH[Data[F][1]] ) + Number(Size);
+                    }
+                    else {
+                        DataV[Data[F][0]] = Number(Size);
+                        DataH[Data[F][1]] = Number(Size);
+                    }
+                    Data[F][0] = Number( Data[F][0] ) + Number( DataV[Data[F][0]] );
+                    Data[F][1] = Number( Data[F][1] ) + Number( DataH[Data[F][1]] );
+
+                    Marker(Data[F][0], Data[F][1], Data[F][2], Data[F][3] );
+                }
+            }
+        },
+        'json'
+    );
+
+    function Marker (Lat, Lng, Key, Count) {
+        var Image, zIndex;
+#console.log(Count);
+        if ( Count > 0 ) {
+            zIndex = 1000;
+            Image = "http://www.google.com/mapfiles/marker.png";
+        }
+        else {
+            zIndex = -1000;
+            Image = "http://www.google.com/mapfiles/dd-start.png";
+        }
+        var latlng = new google.maps.LatLng( Lat, Lng );
+        var marker = new google.maps.Marker({ map: map, position: latlng, icon: Image, title: Key, zIndex: zIndex });
+        google.maps.event.addListener(marker, 'click', function() {
+            Core.AJAX.FunctionCall(
+                Core.Config.Get('Baselink'),
+                'Action=AgentCustomerMap&Subaction=Customer;Login=' + Key,
+                function (ObjectRef) {
+                    if (!ObjectRef) {
+                        alert("ERROR: Invalid JSON: " + ObjectRef);
+                    }
+                    else {
+                        var Name    = '<b>' + ObjectRef['UserFirstname'] + ' ' + ObjectRef['UserLastname'] + '</b>';
+                        var Address = ObjectRef['UserStreet'] + ' ' + ObjectRef['UserCity'] + ' ' + ObjectRef['UserCountry'];
+                        var Content = Name;
+                        Content = Content + '<font size="-2">'
+                        if ( ObjectRef['UserCompany'] ) {
+                            Content = Content + '<br/>' + '(' + ObjectRef['UserCompany'] + ')';
+                        }
+                        if ( ObjectRef['UserPhone'] ) {
+                            Content = Content + '<br/>' +  ObjectRef['UserPhone'];
+                        }
+                        if (Address) {
+                            Content = Content + '<br/>' +  Address;
+                        }
+                        Content = Content + '</font>';
+                        var infowindow = new google.maps.InfoWindow();
+                        infowindow.setContent( Content );
+                        infowindow.open(map, marker);
+                    }
+                },
+                'json'
+            );
+        });
+    }
+}
+
+$('#CustomerMapSearchSubmit').bind('click', function (Event) {
+    var address = document.getElementById("CustomerMapSearch").value;
+    geocoder.geocode( { 'address': address }, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            map.setCenter(results[0].geometry.location);
+            map.setZoom(14);
+/*
+            var marker = new google.maps.Marker({
+                map: map,
+                position: results[0].geometry.location
+            });
+*/
+        }
+        else {
+            alert("Geocode was not successful for the following reason: " + status);
+        }
+    });
+    return false;
+});
+$('#CustomerMapSearch').bind('keypress.FilterInput', function (Event) {
+    if ((Event.charCode || Event.keyCode) === 13) {
+        var address = document.getElementById("CustomerMapSearch").value;
+        geocoder.geocode( { 'address': address }, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                map.setCenter(results[0].geometry.location);
+                map.setZoom(14);
+            }
+            else {
+                alert("Geocode was not successful for the following reason: " + status);
+            }
+        });
+        return false;
+    }
+});
+
+</script>
+<!--dtl:js_on_document_complete-->
+<div id="map_canvas" style="width: $Data{"Width"}; height: $Data{"Height"};">
+    <p>
+          $Text{"Loading..."}
+    </p>
+    <p>
+        The map is not loaded for manual load, press <a href="#" onclick="initialize(); return false;">here</a>.
+    </p>
+</div>
+<div>
+    <input id="CustomerMapSearch" type="text" value="">
+    <button id="CustomerMapSearchSubmit" type="submit" value="$Text{"Search"}">$Text{"Search"}</button>
+</div>
+
+
+<!--dtl:js_on_document_complete-->
+<script language="JavaScript" type="text/javascript">
+window.onload=function(){
+    initialize();
+}
+</script>
+<!--dtl:js_on_document_complete-->
+<!-- dtl:block:ContentLargeCustomerMapData -->
+
+<!-- dtl:block:ContentLargeCustomerMapConfig -->
+<p>
+$Text{"Extension not configured!"}
+</p>
+
+<p>
+$Text{"Please check the following points first."}
+</p>
+
+<p>
+<ol>
+    <li>1. $Text{"Make sure that UserStreet, UserCity and UserCountry are used attributes in your CustomerMap-Config."}</li>
+    <li>2. $Text{"Execute "%s" to generate geo location data for your customers.", "bin/otrs.GMapsCustomerBuild.pl"}</li>
+    <li>3. $Text{"After you have done all this, check with "browser reload" if it's working now."}</li>
+</ol>
+</p>
+<!-- dtl:block:ContentLargeCustomerMapConfig -->
+

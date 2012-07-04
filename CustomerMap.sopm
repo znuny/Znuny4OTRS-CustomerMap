@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<otrs_package version="1.0">
+    <Name>CustomerMap</Name>
+    <Version>1.0.1</Version>
+    <Framework>3.0.x</Framework>
+    <Vendor>Znuny GmbH</Vendor>
+    <URL>http://znuny.com/en/</URL>
+    <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
+    <Description Lang="en">A Google Maps integraton. A visualiation of your customers in a dashboard plugin.</Description>
+    <Description Lang="de">Ein Google Maps Integration. Eine neuartige Darstellung der Kunden in einem Dashboard-Plugin.</Description>
+    <Filelist>
+        <File Permission="755" Location="bin/otrs.GMapsCustomerBuild.pl"/>
+        <File Permission="644" Location="Kernel/System/GMaps.pm"/>
+        <File Permission="644" Location="Kernel/System/GMapsCustomer.pm"/>
+        <File Permission="644" Location="Kernel/Config/Files/CustomerMap.xml"/>
+        <File Permission="644" Location="Kernel/Modules/AgentCustomerMap.pm"/>
+        <File Permission="644" Location="Kernel/Output/HTML/DashboardCustomerMap.pm"/>
+        <File Permission="644" Location="Kernel/Output/HTML/Standard/AgentCustomerMap.dtl"/>
+        <File Permission="644" Location="Kernel/Output/HTML/Standard/AgentDashboardCustomerMap.dtl"/>
+        <File Permission="644" Location="var/cron/customermap"/>
+    </Filelist>
+</otrs_package>
