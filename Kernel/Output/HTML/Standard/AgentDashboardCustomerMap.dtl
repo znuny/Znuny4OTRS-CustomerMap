@@ -134,42 +134,6 @@ function initialize() {
         });
     }
 }
-
-$('#CustomerMapSearchSubmit').bind('click', function (Event) {
-    var address = document.getElementById("CustomerMapSearch").value;
-    geocoder.geocode( { 'address': address }, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            map.setCenter(results[0].geometry.location);
-            map.setZoom(14);
-/*
-            var marker = new google.maps.Marker({
-                map: map,
-                position: results[0].geometry.location
-            });
-*/
-        }
-        else {
-            alert("Geocode was not successful for the following reason: " + status);
-        }
-    });
-    return false;
-});
-$('#CustomerMapSearch').bind('keypress.FilterInput', function (Event) {
-    if ((Event.charCode || Event.keyCode) === 13) {
-        var address = document.getElementById("CustomerMapSearch").value;
-        geocoder.geocode( { 'address': address }, function(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                map.setCenter(results[0].geometry.location);
-                map.setZoom(14);
-            }
-            else {
-                alert("Geocode was not successful for the following reason: " + status);
-            }
-        });
-        return false;
-    }
-});
-
 </script>
 <!--dtl:js_on_document_complete-->
 <div id="map_canvas" style="width: $Data{"Width"}; height: $Data{"Height"};">
@@ -180,11 +144,6 @@ $('#CustomerMapSearch').bind('keypress.FilterInput', function (Event) {
         The map is not loaded for manual load, press <a href="#" onclick="initialize(); return false;">here</a>.
     </p>
 </div>
-<div>
-    <input id="CustomerMapSearch" type="text" value="">
-    <button id="CustomerMapSearchSubmit" type="submit" value="$Text{"Search"}">$Text{"Search"}</button>
-</div>
-
 
 <!--dtl:js_on_document_complete-->
 <script language="JavaScript" type="text/javascript">
