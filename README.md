@@ -34,6 +34,10 @@ Prerequisite
 * OTRS 3.0
 * OTRS 3.1
 
+Download
+========
+For download see https://github.com/znuny/CustomerMap/tree/master/build
+
 Commercial Support
 ==================
 For this extention and for OTRS in gerneral visit http://znuny.com. Looking forward to hear from you!
