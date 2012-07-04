@@ -1,6 +1,7 @@
 # --
 # Kernel/System/GMaps.pm - lib for gmaps
 # Copyright (C) 2001-2011 Martin Edenhofer, http://edenhofer.de/
+# Copyright (C) 2012 Znuny GmbH, http://znuny.com/
 # --
 # $Id: $
 # --
