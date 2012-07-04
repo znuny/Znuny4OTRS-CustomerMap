@@ -2,6 +2,8 @@ Google Maps Integration
 =======================
 With the Google Maps integration you will be able to see all customer on a map (customers with open tickets marked in a extra color). The map is available in Dashboard and also as an own dedicated one large page map (just click on “more” in dashboard).
 
+![How it looks!](screenshots/customermap.png)
+
 1) Installation
 ===============
 Download the package and install it via admin interface -> package manager.
