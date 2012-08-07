@@ -32,13 +32,13 @@ Go to the dashboard, activate the widget “Customer Map” and check if you see
 
 Enjoy the inspiration how to use this new kind of view (e. g. for optimizing your travel routes). Many new ideas coming by just watching this now extension.
 
-Prerequisite
+Prerequisites
 * OTRS 3.0
 * OTRS 3.1
 
 Download
 ========
-For download see https://github.com/znuny/Znuny4OTRS-CustomerMap/tree/master/build
+For download see https://github.com/znuny/Znuny4OTRS-CustomerMap/downloads/ 
 
 Commercial Support
 ==================
