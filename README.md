@@ -33,8 +33,8 @@ Go to the dashboard, activate the widget “Customer Map” and check if you see
 Enjoy the inspiration how to use this new kind of view (e. g. for optimizing your travel routes). Many new ideas coming by just watching this now extension.
 
 Prerequisites
-* OTRS 3.0
 * OTRS 3.1
+* OTRS 3.0
 
 Download
 ========
