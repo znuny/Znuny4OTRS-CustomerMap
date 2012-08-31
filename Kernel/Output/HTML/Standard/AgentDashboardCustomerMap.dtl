@@ -117,6 +117,9 @@ function initialize() {
                         if ( ObjectRef['UserCompany'] ) {
                             Content = Content + '<br/>' + '(' + ObjectRef['UserCompany'] + ')';
                         }
+                        if ( ObjectRef['CustomerCompanyName'] ) {
+                            Content = Content + '<br/>' + '(' + ObjectRef['CustomerCompanyName'] + ')';
+                        }
                         if ( ObjectRef['UserPhone'] ) {
                             Content = Content + '<br/>' +  ObjectRef['UserPhone'];
                         }
