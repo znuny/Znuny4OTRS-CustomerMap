@@ -1,7 +1,8 @@
 # --
 # Kernel/System/GMaps.pm - lib for gmaps
 # Copyright (C) 2001-2011 Martin Edenhofer, http://edenhofer.de/
-# Copyright (C) 2012 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2013 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2013 Juergen Sluyterman, http://www.rsag.de/
 # --
 # $Id: $
 # --
@@ -16,6 +17,7 @@ use strict;
 use warnings;
 
 use Kernel::System::WebUserAgent;
+use JSON;
 
 use vars qw($VERSION);
 $VERSION = qw($Revision: 1.110 $) [1];
@@ -79,7 +81,7 @@ sub new {
     }
 
     # config
-    $Self->{GeocodingURL} = 'http://maps.google.com/maps/geo?';
+    $Self->{GeocodingURL} = 'http://maps.googleapis.com/maps/api/geocode/json?';
 
     return $Self;
 }
@@ -120,21 +122,50 @@ sub Geocoding {
         MainObject   => $Self->{MainObject},
     );
 
-    my $URL = $Self->{GeocodingURL} . 'q=' . $Param{Query} . '&output=csv';
+    my $URL = $Self->{GeocodingURL} . 'address=' . $Param{Query} . '&sensor=false';
 
     my %Response = $WebUserAgentObject->Request(
         URL => $URL,
     );
-
     return if !$Response{Content};
 
-    my @Data = split /,/, ${ $Response{Content} };
+    my $JSONResponse = ${ $Response{Content} };
+    my $Hash = decode_json( $JSONResponse );
+
+#    use Data::Dumper;
+#    print STDERR Dumper($Hash);
+
+    if ( !$Hash || !$Hash->{status} ) {
+	    $Self->{LogObject}->Log(
+            Priority => 'error',
+            Message  => "Can't process '$URL' got no json data back! '$JSONResponse'",
+        );
+        return;
+    }
+    my $Status    = $Hash->{status};
+    if ( lc($Status) ne 'ok' ) {
+	    $Self->{LogObject}->Log(
+            Priority => 'error',
+            Message  => "Can't process '$URL', status '$Status'",
+        );
+        return;
+    }
+    return if !$Hash->{results};
+    return if !$Hash->{results}->[0];
+    my $Accuracy  = $Hash->{results}->[0]->{geometry}->{location_type};
+    my $Longitude = $Hash->{results}->[0]->{geometry}->{location}->{lng};
+    my $Latitude  = $Hash->{results}->[0]->{geometry}->{location}->{lat};
+
+#    $Self->{LogObject}->Log(
+#        Priority => 'error',
+#        Message  => $Status . " acc: " . $Accuracy . " lat: " . $Latitude . " lng: " . $Longitude,
+#    );
 
     return (
-        Status    => $Data[0],
-        Accuracy  => $Data[1],
-        Latitude  => $Data[2],
-        Longitude => $Data[3],
+        Status    => $Status,
+        Accuracy  => $Accuracy,
+        Latitude  => $Latitude,
+        Longitude => $Longitude,
     );
 }
 
@@ -152,8 +183,3 @@ did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 
 =cut
 
-=head1 VERSION
-
-$Revision: 1.12 $ $Date: 2009/04/17 08:36:44 $
-
-=cut

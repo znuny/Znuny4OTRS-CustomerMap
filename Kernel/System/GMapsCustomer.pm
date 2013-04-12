@@ -158,8 +158,7 @@ sub DataBuild {
         next if !%Response;
 
         # required check
-        next if $Response{Status} !~ /200/;
-        next if $Response{Accuracy} < 6;
+        next if $Response{Status} !~ /ok/i;
 
         # counter check
         $Counter++;
@@ -234,8 +233,3 @@ did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 
 =cut
 
-=head1 VERSION
-
-$Revision: 1.1 $ $Date: 2009/06/10 19:20:24 $
-
-=cut
