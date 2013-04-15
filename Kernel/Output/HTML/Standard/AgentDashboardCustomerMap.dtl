@@ -12,6 +12,7 @@
 
 <!-- dtl:block:ContentLargeCustomerMapData -->
 <script type="text/javascript" src="$Data{"MapsURL"}"></script>
+<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer_compiled.js"></script>
 
 <!--dtl:js_on_document_complete-->
 <script language="JavaScript" type="text/javascript">
@@ -24,7 +25,9 @@ function initialize() {
             zoom: $QData{"Zoom"},
             center: latlng,
             mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
+<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer_compiled.js"></script>
+        },
+        Markers = [];
 
     geocoder = new google.maps.Geocoder();
 
@@ -67,7 +70,7 @@ function initialize() {
             else {
                 var DataH = new Array();
                 var DataV = new Array();
-                var Size  = 0.001;
+                var Size  = 0.00001;
 #console.log(Data);
                 for ( var F=0;F<Data.length;F++ ) {
                     if ( DataV[Data[F][0]] && DataH[Data[F][1]] ) {
@@ -84,6 +87,7 @@ function initialize() {
                     Marker(Data[F][0], Data[F][1], Data[F][2], Data[F][3] );
                 }
             }
+            var markerCluster = new MarkerClusterer(map, Markers);
         },
         'json'
     );
@@ -135,6 +139,7 @@ function initialize() {
                 'json'
             );
         });
+        Markers.push( marker );
     }
 }
 </script>

@@ -3,7 +3,7 @@
     <ConfigItem Name="Frontend::Module###AgentCustomerMap" Required="0" Valid="1">
         <Description Lang="en">Frontend module registration for the AgentCustomerMap object in the agent interface.</Description>
         <Description Lang="de">Frontendmodul-Registration des AgentCustomerMap-Objekts im Agent-Interface.</Description>
-        <Group>Framework</Group>
+        <Group>Znuny4OTRS-CustomerMap</Group>
         <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
         <Setting>
             <FrontendModuleReg>
@@ -16,7 +16,7 @@
     <ConfigItem Name="DashboardBackend###0001-CustomerMap" Required="0" Valid="1">
         <Description Lang="en">Parameters for the dashboard backend. "Group" are used to restriced access to the plugin (e. g. Group: admin;group1;group2;). "Default" means if the plugin is enabled per default or if the user needs to enable it manually. "CacheTTL" means the cache time in minutes for the plugin.</Description>
         <Description Lang="de">Parameter für das Dashboard Backend. "Group" ist verwendet um den Zugriff auf das Plugin einzuschränken (z. B. Group: admin;group1;group2;). ""Default" bedeutet ob das Plugin per default aktiviert ist oder ob dies der Anwender manuell machen muss. "CacheTTL" ist die Cache-Zeit in Minuten nach der das Plugin erneut aufgerufen wird.</Description>
-        <Group>Framework</Group>
+        <Group>Znuny4OTRS-CustomerMap</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
             <Hash>
@@ -30,6 +30,17 @@
                 <Item Key="DefaultLongitude">19.226562</Item>
                 <Item Key="DefaultZoom">2</Item>
             </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Znuny4OTRSCustomerMapOnlyOpenTickets" Required="0" Valid="1">
+        <Description Translatable="1">Show only open Tickets in customer map.</Description>
+        <Group>Znuny4OTRS-CustomerMap</Group>
+        <SubGroup>Core</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">All Customers</Item>
+                <Item Key="1">Only Customers with open Tickets</Item>
+            </Option>
         </Setting>
     </ConfigItem>
 </otrs_config>

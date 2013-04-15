@@ -1,7 +1,7 @@
 # --
 # Kernel/System/GMapsCustomer.pm - a GMaps customer
 # Copyright (C) 2001-2011 Martin Edenhofer, http://edenhofer.de/
-# Copyright (C) 2012 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2013 Znuny GmbH, http://znuny.com/
 # --
 # $Id: $
 # --
@@ -123,7 +123,7 @@ sub DataBuild {
 
     my @Data;
     my $Counter      = 0;
-    my $CounterLimit = 100_000;
+    my $CounterLimit = 120_000;
     USER:
     for my $UserID ( sort keys %List ) {
         my %Customer = $Self->{CustomerUserObject}->CustomerUserDataGet(
@@ -157,6 +157,8 @@ sub DataBuild {
         );
         next if !%Response;
 
+        sleep 0.3;
+
         # required check
         next if $Response{Status} !~ /ok/i;
 
@@ -170,6 +172,9 @@ sub DataBuild {
             CustomerUserLogin => $Customer{UserLogin},
             UserID            => 1,
         );
+        if ( $Self->{ConfigObject}->Get('Znuny4OTRSCustomerMapOnlyOpenTickets') ) {
+            next if !$Count;
+        }
         push @Data, [ $Response{Latitude}, $Response{Longitude}, $Customer{UserLogin}, $Count ];
     }
 
