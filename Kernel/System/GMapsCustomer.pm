@@ -91,10 +91,10 @@ sub new {
     $Self->{VirtualFSObject}    = Kernel::System::VirtualFS->new( %{$Self} );
 
     # required attributes
-    $Self->{RequiredAttributes} = ['UserCity'];
+    $Self->{RequiredAttributes} = $Self->{ConfigObject}->Get( 'Znuny4OTRSCustomerMapRequiredCustomerDataAttributes' ) || ['UserCity'];
 
     # attribute map
-    $Self->{MapAttribtes} = {
+    $Self->{MapAttribtes} = $Self->{ConfigObject}->Get('Znuny4OTRSCustomerMapCustomerDataAttributes') || {
         'UserStreet'  => 'UserStreet',
         'UserCity'    => 'UserCity',
         'UserCountry' => 'UserCountry',
