@@ -94,7 +94,7 @@ sub new {
     $Self->{RequiredAttributes} = $Self->{ConfigObject}->Get( 'Znuny4OTRSCustomerMapRequiredCustomerDataAttributes' ) || ['UserCity'];
 
     # attribute map
-    $Self->{MapAttribtes} = $Self->{ConfigObject}->Get('Znuny4OTRSCustomerMapCustomerDataAttributes') || {
+    $Self->{MapAttributes} = $Self->{ConfigObject}->Get('Znuny4OTRSCustomerMapCustomerDataAttributes') || {
         'UserStreet'  => 'UserStreet',
         'UserCity'    => 'UserCity',
         'UserCountry' => 'UserCountry',
@@ -143,8 +143,8 @@ sub DataBuild {
 
         # geo lookup
         my $Query;
-        for my $KeyOrig (qw(UserStreet UserCity UserCountry)) {
-            my $Key = $Self->{MapAttribtes}->{$KeyOrig};
+        for my $KeyOrig ( keys %{$Self->{MapAttributes}} ) {
+            my $Key = $Self->{MapAttributes}->{$KeyOrig};
             next if !$Customer{$Key};
             chomp $Customer{$Key};
             if ($Query) {
@@ -157,7 +157,7 @@ sub DataBuild {
         );
         next if !%Response;
 
-        sleep 0.3;
+        select undef, undef, undef, 0.3;
 
         # required check
         next if $Response{Status} !~ /ok/i;
