@@ -1,13 +1,6 @@
 # --
 # Kernel/System/GMapsCustomer.pm - a GMaps customer
-# Copyright (C) 2001-2011 Martin Edenhofer, http://edenhofer.de/
-# Copyright (C) 2012-2013 Znuny GmbH, http://znuny.com/
-# --
-# $Id: $
-# --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file COPYING for license information (AGPL). If you
-# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
 # --
 
 package Kernel::System::GMapsCustomer;
@@ -21,9 +14,6 @@ use Kernel::System::Time;
 use Kernel::System::Ticket;
 use Kernel::System::JSON;
 use Kernel::System::VirtualFS;
-
-use vars qw(@ISA $VERSION);
-$VERSION = qw($Revision: 1.1 $) [1];
 
 =head1 NAME
 

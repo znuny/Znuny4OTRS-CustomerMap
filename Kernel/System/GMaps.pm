@@ -1,14 +1,7 @@
 # --
 # Kernel/System/GMaps.pm - lib for gmaps
-# Copyright (C) 2001-2011 Martin Edenhofer, http://edenhofer.de/
-# Copyright (C) 2012-2013 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
 # Copyright (C) 2013 Juergen Sluyterman, http://www.rsag.de/
-# --
-# $Id: $
-# --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file COPYING for license information (AGPL). If you
-# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::System::GMaps;
@@ -18,9 +11,6 @@ use warnings;
 
 use Kernel::System::WebUserAgent;
 use JSON;
-
-use vars qw($VERSION);
-$VERSION = qw($Revision: 1.110 $) [1];
 
 =head1 NAME
 

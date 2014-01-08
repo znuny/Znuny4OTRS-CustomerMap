@@ -1,25 +1,7 @@
 #!/usr/bin/perl -w
 # --
-# bin/otrs.GMapsCustomerBuild.pl - create customer/ticket address geo tag pool
-# Copyright (C) 2001-2011 Martin Edenhofer, http://edenhofer.de/
-# Copyright (C) 2012 Znuny GmbH, http://znuny.com/
-# --
-# $Id: $
-# --
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU AFFERO General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-# or see http://www.gnu.org/licenses/agpl.txt.
+# bin/znuny.GMapsCustomerBuild.pl - create customer/ticket address geo tag pool
+# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
 # --
 
 use strict;
@@ -30,9 +12,6 @@ use File::Basename;
 use FindBin qw($RealBin);
 use lib dirname($RealBin);
 use lib dirname($RealBin) . '/Kernel/cpan-lib';
-
-use vars qw($VERSION);
-$VERSION = qw($Revision: 1.36 $) [1];
 
 use Getopt::Std;
 use Kernel::Config;
@@ -48,9 +27,9 @@ use Kernel::System::GMapsCustomer;
 my %Opts;
 getopt( 'hqtdf', \%Opts );
 if ( $Opts{h} ) {
-    print "GMapsCustomerBuild.pl <Revision $VERSION> - geo data collector\n";
-    print "Copyright (C) 2001-2011 Martin Edenhofer, http://edenhofer.de/\n";
-    print "usage: otrs.GMapsCustomerBuild.pl [-f force]\n";
+    print "znuny.GMapsCustomerBuild.pl - geo data collector\n";
+    print "Copyright (C) 2014 Znuny GmbH, http://znuny.com/\n";
+    print "usage: znuny.GMapsCustomerBuild.pl [-f force]\n";
     exit 1;
 }
 if ( !$Opts{d} ) {
@@ -72,12 +51,12 @@ $CommonObject{PIDObject}  = Kernel::System::PID->new(%CommonObject);
 
 # create pid lock
 if ( !$Opts{f} && !$CommonObject{PIDObject}->PIDCreate( Name => 'GMapsCustomer' ) ) {
-    print "NOTICE: otrs.GMapsCustomer.pl is already running (use '-f 1' if you want to start it ";
+    print "NOTICE: znuny.GMapsCustomerBuild.pl is already running (use '-f 1' if you want to start it ";
     print "forced)!\n";
     exit 1;
 }
 elsif ( $Opts{f} && !$CommonObject{PIDObject}->PIDCreate( Name => 'GMapsCustomer' ) ) {
-    print "NOTICE: otrs.GMapsCustomer.pl is already running but is starting again!\n";
+    print "NOTICE: znuny.GMapsCustomerBuild.pl is already running but is starting again!\n";
 }
 
 # common objects

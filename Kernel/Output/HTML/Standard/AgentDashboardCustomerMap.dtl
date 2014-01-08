@@ -1,13 +1,6 @@
 # --
 # AgentDashboardCustomerMap.dtl - provides HTML for global dashboard
-# Copyright (C) 2001-2011 Martin Edenhofer, http://edenhofer.de/
-# Copyright (C) 2012 Znuny GmbH, http://znuny.com/
-# --
-# $Id: $
-# --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file COPYING for license information (AGPL). If you
-# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
 # --
 
 <!-- dtl:block:ContentLargeCustomerMapData -->
@@ -174,7 +167,7 @@ $Text{"Please check the following points first."}
 <p>
 <ol>
     <li>1. $Text{"Make sure that UserStreet, UserCity and UserCountry are used attributes in your CustomerMap-Config."}</li>
-    <li>2. $Text{"Execute "%s" to generate geo location data for your customers.", "bin/otrs.GMapsCustomerBuild.pl"}</li>
+    <li>2. $Text{"Execute "%s" to generate geo location data for your customers.", "bin/znuny.GMapsCustomerBuild.pl"}</li>
     <li>3. $Text{"After you have done all this, check with "browser reload" if it's working now."}</li>
 </ol>
 </p>

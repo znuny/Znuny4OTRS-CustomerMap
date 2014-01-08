@@ -1,4 +1,4 @@
-![Znuny logo](http://znuny.com/assets/logo_small.png) 
+![Znuny logo](http://znuny.com/assets/logo_small.png)
 
 Google Maps Integration
 =======================
@@ -20,6 +20,8 @@ Download the package and install it via admin interface -> package manager or us
 - OTRS 3.1
 
 - OTRS 3.2
+
+- OTRS 3.3
 
 
 **Configuration**
@@ -43,13 +45,13 @@ Just execute the following cmd program to build your geo location database. You 
 
 **Check if it is working**
 
-Go to the dashboard, activate the widget “Customer Map” and check if you see your customers on the map. 
+Go to the dashboard, activate the widget “Customer Map” and check if you see your customers on the map.
 
-Enjoy the inspiration how to use this new kind of view (e. g. for optimizing your travel routes). 
+Enjoy the inspiration how to use this new kind of view (e. g. for optimizing your travel routes).
 
 **Download**
 
-For download see [http://znuny.com/d/](http://znuny.com/d/)
+For download see [hhttp://znuny.com/en/#!/addons](hhttp://znuny.com/en/#!/addons)
 
 **Commercial Support**
 
