@@ -39,7 +39,7 @@ configured in your CustomerUserMap (just take a look in your Kernel/Config.pm to
 
 Just execute the following cmd program to build your geo location database. You may also do this by using var/cron/customermap cron job to build it automatically.
 
-    shell> bin/otrs.GMapsCustomerBuild.pl
+    shell> bin/znuny.GMapsCustomerBuild.pl
     NOTICE: Done (wrote 209 records).
     shell>
 
