@@ -51,7 +51,7 @@ Enjoy the inspiration how to use this new kind of view (e. g. for optimizing you
 
 **Download**
 
-For download see [hhttp://znuny.com/en/#!/addons](hhttp://znuny.com/en/#!/addons)
+For download see [hhttp://znuny.com/en/#!/addons](http://znuny.com/en/#!/addons)
 
 **Commercial Support**
 
