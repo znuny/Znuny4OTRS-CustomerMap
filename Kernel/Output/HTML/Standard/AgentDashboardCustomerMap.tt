@@ -1,0 +1,43 @@
+# --
+# AgentDashboardCustomerMap.tt - provides HTML for global dashboard
+# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# --
+
+[% RenderBlockStart("ContentLargeCustomerMapData") %]
+<script type="text/javascript" src="[% Data.MapsURL %]"></script>
+<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer_compiled.js"></script>
+
+<div id="map_canvas" style="width: [% Data.Width %]; height: [% Data.Height %];">
+    <p>
+          [% Translate("Loading...") | html %]
+    </p>
+    <p>
+        The map is not loaded for manual load, press <a href="#" onclick="initialize(); return false;">here</a>.
+    </p>
+</div>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script language="JavaScript" type="text/javascript">
+    Core.Agent.CustomerMap.Init([% Data.Latitude %], [% Data.Longitude %], [% Data.Zoom %]);
+</script>
+[% END %]
+[% RenderBlockEnd("ContentLargeCustomerMapData") %]
+
+[% RenderBlockStart("ContentLargeCustomerMapConfig") %]
+<p>
+[% Translate("Extension not configured!") | html %]
+</p>
+
+<p>
+[% Translate("Please check the following points first.") | html %]
+</p>
+
+<p>
+<ol>
+    <li>1. [% Translate("Make sure that UserStreet, UserCity and UserCountry are used attributes in your CustomerMap-Config.") | html %]</li>
+    <li>2. [% Translate("Execute \"%s\" to generate geo location data for your customers.", "bin/znuny.GMapsCustomerBuild.pl") | html %]</li>
+    <li>3. [% Translate("After you have done all this, check with \"browser reload\" if it's working now.") | html %]</li>
+</ol>
+</p>
+[% RenderBlockEnd("ContentLargeCustomerMapConfig") %]
+

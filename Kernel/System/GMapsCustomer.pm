@@ -15,6 +15,14 @@ use Kernel::System::Ticket;
 use Kernel::System::JSON;
 use Kernel::System::VirtualFS;
 
+our @ObjectDependencies = (
+    'Kernel::Config',
+    'Kernel::System::Encode',
+    'Kernel::System::Log',
+    'Kernel::System::Main',
+    'Kernel::System::GMapsCustomer',
+);
+
 =head1 NAME
 
 Kernel::System::GMapsCustomer - a GMaps customer lib
@@ -68,23 +76,13 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    # check needed objects
-    for my $Object (qw(DBObject ConfigObject LogObject MainObject EncodeObject)) {
-        $Self->{$Object} = $Param{$Object} || die "Got no $Object!";
-    }
-
-    $Self->{GMapsObject}        = Kernel::System::GMaps->new( %{$Self} );
-    $Self->{CustomerUserObject} = Kernel::System::CustomerUser->new( %{$Self} );
-    $Self->{TimeObject}         = Kernel::System::Time->new( %{$Self} );
-    $Self->{TicketObject}       = Kernel::System::Ticket->new( %{$Self} );
-    $Self->{JSONObject}         = Kernel::System::JSON->new( %{$Self} );
-    $Self->{VirtualFSObject}    = Kernel::System::VirtualFS->new( %{$Self} );
-
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    
     # required attributes
-    $Self->{RequiredAttributes} = $Self->{ConfigObject}->Get( 'Znuny4OTRSCustomerMapRequiredCustomerDataAttributes' ) || ['UserCity'];
+    $Self->{RequiredAttributes} = $ConfigObject->Get( 'Znuny4OTRSCustomerMapRequiredCustomerDataAttributes' ) || ['UserCity'];
 
     # attribute map
-    $Self->{MapAttributes} = $Self->{ConfigObject}->Get('Znuny4OTRSCustomerMapCustomerDataAttributes') || {
+    $Self->{MapAttributes} = $ConfigObject->Get('Znuny4OTRSCustomerMapCustomerDataAttributes') || {
         'UserStreet'  => 'UserStreet',
         'UserCity'    => 'UserCity',
         'UserCountry' => 'UserCountry',
@@ -106,8 +104,15 @@ return the content of requested URL
 
 sub DataBuild {
     my ( $Self, %Param ) = @_;
-
-    my %List = $Self->{CustomerUserObject}->CustomerUserList(
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
+    my $GmapsObject = $Kernel::OM->Get('Kernel::System::GMaps');
+    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $LogObject  = $Kernel::OM->Get('Kernel::System::Log');
+    my $JSONObject  = $Kernel::OM->Get('Kernel::System::JSON');
+    my $VirtualFSObject  = $Kernel::OM->Get('Kernel::System::VirtualFS');
+    
+    my %List = $CustomerUserObject->CustomerUserList(
         Valid => 1,
     );
 
@@ -116,7 +121,7 @@ sub DataBuild {
     my $CounterLimit = 120_000;
     USER:
     for my $UserID ( sort keys %List ) {
-        my %Customer = $Self->{CustomerUserObject}->CustomerUserDataGet(
+        my %Customer = $CustomerUserObject->CustomerUserDataGet(
             User => $UserID,
         );
 
@@ -142,7 +147,7 @@ sub DataBuild {
             }
             $Query .= $Customer{$Key};
         }
-        my %Response = $Self->{GMapsObject}->Geocoding(
+        my %Response = $GmapsObject->Geocoding(
             Query => $Query,
         );
         next if !%Response;
@@ -156,20 +161,20 @@ sub DataBuild {
         $Counter++;
         last USER if $Counter == $CounterLimit;
 
-        my $Count = $Self->{TicketObject}->TicketSearch(
+        my $Count = $TicketObject->TicketSearch(
             Result            => 'COUNT',
             StateType         => $Self->{StateType},
             CustomerUserLogin => $Customer{UserLogin},
             UserID            => 1,
         );
-        if ( $Self->{ConfigObject}->Get('Znuny4OTRSCustomerMapOnlyOpenTickets') ) {
+        if ( $ConfigObject->Get('Znuny4OTRSCustomerMapOnlyOpenTickets') ) {
             next if !$Count;
         }
         push @Data, [ $Response{Latitude}, $Response{Longitude}, $Customer{UserLogin}, $Count ];
     }
 
     if ( !@Data ) {
-        $Self->{LogObject}->Log(
+        $LogObject->Log(
             Priority => 'error',
             Message =>
                 "No Customer Data found with 'UserCity' attribute (UserStreet, UserCity and UserCountry is used in generel)!",
@@ -181,12 +186,12 @@ sub DataBuild {
         Data => \@Data,
     );
 
-    $Self->{VirtualFSObject}->Delete(
+    $VirtualFSObject->Delete(
         Filename        => '/CMapsCustomerMap/Data.json',
         DisableWarnings => 1,
     );
 
-    my $Success = $Self->{VirtualFSObject}->Write(
+    my $Success = $VirtualFSObject->Write(
         Content  => \$Content,
         Filename => '/CMapsCustomerMap/Data.json',
         Mode     => 'utf8',
@@ -205,8 +210,9 @@ read data and return json string
 
 sub DataRead {
     my ( $Self, %Param ) = @_;
+    my $VirtualFSObject  = $Kernel::OM->Get('Kernel::System::VirtualFS');
 
-    my %File = $Self->{VirtualFSObject}->Read(
+    my %File = $VirtualFSObject->Read(
         Filename        => '/CMapsCustomerMap/Data.json',
         Mode            => 'utf8',
         DisableWarnings => 1,

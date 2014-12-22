@@ -12,16 +12,18 @@ use File::Basename;
 use FindBin qw($RealBin);
 use lib dirname($RealBin);
 use lib dirname($RealBin) . '/Kernel/cpan-lib';
+use lib dirname($RealBin) . '/Custom';
+
 
 use Getopt::Std;
-use Kernel::Config;
-use Kernel::System::Encode;
-use Kernel::System::Main;
-use Kernel::System::Time;
-use Kernel::System::DB;
-use Kernel::System::Log;
-use Kernel::System::PID;
-use Kernel::System::GMapsCustomer;
+use Kernel::System::ObjectManager;
+
+# create common objects
+local $Kernel::OM = Kernel::System::ObjectManager->new(
+    'Kernel::System::Log' => {
+        LogPrefix => 'OTRS-znuny.GMapsCustomerBuild.pl',
+    },
+);
 
 # get options
 my %Opts;
@@ -35,35 +37,20 @@ if ( $Opts{h} ) {
 if ( !$Opts{d} ) {
     $Opts{d} = 0;
 }
-
-# create common objects
-my %CommonObject;
-$CommonObject{ConfigObject} = Kernel::Config->new();
-$CommonObject{EncodeObject} = Kernel::System::Encode->new(%CommonObject);
-$CommonObject{LogObject}    = Kernel::System::Log->new(
-    LogPrefix => 'OTRS-GMapsCustomerBuild',
-    %CommonObject,
-);
-$CommonObject{MainObject} = Kernel::System::Main->new(%CommonObject);
-$CommonObject{TimeObject} = Kernel::System::Time->new(%CommonObject);
-$CommonObject{DBObject}   = Kernel::System::DB->new(%CommonObject);
-$CommonObject{PIDObject}  = Kernel::System::PID->new(%CommonObject);
+my $PIDObject = $Kernel::OM->Get('Kernel::System::PID');
+my $GMapsObject = $Kernel::OM->Get('Kernel::System::GMapsCustomer');
 
 # create pid lock
-if ( !$Opts{f} && !$CommonObject{PIDObject}->PIDCreate( Name => 'GMapsCustomer' ) ) {
+if ( !$Opts{f} && !$PIDObject->PIDCreate( Name => 'GMapsCustomer' ) ) {
     print "NOTICE: znuny.GMapsCustomerBuild.pl is already running (use '-f 1' if you want to start it ";
     print "forced)!\n";
     exit 1;
 }
-elsif ( $Opts{f} && !$CommonObject{PIDObject}->PIDCreate( Name => 'GMapsCustomer' ) ) {
+elsif ( $Opts{f} && !$PIDObject->PIDCreate( Name => 'GMapsCustomer' ) ) {
     print "NOTICE: znuny.GMapsCustomerBuild.pl is already running but is starting again!\n";
 }
 
-# common objects
-$CommonObject{GMapsCustomer} = Kernel::System::GMapsCustomer->new(
-    %CommonObject,
-);
-my $Count = $CommonObject{GMapsCustomer}->DataBuild();
+my $Count = $GMapsObject->DataBuild();
 if ($Count) {
     print "NOTICE: Done (wrote $Count records).\n";
 }
@@ -72,5 +59,5 @@ else {
 }
 
 # delete pid lock
-$CommonObject{PIDObject}->PIDDelete( Name => 'GMapsCustomer' );
+$PIDObject->PIDDelete( Name => 'GMapsCustomer' );
 exit 0;

@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
     <Name>Znuny4OTRS-CustomerMap</Name>
-    <Version>1.5.0</Version>
-    <ChangeLog Version="1.5.0" Date="2014-01-13 17:03:57 +0100">Added OTRS 3.3 support.</ChangeLog>
-    <Framework>3.0.x</Framework>
-    <Framework>3.1.x</Framework>
-    <Framework>3.2.x</Framework>
-    <Framework>3.3.x</Framework>
-    <PackageRequired Version="1.0.0">Znuny4OTRS-Repo</PackageRequired>
+    <Version>2.0.0</Version>
+    <Framework>4.0.x</Framework>
+    <PackageRequired Version="2.0.2">Znuny4OTRS-Repo</PackageRequired>
     <Vendor>Znuny GmbH</Vendor>
     <URL>http://znuny.com/en/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
@@ -20,8 +16,18 @@
         <File Permission="644" Location="Kernel/Config/Files/CustomerMap.xml"/>
         <File Permission="644" Location="Kernel/Modules/AgentCustomerMap.pm"/>
         <File Permission="644" Location="Kernel/Output/HTML/DashboardCustomerMap.pm"/>
-        <File Permission="644" Location="Kernel/Output/HTML/Standard/AgentCustomerMap.dtl"/>
-        <File Permission="644" Location="Kernel/Output/HTML/Standard/AgentDashboardCustomerMap.dtl"/>
+        <File Permission="644" Location="Kernel/Output/HTML/Standard/AgentCustomerMap.tt"/>
+        <File Permission="644" Location="Kernel/Output/HTML/Standard/AgentDashboardCustomerMap.tt"/>
         <File Permission="644" Location="var/cron/customermap"/>
+        <File Permission="644" Location="var/httpd/htdocs/js/Core.Agent.CustomerMap.js"/>
     </Filelist>
+    <CodeInstall Type="post"><![CDATA[
+        return if !$Kernel::OM->Get('Kernel::System::ZnunyHelper');
+        my $Helper = $Kernel::OM->Get('Kernel::System::ZnunyHelper');
+        $Helper->_LoaderAdd(
+            AgentDashboard => ['Core.Agent.CustomerMap.js'],
+            AgentCustomerMap => ['Core.Agent.CustomerMap.js'],
+        );
+    ]]></CodeInstall>
+
 </otrs_package>

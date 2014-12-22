@@ -11,6 +11,14 @@ use warnings;
 
 use Kernel::System::WebUserAgent;
 use JSON;
+use utf8;
+our @ObjectDependencies = (
+    'Kernel::Config',
+    'Kernel::System::Encode',
+    'Kernel::System::Log',
+    'Kernel::System::Main',
+    'Kernel::System::WebUserAgent',
+);
 
 =head1 NAME
 
@@ -65,11 +73,6 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    # check needed objects
-    for (qw(DBObject ConfigObject LogObject MainObject)) {
-        $Self->{$_} = $Param{$_} || die "Got no $_!";
-    }
-
     # config
     $Self->{GeocodingURL} = 'http://maps.googleapis.com/maps/api/geocode/json?';
 
@@ -97,20 +100,16 @@ see also: http://code.google.com/apis/maps/documentation/geocoding/
 
 sub Geocoding {
     my ( $Self, %Param ) = @_;
+    my $WebUserAgentObject = $Kernel::OM->Get('Kernel::System::WebUserAgent');
+    my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
 
     for (qw(Query)) {
         if ( !$Param{$_} ) {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "Need $_!" );
+            $LogObject->Log( Priority => 'error', Message => "Need $_!" );
             return;
         }
     }
 
-    my $WebUserAgentObject = Kernel::System::WebUserAgent->new(
-        DBObject     => $Self->{DBObject},
-        ConfigObject => $Self->{ConfigObject},
-        LogObject    => $Self->{LogObject},
-        MainObject   => $Self->{MainObject},
-    );
 
     my $URL = $Self->{GeocodingURL} . 'address=' . $Param{Query} . '&sensor=false';
 
@@ -122,11 +121,8 @@ sub Geocoding {
     my $JSONResponse = ${ $Response{Content} };
     my $Hash = decode_json( $JSONResponse );
 
-#    use Data::Dumper;
-#    print STDERR Dumper($Hash);
-
     if ( !$Hash || !$Hash->{status} ) {
-	    $Self->{LogObject}->Log(
+	    $LogObject->Log(
             Priority => 'error',
             Message  => "Can't process '$URL' got no json data back! '$JSONResponse'",
         );
@@ -134,7 +130,7 @@ sub Geocoding {
     }
     my $Status    = $Hash->{status};
     if ( lc($Status) ne 'ok' ) {
-	    $Self->{LogObject}->Log(
+	    $LogObject->Log(
             Priority => 'error',
             Message  => "Can't process '$URL', status '$Status'",
         );
@@ -146,11 +142,6 @@ sub Geocoding {
     my $Longitude = $Hash->{results}->[0]->{geometry}->{location}->{lng};
     my $Latitude  = $Hash->{results}->[0]->{geometry}->{location}->{lat};
 
-#    $Self->{LogObject}->Log(
-#        Priority => 'error',
-#        Message  => $Status . " acc: " . $Accuracy . " lat: " . $Latitude . " lng: " . $Longitude,
-#    );
-
     return (
         Status    => $Status,
         Accuracy  => $Accuracy,
@@ -160,16 +151,3 @@ sub Geocoding {
 }
 
 1;
-
-=back
-
-=head1 TERMS AND CONDITIONS
-
-This software is part of the OTRS project (http://otrs.org/).
-
-This software comes with ABSOLUTELY NO WARRANTY. For details, see
-the enclosed file COPYING for license information (AGPL). If you
-did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
-
-=cut
-

@@ -1,0 +1,17 @@
+# --
+# AgentCustomerMap.tt - provides HTML form for customer map
+# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# --
+
+<div class="MainBox ARIARoleMain">
+
+    <h1>[% Translate("Customer Map") | html %]</h1>
+
+[% RenderBlockStart("TicketBack") %]
+      <a href="[% Env("Baselink") %][% Env("LastScreenView") %]" onmouseover="window.status=[% Translate("Back") | JSON %]; return true;" onmouseout="window.status='';" class="menuitem">[% Translate("Back") | html %]</a>
+[% RenderBlockEnd("TicketBack") %]
+
+    <div class="ContentColumn">
+    [% Data.Map %]
+    </div>
+</div>
