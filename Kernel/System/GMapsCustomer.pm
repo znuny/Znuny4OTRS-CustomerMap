@@ -1,35 +1,33 @@
 # --
-# Kernel/System/GMapsCustomer.pm - a GMaps customer
+# Kernel/System/GMaps.pm - lib for gmaps
 # Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2013 Juergen Sluyterman, http://www.rsag.de/
 # --
 
-package Kernel::System::GMapsCustomer;
+package Kernel::System::GMaps;
 
 use strict;
 use warnings;
 
-use Kernel::System::CustomerUser;
-use Kernel::System::GMaps;
-use Kernel::System::Time;
-use Kernel::System::Ticket;
-use Kernel::System::JSON;
-use Kernel::System::VirtualFS;
-
+use Kernel::System::WebUserAgent;
+use JSON;
+use utf8;
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::Encode',
     'Kernel::System::Log',
     'Kernel::System::Main',
-    'Kernel::System::GMapsCustomer',
+    'Kernel::System::JSON',
+    'Kernel::System::WebUserAgent',
 );
 
 =head1 NAME
 
-Kernel::System::GMapsCustomer - a GMaps customer lib
+Kernel::System::GMaps - a google maps lib
 
 =head1 SYNOPSIS
 
-All GMaps customer functions.
+All google maps functions.
 
 =head1 PUBLIC INTERFACE
 
@@ -45,7 +43,7 @@ create an object
     use Kernel::System::Encode;
     use Kernel::System::Log;
     use Kernel::System::Main;
-    use Kernel::System::GMapsCustomer;
+    use Kernel::System::WebUserAgent;
 
     my $ConfigObject = Kernel::Config->new();
     my $EncodeObject = Kernel::System::Encode->new(
@@ -60,7 +58,7 @@ create an object
         EncodeObject => $EncodeObject,
         LogObject    => $LogObject,
     );
-    my $GMapsCustomerObject = Kernel::System::GMapsCustomer->new(
+    my $GMapsObject = Kernel::System::GMaps->new(
         ConfigObject => $ConfigObject,
         EncodeObject => $EncodeObject,
         LogObject    => $LogObject,
@@ -76,161 +74,82 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    
-    # required attributes
-    $Self->{RequiredAttributes} = $ConfigObject->Get( 'Znuny4OTRSCustomerMapRequiredCustomerDataAttributes' ) || ['UserCity'];
-
-    # attribute map
-    $Self->{MapAttributes} = $ConfigObject->Get('Znuny4OTRSCustomerMapCustomerDataAttributes') || {
-        'UserStreet'  => 'UserStreet',
-        'UserCity'    => 'UserCity',
-        'UserCountry' => 'UserCountry',
-    };
-
-    # open ticket state types
-    $Self->{StateType} = [ 'new', 'open', 'pending reminder', 'pending auto' ];
+    # config
+    $Self->{GeocodingURL} = 'http://maps.googleapis.com/maps/api/geocode/json?';
 
     return $Self;
 }
 
-=item DataBuild()
+=item Geocoding()
 
 return the content of requested URL
 
-    my $Success = $GMapsCustomerObject->DataBuild();
+    my %Response = $GMapsObject->Geocoding(
+        Query => 'some location, country',
+    );
+
+returns
+
+    %Response = (
+        Status    => 200,
+        Accuracy  => 1,
+    );
+
+see also: http://code.google.com/apis/maps/documentation/geocoding/
 
 =cut
 
-sub DataBuild {
+sub Geocoding {
     my ( $Self, %Param ) = @_;
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
-    my $GmapsObject = $Kernel::OM->Get('Kernel::System::GMaps');
-    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $LogObject  = $Kernel::OM->Get('Kernel::System::Log');
-    my $JSONObject  = $Kernel::OM->Get('Kernel::System::JSON');
-    my $VirtualFSObject  = $Kernel::OM->Get('Kernel::System::VirtualFS');
-    
-    my %List = $CustomerUserObject->CustomerUserList(
-        Valid => 1,
-    );
+    my $WebUserAgentObject = $Kernel::OM->Get('Kernel::System::WebUserAgent');
+    my $JSONObject = $Kernel::OM->Get('Kernel::System::JSON');
+    my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
 
-    my @Data;
-    my $Counter      = 0;
-    my $CounterLimit = 120_000;
-    USER:
-    for my $UserID ( sort keys %List ) {
-        my %Customer = $CustomerUserObject->CustomerUserDataGet(
-            User => $UserID,
-        );
-
-        # check required infos
-        for my $Key ( @{ $Self->{RequiredAttributes} } ) {
-            next USER if !$Customer{$Key};
+    for (qw(Query)) {
+        if ( !$Param{$_} ) {
+            $LogObject->Log( Priority => 'error', Message => "Need $_!" );
+            return;
         }
-
-        # cleanup
-        for my $Key ( keys %Customer ) {
-            next if !$Customer{$Key};
-            $Customer{$Key} =~ s/(\r|\n|\t)//g;
-        }
-
-        # geo lookup
-        my $Query;
-        for my $KeyOrig ( keys %{$Self->{MapAttributes}} ) {
-            my $Key = $Self->{MapAttributes}->{$KeyOrig};
-            next if !$Customer{$Key};
-            chomp $Customer{$Key};
-            if ($Query) {
-                $Query .= ', ';
-            }
-            $Query .= $Customer{$Key};
-        }
-        my %Response = $GmapsObject->Geocoding(
-            Query => $Query,
-        );
-        next if !%Response;
-
-        select undef, undef, undef, 0.3;
-
-        # required check
-        next if $Response{Status} !~ /ok/i;
-
-        # counter check
-        $Counter++;
-        last USER if $Counter == $CounterLimit;
-
-        my $Count = $TicketObject->TicketSearch(
-            Result            => 'COUNT',
-            StateType         => $Self->{StateType},
-            CustomerUserLogin => $Customer{UserLogin},
-            UserID            => 1,
-        );
-        if ( $ConfigObject->Get('Znuny4OTRSCustomerMapOnlyOpenTickets') ) {
-            next if !$Count;
-        }
-        push @Data, [ $Response{Latitude}, $Response{Longitude}, $Customer{UserLogin}, $Count ];
     }
 
-    if ( !@Data ) {
+
+    my $URL = $Self->{GeocodingURL} . 'address=' . $Param{Query} . '&sensor=false';
+
+    my %Response = $WebUserAgentObject->Request(
+        URL => $URL,
+    );
+    return if !$Response{Content};
+
+    my $JSONResponse = ${ $Response{Content} };
+    my $Hash = $JSONObject->Decode(Data => $JSONResponse);
+
+    if ( !$Hash || !$Hash->{status} ) {
         $LogObject->Log(
             Priority => 'error',
-            Message =>
-                "No Customer Data found with 'UserCity' attribute (UserStreet, UserCity and UserCountry is used in generel)!",
+            Message  => "Can't process '$URL' got no json data back! '$JSONResponse'",
         );
         return;
     }
+    my $Status    = $Hash->{status};
+    if ( lc($Status) ne 'ok' ) {
+        $LogObject->Log(
+            Priority => 'error',
+            Message  => "Can't process '$URL', status '$Status'",
+        );
+        return;
+    }
+    return if !$Hash->{results};
+    return if !$Hash->{results}->[0];
+    my $Accuracy  = $Hash->{results}->[0]->{geometry}->{location_type};
+    my $Longitude = $Hash->{results}->[0]->{geometry}->{location}->{lng};
+    my $Latitude  = $Hash->{results}->[0]->{geometry}->{location}->{lat};
 
-    my $Content = $Self->{JSONObject}->Encode(
-        Data => \@Data,
+    return (
+        Status    => $Status,
+        Accuracy  => $Accuracy,
+        Latitude  => $Latitude,
+        Longitude => $Longitude,
     );
-
-    $VirtualFSObject->Delete(
-        Filename        => '/CMapsCustomerMap/Data.json',
-        DisableWarnings => 1,
-    );
-
-    my $Success = $VirtualFSObject->Write(
-        Content  => \$Content,
-        Filename => '/CMapsCustomerMap/Data.json',
-        Mode     => 'utf8',
-    );
-    return if !$Success;
-    return scalar @Data;
 }
 
-=item DataRead()
-
-read data and return json string
-
-    my $ContentJSONRef = $GMapsCustomerObject->DataRead();
-
-=cut
-
-sub DataRead {
-    my ( $Self, %Param ) = @_;
-    my $VirtualFSObject  = $Kernel::OM->Get('Kernel::System::VirtualFS');
-
-    my %File = $VirtualFSObject->Read(
-        Filename        => '/CMapsCustomerMap/Data.json',
-        Mode            => 'utf8',
-        DisableWarnings => 1,
-    );
-    return '{}' if !%File;
-    return $File{Content};
-}
 1;
-
-=back
-
-=head1 TERMS AND CONDITIONS
-
-This software is part of the OTRS project (http://otrs.org/).
-
-This software comes with ABSOLUTELY NO WARRANTY. For details, see
-the enclosed file COPYING for license information (AGPL). If you
-did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
-
-=cut
-

@@ -10,13 +10,13 @@ use strict;
 use warnings;
 
 use Kernel::System::WebUserAgent;
-use JSON;
 use utf8;
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::Encode',
     'Kernel::System::Log',
     'Kernel::System::Main',
+    'Kernel::System::JSON',
     'Kernel::System::WebUserAgent',
 );
 
@@ -101,6 +101,7 @@ see also: http://code.google.com/apis/maps/documentation/geocoding/
 sub Geocoding {
     my ( $Self, %Param ) = @_;
     my $WebUserAgentObject = $Kernel::OM->Get('Kernel::System::WebUserAgent');
+    my $JSONObject = $Kernel::OM->Get('Kernel::System::JSON');
     my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
 
     for (qw(Query)) {
@@ -119,10 +120,10 @@ sub Geocoding {
     return if !$Response{Content};
 
     my $JSONResponse = ${ $Response{Content} };
-    my $Hash = decode_json( $JSONResponse );
+    my $Hash = $JSONObject->Decode(Data => $JSONResponse)
 
     if ( !$Hash || !$Hash->{status} ) {
-	    $LogObject->Log(
+        $LogObject->Log(
             Priority => 'error',
             Message  => "Can't process '$URL' got no json data back! '$JSONResponse'",
         );
@@ -130,7 +131,7 @@ sub Geocoding {
     }
     my $Status    = $Hash->{status};
     if ( lc($Status) ne 'ok' ) {
-	    $LogObject->Log(
+        $LogObject->Log(
             Priority => 'error',
             Message  => "Can't process '$URL', status '$Status'",
         );
