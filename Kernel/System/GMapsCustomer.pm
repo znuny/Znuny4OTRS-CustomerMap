@@ -115,9 +115,7 @@ sub DataBuild {
     my %List = $CustomerUserObject->CustomerUserList(
         Valid => 1,
     );
-$LogObject->Dumper(
-    %List
-);
+
     my @Data;
     my $Counter      = 0;
     my $CounterLimit = 120_000;
