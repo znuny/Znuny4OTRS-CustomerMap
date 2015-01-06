@@ -77,7 +77,7 @@ sub new {
     bless( $Self, $Type );
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    
+
     # required attributes
     $Self->{RequiredAttributes} = $ConfigObject->Get( 'Znuny4OTRSCustomerMapRequiredCustomerDataAttributes' ) || ['UserCity'];
 
@@ -104,14 +104,15 @@ return the content of requested URL
 
 sub DataBuild {
     my ( $Self, %Param ) = @_;
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
     my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
-    my $GmapsObject = $Kernel::OM->Get('Kernel::System::GMaps');
-    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $LogObject  = $Kernel::OM->Get('Kernel::System::Log');
-    my $JSONObject  = $Kernel::OM->Get('Kernel::System::JSON');
-    my $VirtualFSObject  = $Kernel::OM->Get('Kernel::System::VirtualFS');
-    
+    my $GmapsObject        = $Kernel::OM->Get('Kernel::System::GMaps');
+    my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $LogObject          = $Kernel::OM->Get('Kernel::System::Log');
+    my $JSONObject         = $Kernel::OM->Get('Kernel::System::JSON');
+    my $VirtualFSObject    = $Kernel::OM->Get('Kernel::System::VirtualFS');
+
     my %List = $CustomerUserObject->CustomerUserList(
         Valid => 1,
     );

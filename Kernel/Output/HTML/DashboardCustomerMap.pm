@@ -85,9 +85,9 @@ sub Run {
         Data => {
             %{ $Self->{Config} },
             Name      => $Self->{Name},
-            Latitude  => $Self->{UserCustomerMapLatitude} || $Self->{Config}->{DefaultLatitude},
+            Latitude  => $Self->{UserCustomerMapLatitude}  || $Self->{Config}->{DefaultLatitude},
             Longitude => $Self->{UserCustomerMapLongitude} || $Self->{Config}->{DefaultLongitude},
-            Zoom      => $Self->{UserCustomerMapZoom} || $Self->{Config}->{DefaultZoom},
+            Zoom      => $Self->{UserCustomerMapZoom}      || $Self->{Config}->{DefaultZoom},
             Width     => '100%',
             Height    => '400px',
         },
