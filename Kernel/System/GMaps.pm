@@ -9,8 +9,8 @@ package Kernel::System::GMaps;
 use strict;
 use warnings;
 
-use Kernel::System::WebUserAgent;
 use utf8;
+
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::Encode',
@@ -100,17 +100,22 @@ see also: http://code.google.com/apis/maps/documentation/geocoding/
 
 sub Geocoding {
     my ( $Self, %Param ) = @_;
+
     my $WebUserAgentObject = $Kernel::OM->Get('Kernel::System::WebUserAgent');
-    my $JSONObject = $Kernel::OM->Get('Kernel::System::JSON');
-    my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
+    my $JSONObject         = $Kernel::OM->Get('Kernel::System::JSON');
+    my $LogObject          = $Kernel::OM->Get('Kernel::System::Log');
 
-    for (qw(Query)) {
-        if ( !$Param{$_} ) {
-            $LogObject->Log( Priority => 'error', Message => "Need $_!" );
-            return;
-        }
+    NEEDED:
+    for my $Needed (qw(Query)) {
+
+        next NEEDED if $Param{ $Needed };
+
+        $LogObject->Log(
+            Priority => 'error',
+            Message  => "Need $Needed!"
+        );
+        return;
     }
-
 
     my $URL = $Self->{GeocodingURL} . 'address=' . $Param{Query} . '&sensor=false';
 
@@ -120,16 +125,19 @@ sub Geocoding {
     return if !$Response{Content};
 
     my $JSONResponse = ${ $Response{Content} };
-    my $Hash = $JSONObject->Decode(Data => $JSONResponse)
+    my $Hash         = $JSONObject->Decode(Data => $JSONResponse);
 
-    if ( !$Hash || !$Hash->{status} ) {
+    if (
+        !$Hash
+        || !$Hash->{status}
+    ) {
         $LogObject->Log(
             Priority => 'error',
             Message  => "Can't process '$URL' got no json data back! '$JSONResponse'",
         );
         return;
     }
-    my $Status    = $Hash->{status};
+    my $Status = $Hash->{status};
     if ( lc($Status) ne 'ok' ) {
         $LogObject->Log(
             Priority => 'error',
@@ -139,6 +147,7 @@ sub Geocoding {
     }
     return if !$Hash->{results};
     return if !$Hash->{results}->[0];
+
     my $Accuracy  = $Hash->{results}->[0]->{geometry}->{location_type};
     my $Longitude = $Hash->{results}->[0]->{geometry}->{location}->{lng};
     my $Latitude  = $Hash->{results}->[0]->{geometry}->{location}->{lat};
