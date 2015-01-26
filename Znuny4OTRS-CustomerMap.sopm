@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
     <Name>Znuny4OTRS-CustomerMap</Name>
-    <Version>2.0.0</Version>
+    <Version>1.6.0</Version>
+    <ChangeLog Version="1.6.0" Date="2015-01-26 12:36:48 +0100">ported to 4.0</ChangeLog>
     <Framework>4.0.x</Framework>
     <PackageRequired Version="2.0.2">Znuny4OTRS-Repo</PackageRequired>
     <Vendor>Znuny GmbH</Vendor>
@@ -20,6 +21,7 @@
         <File Permission="644" Location="Kernel/Output/HTML/Standard/AgentDashboardCustomerMap.tt"/>
         <File Permission="644" Location="var/cron/customermap"/>
         <File Permission="644" Location="var/httpd/htdocs/js/Core.Agent.CustomerMap.js"/>
+        <File Location="doc/de/Znuny4OTRS-CustomerMap.pdf" Permission="644"/>
     </Filelist>
     <CodeInstall Type="post"><![CDATA[
         return if !$Kernel::OM->Get('Kernel::System::ZnunyHelper');
