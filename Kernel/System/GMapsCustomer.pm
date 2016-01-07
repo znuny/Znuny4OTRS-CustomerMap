@@ -1,26 +1,28 @@
 # --
-# Kernel/System/GMapsCustomer.pm - a GMaps customer
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::System::GMapsCustomer;
 
 use strict;
 use warnings;
-
-use Kernel::System::CustomerUser;
-use Kernel::System::GMaps;
-use Kernel::System::Time;
-use Kernel::System::Ticket;
-use Kernel::System::JSON;
-use Kernel::System::VirtualFS;
+use Time::HiRes qw(usleep);
 
 our @ObjectDependencies = (
     'Kernel::Config',
+    'Kernel::System::CustomerUser',
     'Kernel::System::Encode',
+    'Kernel::System::GMaps',
+    'Kernel::System::GMapsCustomer',
+    'Kernel::System::JSON',
     'Kernel::System::Log',
     'Kernel::System::Main',
-    'Kernel::System::GMapsCustomer',
+    'Kernel::System::Ticket',
+    'Kernel::System::VirtualFS',
 );
 
 =head1 NAME
@@ -41,31 +43,9 @@ All GMaps customer functions.
 
 create an object
 
-    use Kernel::Config;
-    use Kernel::System::Encode;
-    use Kernel::System::Log;
-    use Kernel::System::Main;
-    use Kernel::System::GMapsCustomer;
-
-    my $ConfigObject = Kernel::Config->new();
-    my $EncodeObject = Kernel::System::Encode->new(
-        ConfigObject => $ConfigObject,
-    );
-    my $LogObject = Kernel::System::Log->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-    );
-    my $MainObject = Kernel::System::Main->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-        LogObject    => $LogObject,
-    );
-    my $GMapsCustomerObject = Kernel::System::GMapsCustomer->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-        LogObject    => $LogObject,
-        MainObject   => $MainObject,
-    );
+    use Kernel::System::ObjectManager;
+    local $Kernel::OM       = Kernel::System::ObjectManager->new();
+    my $GMapsCustomerObject = $Kernel::OM->Get('Kernel::System::GMapsCustomer');
 
 =cut
 
@@ -79,7 +59,8 @@ sub new {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # required attributes
-    $Self->{RequiredAttributes} = $ConfigObject->Get( 'Znuny4OTRSCustomerMapRequiredCustomerDataAttributes' ) || ['UserCity'];
+    $Self->{RequiredAttributes}
+        = $ConfigObject->Get('Znuny4OTRSCustomerMapRequiredCustomerDataAttributes') || ['UserCity'];
 
     # attribute map
     $Self->{MapAttributes} = $ConfigObject->Get('Znuny4OTRSCustomerMapCustomerDataAttributes') || {
@@ -127,21 +108,24 @@ sub DataBuild {
         );
 
         # check required infos
+        ATTRIBUTESLOOP:
         for my $Key ( @{ $Self->{RequiredAttributes} } ) {
             next USER if !$Customer{$Key};
         }
 
         # cleanup
-        for my $Key ( keys %Customer ) {
-            next if !$Customer{$Key};
+        CUSTOMERLOOP:
+        for my $Key ( sort keys %Customer ) {
+            next CUSTOMERLOOP if !$Customer{$Key};
             $Customer{$Key} =~ s/(\r|\n|\t)//g;
         }
 
         # geo lookup
         my $Query;
-        for my $KeyOrig ( keys %{$Self->{MapAttributes}} ) {
+        MAPATTRIBUTESLOOP:
+        for my $KeyOrig ( sort keys %{ $Self->{MapAttributes} } ) {
             my $Key = $Self->{MapAttributes}->{$KeyOrig};
-            next if !$Customer{$Key};
+            next MAPATTRIBUTESLOOP if !$Customer{$Key};
             chomp $Customer{$Key};
             if ($Query) {
                 $Query .= ', ';
@@ -151,12 +135,12 @@ sub DataBuild {
         my %Response = $GmapsObject->Geocoding(
             Query => $Query,
         );
-        next if !%Response;
+        next USER if !%Response;
 
-        select undef, undef, undef, 0.3;
+        usleep(300000);
 
         # required check
-        next if $Response{Status} !~ /ok/i;
+        next USER if $Response{Status} !~ /ok/i;
 
         # counter check
         $Counter++;
@@ -169,7 +153,7 @@ sub DataBuild {
             UserID            => 1,
         );
         if ( $ConfigObject->Get('Znuny4OTRSCustomerMapOnlyOpenTickets') ) {
-            next if !$Count;
+            next USER if !$Count;
         }
         push @Data, [ $Response{Latitude}, $Response{Longitude}, $Customer{UserLogin}, $Count ];
     }
@@ -211,7 +195,7 @@ read data and return json string
 
 sub DataRead {
     my ( $Self, %Param ) = @_;
-    my $VirtualFSObject  = $Kernel::OM->Get('Kernel::System::VirtualFS');
+    my $VirtualFSObject = $Kernel::OM->Get('Kernel::System::VirtualFS');
 
     my %File = $VirtualFSObject->Read(
         Filename        => '/GMapsCustomerMap/Data.json',
@@ -221,6 +205,7 @@ sub DataRead {
     return '{}' if !%File;
     return $File{Content};
 }
+
 1;
 
 =back
@@ -234,4 +219,3 @@ the enclosed file COPYING for license information (AGPL). If you
 did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 
 =cut
-

@@ -1,6 +1,9 @@
 # --
-# Kernel/Output/HTML/DashboardCustomerMap.pm
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::Output::HTML::DashboardCustomerMap;
@@ -8,20 +11,14 @@ package Kernel::Output::HTML::DashboardCustomerMap;
 use strict;
 use warnings;
 
+our $ObjectManagerDisabled = 1;
+
 sub new {
     my ( $Type, %Param ) = @_;
 
     # allocate new hash for object
     my $Self = {%Param};
     bless( $Self, $Type );
-
-    # get needed objects
-    for (
-        qw(Config Name ConfigObject LogObject DBObject LayoutObject ParamObject TicketObject UserID)
-        )
-    {
-        die "Got no $_!" if ( !$Self->{$_} );
-    }
 
     $Self->{PrefKeyShown}    = 'UserDashboardPref' . $Self->{Name} . '-Shown';
     $Self->{PrefKeyShownMax} = 'UserDashboardPref' . $Self->{Name} . '-ShownMax';
@@ -71,7 +68,7 @@ sub Config {
 
     return (
         %{ $Self->{Config} },
-        Link                      => $Self->{LayoutObject}->{Baselink} . 'Action=AgentCustomerMap',
+        Link                      => $Kernel::OM->Get('Kernel::System::Layout')->{Baselink} . 'Action=AgentCustomerMap',
         LinkTitle                 => 'Detail',
         PreferencesReloadRequired => 1,
     );
@@ -80,20 +77,22 @@ sub Config {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    $Self->{LayoutObject}->Block(
+    my $LayoutObject = $Kernel::OM->Get('Kernel::System::Layout');
+
+    $LayoutObject->Block(
         Name => 'ContentLargeCustomerMapData',
         Data => {
             %{ $Self->{Config} },
             Name      => $Self->{Name},
-            Latitude  => $Self->{UserCustomerMapLatitude}  || $Self->{Config}->{DefaultLatitude},
+            Latitude  => $Self->{UserCustomerMapLatitude} || $Self->{Config}->{DefaultLatitude},
             Longitude => $Self->{UserCustomerMapLongitude} || $Self->{Config}->{DefaultLongitude},
-            Zoom      => $Self->{UserCustomerMapZoom}      || $Self->{Config}->{DefaultZoom},
+            Zoom      => $Self->{UserCustomerMapZoom} || $Self->{Config}->{DefaultZoom},
             Width     => '100%',
             Height    => '400px',
         },
     );
 
-    my $Content = $Self->{LayoutObject}->Output(
+    my $Content = $LayoutObject->Output(
         TemplateFile => 'AgentDashboardCustomerMap',
         Data         => {
             %{ $Self->{Config} },

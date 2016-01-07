@@ -1,8 +1,8 @@
 # Customer Map
 
 Dieses Paket enthält erweitert das OTRS Dashboard um eine Kundenkarte (Google Maps).
-Auf dieser Karte werden Standorte von Kunden angezeigt, welche über offene Tickets im 
-System verfügen. Diese Einstellung kann über die Sysconfig angepasst werden. 
+Auf dieser Karte werden Standorte von Kunden angezeigt, welche über offene Tickets im
+System verfügen. Diese Einstellung kann über die Sysconfig angepasst werden.
 
 Um die Adressdaten in Geokoordinaten umzuwandeln, wird ein Skript benötigt welches sich im bin/
 Verzeichnis befindet. Damit die Umwandlung korrekt durchgeführt werden kann, ist es notwendig
@@ -30,4 +30,3 @@ findet sich unter var/cron/customermap
  - Znuny4OTRSCustomerMapOnlyOpenTickets
  - Znuny4OTRSCustomerMapCustomerDataAttributes
  - Znuny4OTRSCustomerMapRequiredCustomerDataAttributes
-

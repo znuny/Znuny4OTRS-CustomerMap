@@ -1,12 +1,17 @@
 # --
-# Kernel/Modules/AgentCustomerMap.pm - customer gmap
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::Modules::AgentCustomerMap;
 
 use strict;
 use warnings;
+
+our $ObjectManagerDisabled = 1;
 
 use Kernel::System::CustomerUser;
 use Kernel::System::GMapsCustomer;
@@ -18,51 +23,46 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
-    # check all needed objects
-    for (qw(TicketObject ParamObject DBObject QueueObject LayoutObject ConfigObject LogObject)) {
-        if ( !$Self->{$_} ) {
-            $Self->{LayoutObject}->FatalError( Message => "Got no $_!" );
-        }
-    }
-
-    $Self->{CustomerUserObject}  = Kernel::System::CustomerUser->new(%Param);
-    $Self->{GMapsCustomerObject} = Kernel::System::GMapsCustomer->new(%Param);
-
     return $Self;
 }
 
 sub Run {
     my ( $Self, %Param ) = @_;
 
+    my $ParamObject         = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $LayoutObject        = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $GMapsCustomerObject = $Kernel::OM->Get('Kernel::System::GMapsCustomer');
+
     # ---
     # update preferences
     # ---
     if ( $Self->{Subaction} eq 'Update' ) {
+        KEYLOOP:
         for my $Key (qw( Latitude Longitude Zoom )) {
-            my $Value = $Self->{ParamObject}->GetParam( Param => $Key );
+            my $Value = $ParamObject->GetParam( Param => $Key );
             my $SessionKey = 'UserCustomerMap' . $Key;
 
             # update ssession
-            $Self->{SessionObject}->UpdateSessionID(
+            $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
                 SessionID => $Self->{SessionID},
                 Key       => $SessionKey,
                 Value     => $Value,
             );
 
             # update preferences
-            $Self->{UserObject}->SetPreferences(
+            $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
                 UserID => $Self->{UserID},
                 Key    => $SessionKey,
                 Value  => $Value,
             );
         }
-        my $JSON = $Self->{LayoutObject}->JSONEncode(
+        my $JSON = $LayoutObject->JSONEncode(
             Data => {
                 Status => 'OK',
             },
         );
-        return $Self->{LayoutObject}->Attachment(
-            ContentType => 'text/plain; charset=' . $Self->{LayoutObject}->{Charset},
+        return $LayoutObject->Attachment(
+            ContentType => 'text/plain; charset=' . $LayoutObject->{Charset},
             Content     => $JSON,
             Type        => 'inline',
             NoCache     => 1,
@@ -73,15 +73,15 @@ sub Run {
     # get user data
     # ---
     if ( $Self->{Subaction} eq 'Customer' ) {
-        my $Login = $Self->{ParamObject}->GetParam( Param => 'Login' );
-        my %Customer = $Self->{CustomerUserObject}->CustomerUserDataGet(
+        my $Login = $ParamObject->GetParam( Param => 'Login' );
+        my %Customer = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
             User => $Login,
         );
-        my $JSON = $Self->{LayoutObject}->JSONEncode(
+        my $JSON = $LayoutObject->JSONEncode(
             Data => \%Customer,
         );
-        return $Self->{LayoutObject}->Attachment(
-            ContentType => 'text/plain; charset=' . $Self->{LayoutObject}->{Charset},
+        return $LayoutObject->Attachment(
+            ContentType => 'text/plain; charset=' . $LayoutObject->{Charset},
             Content     => $JSON,
             Type        => 'inline',
             NoCache     => 1,
@@ -92,12 +92,12 @@ sub Run {
     # deliver data
     # ---
     if ( $Self->{Subaction} eq 'Data' ) {
-        my $JSON = $Self->{GMapsCustomerObject}->DataRead();
+        my $JSON = $GMapsCustomerObject->DataRead();
         if ( ref $JSON eq 'SCALAR' ) {
             $JSON = ${$JSON};
         }
-        return $Self->{LayoutObject}->Attachment(
-            ContentType => 'text/plain; charset=' . $Self->{LayoutObject}->{Charset},
+        return $LayoutObject->Attachment(
+            ContentType => 'text/plain; charset=' . $LayoutObject->{Charset},
             Content     => $JSON,
             Type        => 'inline',
             NoCache     => 1,
@@ -105,19 +105,20 @@ sub Run {
     }
 
     # load backends
-    my $Config = $Self->{ConfigObject}->Get('DashboardBackend');
+    my $Config = $Kernel::OM->Get('Kernel::Config')->Get('DashboardBackend');
     if ( !$Config ) {
-        return $Self->{LayoutObject}->ErrorScreen(
+        return $LayoutObject->ErrorScreen(
             Message => 'No such config for Dashboard',
         );
     }
 
+    CONFIGLOOP:
     for my $Name ( sort keys %{$Config} ) {
-        next if $Config->{$Name}->{Module} ne 'Kernel::Output::HTML::DashboardCustomerMap';
+        next CONFIGLOOP if $Config->{$Name}->{Module} ne 'Kernel::Output::HTML::DashboardCustomerMap';
 
-        my $JSON = $Self->{GMapsCustomerObject}->DataRead();
-        if (!$JSON) {
-            $Self->{LayoutObject}->Block(
+        my $JSON = $GMapsCustomerObject->DataRead();
+        if ( !$JSON ) {
+            $LayoutObject->Block(
                 Name => 'ContentLargeCustomerMapConfig',
                 Data => {
                     %{ $Config->{$Name} },
@@ -126,7 +127,7 @@ sub Run {
             );
         }
         else {
-            $Self->{LayoutObject}->Block(
+            $LayoutObject->Block(
                 Name => 'ContentLargeCustomerMapData',
                 Data => {
                     %{ $Config->{$Name} },
@@ -141,21 +142,24 @@ sub Run {
                 },
             );
         }
-        $Param{Map} = $Self->{LayoutObject}->Output(
+        $Param{Map} = $LayoutObject->Output(
             TemplateFile => 'AgentDashboardCustomerMap',
             Data         => {
                 %{ $Config->{$Name} },
                 Name => $Name,
             },
         );
-        last;
+        last CONFIGLOOP;
     }
 
     # start with page ...
-    my $Output = $Self->{LayoutObject}->Header();
-    $Output .= $Self->{LayoutObject}->NavigationBar();
-    $Output .= $Self->{LayoutObject}->Output( TemplateFile => 'AgentCustomerMap', Data => \%Param );
-    $Output .= $Self->{LayoutObject}->Footer();
+    my $Output = $LayoutObject->Header();
+    $Output .= $LayoutObject->NavigationBar();
+    $Output .= $LayoutObject->Output(
+        TemplateFile => 'AgentCustomerMap',
+        Data         => \%Param
+    );
+    $Output .= $LayoutObject->Footer();
     return $Output;
 }
 

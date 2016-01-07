@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2015 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -16,12 +16,13 @@ use base qw(Kernel::System::Console::BaseCommand);
 our @ObjectDependencies = (
     'Kernel::System::GMapsCustomer',
     'Kernel::System::PID',
+    'Kernel::System::Log',
 );
 
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description("Geo data collector\nCopyright (C) 2012-2015 Znuny GmbH, http://znuny.com/");
+    $Self->Description("Geo data collector\nCopyright (C) 2012-2016 Znuny GmbH, http://znuny.com/");
 
     $Self->AddOption(
         Name        => 'force-pid',
@@ -41,7 +42,7 @@ sub Configure {
     return;
 }
 
-sub PreRun { 
+sub PreRun {
     my ($Self) = @_;
     my $PIDObject = $Kernel::OM->Get('Kernel::System::PID');
 
@@ -75,7 +76,7 @@ sub Run {
 
     my $GMapsObject = $Kernel::OM->Get('Kernel::System::GMapsCustomer');
     $Self->Print("\nGeo data collector\n");
-    $Self->Print("\nCopyright (C) 2012-2015 Znuny GmbH, http://znuny.com/\n");
+    $Self->Print("\nCopyright (C) 2012-2016 Znuny GmbH, http://znuny.com/\n");
     $Self->Print("<yellow>Builds customer maps...</yellow>\n\n");
 
     my $Count = $GMapsObject->DataBuild();
@@ -85,7 +86,6 @@ sub Run {
     else {
         $Self->Print("\n<red>ERROR: Failed!</red>\n");
     }
-
 
     return $Self->ExitCodeOk();
 }

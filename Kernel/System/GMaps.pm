@@ -1,9 +1,11 @@
 # --
-# Kernel/System/GMaps.pm - lib for gmaps
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
 # Copyright (C) 2013 Juergen Sluyterman, http://www.rsag.de/
 # --
-
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
 package Kernel::System::GMaps;
 
 use strict;
@@ -38,31 +40,9 @@ All google maps functions.
 
 create an object
 
-    use Kernel::Config;
-    use Kernel::System::Encode;
-    use Kernel::System::Log;
-    use Kernel::System::Main;
-    use Kernel::System::WebUserAgent;
-
-    my $ConfigObject = Kernel::Config->new();
-    my $EncodeObject = Kernel::System::Encode->new(
-        ConfigObject => $ConfigObject,
-    );
-    my $LogObject = Kernel::System::Log->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-    );
-    my $MainObject = Kernel::System::Main->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-        LogObject    => $LogObject,
-    );
-    my $GMapsObject = Kernel::System::GMaps->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-        LogObject    => $LogObject,
-        MainObject   => $MainObject,
-    );
+    use Kernel::System::ObjectManager;
+    local $Kernel::OM = Kernel::System::ObjectManager->new();
+    my $GMapsObject   = $Kernel::OM->Get('Kernel::System::GMaps');
 
 =cut
 
@@ -96,6 +76,7 @@ returns
 
 see also: http://code.google.com/apis/maps/documentation/geocoding/
 
+
 =cut
 
 sub Geocoding {
@@ -108,7 +89,7 @@ sub Geocoding {
     NEEDED:
     for my $Needed (qw(Query)) {
 
-        next NEEDED if $Param{ $Needed };
+        next NEEDED if $Param{$Needed};
 
         $LogObject->Log(
             Priority => 'error',
@@ -125,12 +106,13 @@ sub Geocoding {
     return if !$Response{Content};
 
     my $JSONResponse = ${ $Response{Content} };
-    my $Hash         = $JSONObject->Decode(Data => $JSONResponse);
+    my $Hash = $JSONObject->Decode( Data => $JSONResponse );
 
     if (
         !$Hash
         || !$Hash->{status}
-    ) {
+        )
+    {
         $LogObject->Log(
             Priority => 'error',
             Message  => "Can't process '$URL' got no json data back! '$JSONResponse'",
@@ -159,5 +141,6 @@ sub Geocoding {
         Longitude => $Longitude,
     );
 }
-
 1;
+
+=back
