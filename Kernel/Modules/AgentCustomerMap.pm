@@ -114,7 +114,7 @@ sub Run {
 
     CONFIGLOOP:
     for my $Name ( sort keys %{$Config} ) {
-        next CONFIGLOOP if $Config->{$Name}->{Module} ne 'Kernel::Output::HTML::DashboardCustomerMap';
+        next CONFIGLOOP if $Config->{$Name}->{Module} ne 'Kernel::Output::HTML::Dashboard::CustomerMap';
 
         my $JSON = $GMapsCustomerObject->DataRead();
         if ( !$JSON ) {

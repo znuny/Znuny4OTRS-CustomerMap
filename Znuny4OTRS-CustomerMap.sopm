@@ -16,9 +16,9 @@
         <File Permission="644" Location="Kernel/Config/Files/Znuny4OTRSCustomerMap.xml"/>
         <File Permission="644" Location="Kernel/Language/de_Znuny4OTRSCustomerMap.pm"/>
         <File Permission="644" Location="Kernel/Modules/AgentCustomerMap.pm"/>
-        <File Permission="644" Location="Kernel/Output/HTML/DashboardCustomerMap.pm"/>
-        <File Permission="644" Location="Kernel/Output/HTML/Standard/AgentCustomerMap.tt"/>
-        <File Permission="644" Location="Kernel/Output/HTML/Standard/AgentDashboardCustomerMap.tt"/>
+        <File Permission="644" Location="Kernel/Output/HTML/Dashboard/DashboardCustomerMap.pm"/>
+        <File Permission="644" Location="Kernel/Output/HTML/Templates/Standard/AgentCustomerMap.tt"/>
+        <File Permission="644" Location="Kernel/Output/HTML/Templates/Standard/AgentDashboardCustomerMap.tt"/>
         <File Permission="644" Location="Kernel/System/Console/Command/Znuny/CustomerMapBuild.pm"/>
         <File Permission="644" Location="Kernel/System/GMaps.pm"/>
         <File Permission="644" Location="Kernel/System/GMapsCustomer.pm"/>

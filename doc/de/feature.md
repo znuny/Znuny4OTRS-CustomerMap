@@ -1,6 +1,6 @@
 # Customer Map
 
-Dieses Paket enthält erweitert das OTRS Dashboard um eine Kundenkarte (Google Maps).
+Dieses Paket erweitert das OTRS Dashboard um eine Kundenkarte (Google Maps).
 Auf dieser Karte werden Standorte von Kunden angezeigt, welche über offene Tickets im
 System verfügen. Diese Einstellung kann über die Sysconfig angepasst werden.
 
@@ -14,7 +14,7 @@ mindestens folgende Attribute im Kunden Mapping eingetragen zu haben:
 
 Sollten diese Attribute nicht Ihren entsprechen, können diese über die Sysconfig angepasst werden.
 Hinweis:
-Die Anfragen an der Google Geocoding API sind auf ca 2000 Anfragen pro Tag limittiert.
+Die Anfragen an der Google Geocoding API sind auf ca 2000 Anfragen pro Tag limitiert.
 
 Das Umwandeln kann über die Konsole manuell ausgeführt werden:
 

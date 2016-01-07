@@ -6,7 +6,7 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::Output::HTML::DashboardCustomerMap;
+package Kernel::Output::HTML::Dashboard::CustomerMap;
 
 use strict;
 use warnings;
@@ -68,7 +68,7 @@ sub Config {
 
     return (
         %{ $Self->{Config} },
-        Link                      => $Kernel::OM->Get('Kernel::System::Layout')->{Baselink} . 'Action=AgentCustomerMap',
+        Link                      => $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{Baselink} . 'Action=AgentCustomerMap',
         LinkTitle                 => 'Detail',
         PreferencesReloadRequired => 1,
     );
@@ -77,7 +77,7 @@ sub Config {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    my $LayoutObject = $Kernel::OM->Get('Kernel::System::Layout');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     $LayoutObject->Block(
         Name => 'ContentLargeCustomerMapData',
