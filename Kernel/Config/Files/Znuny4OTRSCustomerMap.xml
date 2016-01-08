@@ -63,4 +63,22 @@
             </Array>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Daemon::SchedulerCronTaskManager::Task###UpdateCustomerMap" Required="0" Valid="1" ConfigLevel="100">
+        <Description Translatable="1">Updates the customer map based on addresses.</Description>
+        <Group>Daemon</Group>
+        <SubGroup>Daemon::SchedulerCronTaskManager::Task</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="TaskName">UpdateCustomerMap</Item>
+                <Item Key="Schedule">45 3 * * *</Item> <!-- default every day at 03:45 AM -->
+                <Item Key="Module">Kernel::System::GMapsCustomer</Item>
+                <Item Key="Function">DataBuild</Item>
+                <Item Key="MaximumParallelInstances">1</Item>
+                <Item Key="Params">
+                    <Array>
+                    </Array>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
 </otrs_config>

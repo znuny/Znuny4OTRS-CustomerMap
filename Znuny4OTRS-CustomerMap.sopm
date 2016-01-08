@@ -22,7 +22,6 @@
         <File Permission="644" Location="Kernel/System/Console/Command/Znuny/CustomerMapBuild.pm"/>
         <File Permission="644" Location="Kernel/System/GMaps.pm"/>
         <File Permission="644" Location="Kernel/System/GMapsCustomer.pm"/>
-        <File Permission="644" Location="var/cron/customermap"/>
         <File Permission="644" Location="var/httpd/htdocs/js/Core.Agent.CustomerMap.js"/>
     </Filelist>
     <CodeInstall Type="post"><![CDATA[

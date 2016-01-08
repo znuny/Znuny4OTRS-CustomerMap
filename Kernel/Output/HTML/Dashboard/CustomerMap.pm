@@ -68,8 +68,8 @@ sub Config {
 
     return (
         %{ $Self->{Config} },
-        Link                      => $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{Baselink} . 'Action=AgentCustomerMap',
-        LinkTitle                 => 'Detail',
+        Link      => $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{Baselink} . 'Action=AgentCustomerMap',
+        LinkTitle => 'Detail',
         PreferencesReloadRequired => 1,
     );
 }
