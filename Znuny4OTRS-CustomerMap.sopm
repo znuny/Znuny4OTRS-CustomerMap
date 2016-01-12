@@ -12,7 +12,6 @@
     <Description Lang="en">A Google Maps integraton. A visualisation of your customers in a dashboard plugin.</Description>
     <Description Lang="de">Ein Google Maps Integration. Eine neuartige Darstellung der Kunden in einem Dashboard-Plugin.</Description>
     <Filelist>
-        <File Permission="644" Location="doc/de/screenshots/customermap.png"/>
         <File Permission="644" Location="Kernel/Config/Files/Znuny4OTRSCustomerMap.xml"/>
         <File Permission="644" Location="Kernel/Language/de_Znuny4OTRSCustomerMap.pm"/>
         <File Permission="644" Location="Kernel/Modules/AgentCustomerMap.pm"/>
