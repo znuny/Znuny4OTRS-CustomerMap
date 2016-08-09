@@ -1,4 +1,4 @@
-![Znuny logo](http://znuny.com/assets/logo_small.png)
+![Znuny logo](http://znuny.com/assets/images/logo_small.png)
 
 Google Maps Integration
 =======================
@@ -15,7 +15,7 @@ Download the package and install it via admin interface -> package manager or us
 
 - Znuny4OTRS-Repo
 
-- OTRS 4.0
+- OTRS 5
 
 **Configuration**
 
@@ -30,9 +30,9 @@ configured in your CustomerUserMap (just take a look in your Kernel/Config.pm to
 
 **Build geo location data of your customer records**
 
-Just execute the following cmd program to build your geo location database. You may also do this by using var/cron/customermap cron job to build it automatically.
+Just execute the following console command build your geo location database.
 
-    shell> bin/znuny.GMapsCustomerBuild.pl
+    shell> bin/otrs.Console.pl Znuny::CustomerMapBuild
     NOTICE: Done (wrote 209 records).
     shell>
 
@@ -48,10 +48,10 @@ For download see [http://znuny.com/en/#!/addons](http://znuny.com/en/#!/addons)
 
 **Commercial Support**
 
-For this extension and for OTRS in general visit [http://znuny.com](http://znuny.com). Looking forward to hear from you!
+For this extension and for OTRS in general visit [http://znuny.com/](http://znuny.com/). Looking forward to hear from you!
 
 Enjoy!
 
  Your Znuny Team!
 
- [http://znuny.com](http://znuny.com)
+ [http://znuny.com/](http://znuny.com/)
