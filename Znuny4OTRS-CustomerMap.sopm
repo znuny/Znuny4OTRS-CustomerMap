@@ -12,17 +12,16 @@
     <Description Lang="en">A Google Maps integraton. A visualisation of your customers in a dashboard plugin.</Description>
     <Description Lang="de">Ein Google Maps Integration. Eine neuartige Darstellung der Kunden in einem Dashboard-Plugin.</Description>
     <Filelist>
-        <File Permission="755" Location="bin/znuny.GMapsCustomerBuild.pl"/>
-        <File Permission="644" Location="Kernel/System/GMaps.pm"/>
-        <File Permission="644" Location="Kernel/System/GMapsCustomer.pm"/>
         <File Permission="644" Location="Kernel/Config/Files/CustomerMap.xml"/>
         <File Permission="644" Location="Kernel/Modules/AgentCustomerMap.pm"/>
         <File Permission="644" Location="Kernel/Output/HTML/DashboardCustomerMap.pm"/>
         <File Permission="644" Location="Kernel/Output/HTML/Standard/AgentCustomerMap.tt"/>
         <File Permission="644" Location="Kernel/Output/HTML/Standard/AgentDashboardCustomerMap.tt"/>
+        <File Permission="644" Location="Kernel/System/GMaps.pm"/>
+        <File Permission="644" Location="Kernel/System/GMapsCustomer.pm"/>
+        <File Permission="755" Location="bin/znuny.GMapsCustomerBuild.pl"/>
         <File Permission="644" Location="var/cron/customermap"/>
         <File Permission="644" Location="var/httpd/htdocs/js/Core.Agent.CustomerMap.js"/>
-        <File Location="doc/de/Znuny4OTRS-CustomerMap.pdf" Permission="644"/>
     </Filelist>
     <CodeInstall Type="post"><![CDATA[
         return if !$Kernel::OM->Get('Kernel::System::ZnunyHelper');
@@ -32,5 +31,4 @@
             AgentCustomerMap => ['Core.Agent.CustomerMap.js'],
         );
     ]]></CodeInstall>
-
 </otrs_package>
