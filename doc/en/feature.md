@@ -57,4 +57,3 @@ As an alternative add the provided script to your OTRS crontab. The needed entry
  - Znuny4OTRSCustomerMapOnlyOpenTickets
  - Znuny4OTRSCustomerMapCustomerDataAttributes
  - Znuny4OTRSCustomerMapRequiredCustomerDataAttributes
-

@@ -1,6 +1,9 @@
 # --
-# Kernel/Output/HTML/DashboardCustomerMap.pm
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::Output::HTML::DashboardCustomerMap;
@@ -16,11 +19,12 @@ sub new {
     bless( $Self, $Type );
 
     # get needed objects
-    for (
+    OBJECTLOOP:
+    for my $Object (
         qw(Config Name ConfigObject LogObject DBObject LayoutObject ParamObject TicketObject UserID)
         )
     {
-        die "Got no $_!" if ( !$Self->{$_} );
+        die "Got no Object!" if ( !$Self->{$Object} );
     }
 
     $Self->{PrefKeyShown}    = 'UserDashboardPref' . $Self->{Name} . '-Shown';
@@ -85,9 +89,9 @@ sub Run {
         Data => {
             %{ $Self->{Config} },
             Name      => $Self->{Name},
-            Latitude  => $Self->{UserCustomerMapLatitude}  || $Self->{Config}->{DefaultLatitude},
+            Latitude  => $Self->{UserCustomerMapLatitude} || $Self->{Config}->{DefaultLatitude},
             Longitude => $Self->{UserCustomerMapLongitude} || $Self->{Config}->{DefaultLongitude},
-            Zoom      => $Self->{UserCustomerMapZoom}      || $Self->{Config}->{DefaultZoom},
+            Zoom      => $Self->{UserCustomerMapZoom} || $Self->{Config}->{DefaultZoom},
             Width     => '100%',
             Height    => '400px',
         },

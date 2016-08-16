@@ -1,12 +1,16 @@
 # --
-# Kernel/System/GMapsCustomer.pm - a GMaps customer
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::System::GMapsCustomer;
 
 use strict;
 use warnings;
+use Time::HiRes qw(usleep);
 
 use Kernel::System::CustomerUser;
 use Kernel::System::GMaps;
@@ -17,10 +21,12 @@ use Kernel::System::VirtualFS;
 
 our @ObjectDependencies = (
     'Kernel::Config',
-    'Kernel::System::Encode',
+    'Kernel::System::CustomerUser',
+    'Kernel::System::GMaps',
+    'Kernel::System::JSON',
     'Kernel::System::Log',
-    'Kernel::System::Main',
-    'Kernel::System::GMapsCustomer',
+    'Kernel::System::Ticket',
+    'Kernel::System::VirtualFS',
 );
 
 =head1 NAME
@@ -79,7 +85,8 @@ sub new {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # required attributes
-    $Self->{RequiredAttributes} = $ConfigObject->Get( 'Znuny4OTRSCustomerMapRequiredCustomerDataAttributes' ) || ['UserCity'];
+    $Self->{RequiredAttributes}
+        = $ConfigObject->Get('Znuny4OTRSCustomerMapRequiredCustomerDataAttributes') || ['UserCity'];
 
     # attribute map
     $Self->{MapAttributes} = $ConfigObject->Get('Znuny4OTRSCustomerMapCustomerDataAttributes') || {
@@ -132,16 +139,18 @@ sub DataBuild {
         }
 
         # cleanup
-        for my $Key ( keys %Customer ) {
-            next if !$Customer{$Key};
+        CUSTOMERLOOP:
+        for my $Key ( sort keys %Customer ) {
+            next CUSTOMERLOOP if !$Customer{$Key};
             $Customer{$Key} =~ s/(\r|\n|\t)//g;
         }
 
         # geo lookup
         my $Query;
-        for my $KeyOrig ( keys %{$Self->{MapAttributes}} ) {
+        MAPATTRIBUTELOOP:
+        for my $KeyOrig ( sort keys %{ $Self->{MapAttributes} } ) {
             my $Key = $Self->{MapAttributes}->{$KeyOrig};
-            next if !$Customer{$Key};
+            next MAPATTRIBUTELOOP if !$Customer{$Key};
             chomp $Customer{$Key};
             if ($Query) {
                 $Query .= ', ';
@@ -151,12 +160,12 @@ sub DataBuild {
         my %Response = $GmapsObject->Geocoding(
             Query => $Query,
         );
-        next if !%Response;
+        next USER if !%Response;
 
-        select undef, undef, undef, 0.3;
+        usleep(300000);
 
         # required check
-        next if $Response{Status} !~ /ok/i;
+        next USER if $Response{Status} !~ /ok/i;
 
         # counter check
         $Counter++;
@@ -169,7 +178,7 @@ sub DataBuild {
             UserID            => 1,
         );
         if ( $ConfigObject->Get('Znuny4OTRSCustomerMapOnlyOpenTickets') ) {
-            next if !$Count;
+            next USER if !$Count;
         }
         push @Data, [ $Response{Latitude}, $Response{Longitude}, $Customer{UserLogin}, $Count ];
     }
@@ -211,7 +220,7 @@ read data and return json string
 
 sub DataRead {
     my ( $Self, %Param ) = @_;
-    my $VirtualFSObject  = $Kernel::OM->Get('Kernel::System::VirtualFS');
+    my $VirtualFSObject = $Kernel::OM->Get('Kernel::System::VirtualFS');
 
     my %File = $VirtualFSObject->Read(
         Filename        => '/GMapsCustomerMap/Data.json',
@@ -234,4 +243,3 @@ the enclosed file COPYING for license information (AGPL). If you
 did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 
 =cut
-

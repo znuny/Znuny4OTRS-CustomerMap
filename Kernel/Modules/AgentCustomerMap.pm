@@ -1,6 +1,9 @@
 # --
-# Kernel/Modules/AgentCustomerMap.pm - customer gmap
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::Modules::AgentCustomerMap;
@@ -19,10 +22,10 @@ sub new {
     bless( $Self, $Type );
 
     # check all needed objects
-    for (qw(TicketObject ParamObject DBObject QueueObject LayoutObject ConfigObject LogObject)) {
-        if ( !$Self->{$_} ) {
-            $Self->{LayoutObject}->FatalError( Message => "Got no $_!" );
-        }
+    OBJECTLOOP:
+    for my $Object (qw(TicketObject ParamObject DBObject QueueObject LayoutObject ConfigObject LogObject)) {
+        next OBJECTLOOP if $Self->{$Object};
+        $Self->{LayoutObject}->FatalError( Message => "Got no $Object!" );
     }
 
     $Self->{CustomerUserObject}  = Kernel::System::CustomerUser->new(%Param);
@@ -112,11 +115,12 @@ sub Run {
         );
     }
 
+    CONFIGLOOP:
     for my $Name ( sort keys %{$Config} ) {
-        next if $Config->{$Name}->{Module} ne 'Kernel::Output::HTML::DashboardCustomerMap';
+        next CONFIGLOOP if $Config->{$Name}->{Module} ne 'Kernel::Output::HTML::DashboardCustomerMap';
 
         my $JSON = $Self->{GMapsCustomerObject}->DataRead();
-        if (!$JSON) {
+        if ( !$JSON ) {
             $Self->{LayoutObject}->Block(
                 Name => 'ContentLargeCustomerMapConfig',
                 Data => {
@@ -148,13 +152,16 @@ sub Run {
                 Name => $Name,
             },
         );
-        last;
+        last CONFIGLOOP;
     }
 
     # start with page ...
     my $Output = $Self->{LayoutObject}->Header();
     $Output .= $Self->{LayoutObject}->NavigationBar();
-    $Output .= $Self->{LayoutObject}->Output( TemplateFile => 'AgentCustomerMap', Data => \%Param );
+    $Output .= $Self->{LayoutObject}->Output(
+        TemplateFile => 'AgentCustomerMap',
+        Data         => \%Param
+    );
     $Output .= $Self->{LayoutObject}->Footer();
     return $Output;
 }

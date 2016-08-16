@@ -1,6 +1,6 @@
 // --
 // Core.Agent.CustomerMap.js - provides the special module functions for the customer map
-// Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+// Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you
@@ -27,7 +27,9 @@ Core.Agent.CustomerMap = (function (TargetNS) {
     TargetNS.Markers = [];
 
     TargetNS.Init = function (lat, lng, zoom) {
-        var latlng = new google.maps.LatLng( lat, lng ),
+    /*global google:true*/
+    /*eslint no-unused-vars: [2, {"args": "after-used", "varsIgnorePattern": "(UpdateTimeout|markerCluster)"}]*/
+        var latlng = new google.maps.LatLng(lat, lng),
             UpdateTimeout,
             Options = {
                 zoom: zoom,
@@ -40,7 +42,7 @@ Core.Agent.CustomerMap = (function (TargetNS) {
         TargetNS.map = new google.maps.Map(
             document.getElementById("map_canvas"),
             Options
-        );
+       );
 
         // update latest map position
         google.maps.event.addListener(TargetNS.map, 'zoom_changed', function() {
@@ -67,7 +69,7 @@ Core.Agent.CustomerMap = (function (TargetNS) {
                 'json'
             );
         }, 500);
-    }    
+    }
     TargetNS.Fetch = function () {
         Core.AJAX.FunctionCall(
             Core.Config.Get('Baselink'),
@@ -80,30 +82,31 @@ Core.Agent.CustomerMap = (function (TargetNS) {
                     var DataH = new Array();
                     var DataV = new Array();
                     var Size  = 0.00001;
-                    for ( var F=0;F<Data.length;F++ ) {
-                        if ( DataV[Data[F][0]] && DataH[Data[F][1]] ) {
-                            DataV[Data[F][0]] = Number( DataV[Data[F][0]] ) + Number(Size);
-                            DataH[Data[F][1]] = Number( DataH[Data[F][1]] ) + Number(Size);
+                    for (var F=0;F<Data.length;F++) {
+                        if (DataV[Data[F][0]] && DataH[Data[F][1]]) {
+                            DataV[Data[F][0]] = Number(DataV[Data[F][0]]) + Number(Size);
+                            DataH[Data[F][1]] = Number(DataH[Data[F][1]]) + Number(Size);
                         }
                         else {
                             DataV[Data[F][0]] = Number(Size);
                             DataH[Data[F][1]] = Number(Size);
                         }
-                        Data[F][0] = Number( Data[F][0] ) + Number( DataV[Data[F][0]] );
-                        Data[F][1] = Number( Data[F][1] ) + Number( DataH[Data[F][1]] );
+                        Data[F][0] = Number(Data[F][0]) + Number(DataV[Data[F][0]]);
+                        Data[F][1] = Number(Data[F][1]) + Number(DataH[Data[F][1]]);
 
-                        TargetNS.Marker(Data[F][0], Data[F][1], Data[F][2], Data[F][3] );
+                        TargetNS.Marker(Data[F][0], Data[F][1], Data[F][2], Data[F][3]);
                     }
                 }
+                /*global MarkerClusterer:true*/
                 var markerCluster = new MarkerClusterer(TargetNS.map, TargetNS.Markers);
             },
             'json'
-        );
+       );
     }
 
     TargetNS.Marker = function (Lat, Lng, Key, Count){
         var Image, zIndex;
-        if ( Count > 0 ) {
+        if (Count > 0) {
             zIndex = 1000;
             Image = "http://www.google.com/mapfiles/marker.png";
         }
@@ -111,7 +114,7 @@ Core.Agent.CustomerMap = (function (TargetNS) {
             zIndex = -1000;
             Image = "http://www.google.com/mapfiles/dd-start.png";
         }
-        var latlng = new google.maps.LatLng( Lat, Lng );
+        var latlng = new google.maps.LatLng(Lat, Lng);
         var marker = new google.maps.Marker({ map: TargetNS.map, position: latlng, icon: Image, title: Key, zIndex: zIndex });
         google.maps.event.addListener(marker, 'click', function() {
             Core.AJAX.FunctionCall(
@@ -126,13 +129,13 @@ Core.Agent.CustomerMap = (function (TargetNS) {
                         var Address = ObjectRef['UserStreet'] + ' ' + ObjectRef['UserCity'] + ' ' + ObjectRef['UserCountry'];
                         var Content = Name;
                         Content = Content + '<font size="-2">'
-                        if ( ObjectRef['UserCompany'] ) {
+                        if (ObjectRef['UserCompany']) {
                             Content = Content + '<br/>' + '(' + ObjectRef['UserCompany'] + ')';
                         }
-                        if ( ObjectRef['CustomerCompanyName'] ) {
+                        if (ObjectRef['CustomerCompanyName']) {
                             Content = Content + '<br/>' + '(' + ObjectRef['CustomerCompanyName'] + ')';
                         }
-                        if ( ObjectRef['UserPhone'] ) {
+                        if (ObjectRef['UserPhone']) {
                             Content = Content + '<br/>' +  ObjectRef['UserPhone'];
                         }
                         if (Address) {
@@ -140,14 +143,14 @@ Core.Agent.CustomerMap = (function (TargetNS) {
                         }
                         Content = Content + '</font>';
                         var infowindow = new google.maps.InfoWindow();
-                        infowindow.setContent( Content );
+                        infowindow.setContent(Content);
                         infowindow.open(TargetNS.map, marker);
                     }
                 },
                 'json'
             );
         });
-        TargetNS.Markers.push( marker );
+        TargetNS.Markers.push(marker);
     };
     return TargetNS;
 }(Core.Agent.CustomerMap || {}));
