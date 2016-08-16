@@ -4,6 +4,35 @@ Dieses Paket erweitert das OTRS Dashboard um eine Kundenkarte (Google Maps).
 Auf dieser Karte werden Standorte von Kunden angezeigt, welche über offene Tickets im
 System verfügen. Diese Einstellung kann über die Sysconfig angepasst werden.
 
+# Konfiguration
+
+Um Kundenstandorte anzuzeigen, ist es notwendig einen GoogleMaps Browser-API-Key zu besitzen.
+
+Sollten Sie noch keinen ihr Eigen nennen, können Sie diesen unter:
+
+https://developers.google.com/maps/documentation/javascript/get-api-key
+
+anfordern.
+
+Dieser Key ist dann in der SysConfig Option
+```
+Znuny4OTRS-CustomerMap->Frontend::Agent::Dashboard
+```
+im Konfigurationsfeld:
+```
+MapsURL
+```
+anstelle von
+```
+MyGoogleMapsAPIKEY
+```
+einzufügen.
+
+Siehe:
+![GoogleMapsAPIKey](doc/de/images/MapKeyInsert.jpg)
+
+# Koordinaten der Kundenstandorte ermitteln
+
 Um die Adressdaten in Geokoordinaten umzuwandeln, versichern Sie sich bitte dass der OTRS Daemon läuft. Er führt die aktualisierung täglich um 03:45 Uhr durch.
 
 Wenn Sie diese Uhrzeit ändern wollen, können Sie dies in der SysConfig Option Daemon::SchedulerCronTaskManager::Task###UpdateCustomerMap unter "Schedule" machen.

@@ -60,15 +60,12 @@ sub PreRun {
     my $Debug = $Self->GetOption('debug');
     my $Name  = $Self->Name();
 
-    if ($Debug) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'debug',
-            Message  => "Znuny4OTRS CustomerMapBuild ($Name) started.",
-        );
-    }
+    return if !$Debug;
 
-    return;
-
+    $Kernel::OM->Get('Kernel::System::Log')->Log(
+        Priority => 'debug',
+        Message  => "Znuny4OTRS CustomerMapBuild ($Name) started.",
+    );
 }
 
 sub Run {
@@ -103,7 +100,8 @@ sub PostRun {
         );
     }
 
-    return $Kernel::OM->Get('Kernel::System::PID')->PIDDelete( Name => $Self->Name() );
+    my $Result = $Kernel::OM->Get('Kernel::System::PID')->PIDDelete( Name => $Self->Name() );
+    return $Result;
 }
 
 1;
