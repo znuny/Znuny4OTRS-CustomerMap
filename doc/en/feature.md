@@ -4,6 +4,33 @@ This package provides you a customer map based on Google Maps on your OTRS dashb
 The locations show on this map representing customer with open tickets in your system.
 Of course, you can adjust settings via SysConfig.
 
+# Configuration
+
+To display customer locations, its obligatory to have a GoogleMaps Browser-API-Key.
+
+If you don't have one yet, you can obtain it via:
+
+https://developers.google.com/maps/documentation/javascript/get-api-key
+
+This Key has to be inserted in the SysConfig Option:
+```
+Znuny4OTRS-CustomerMap->Frontend::Agent::Dashboard
+```
+at Key:
+```
+MapsURL
+```
+by replacing
+```
+MyGoogleMapsAPIKEY
+```
+with the API Key.
+
+Like:
+![GoogleMapsAPIKey](doc/de/images/MapKeyInsert.jpg)
+
+# Determin customer locations
+
 Please make sure the OTRS Daemon is running. It will take care of updating the Map every day at 3:45 in the morning.
 
 If you want to change that Time, please visit the SysConfig Daemon::SchedulerCronTaskManager::Task###UpdateCustomerMap and change the Schedule part there.
