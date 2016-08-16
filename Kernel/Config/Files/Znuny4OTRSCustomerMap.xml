@@ -20,7 +20,7 @@
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::Dashboard::CustomerMap</Item>
                 <Item Key="Title">Customer Map</Item>
-                <Item Key="MapsURL">http://maps.google.com/maps/api/js?key=</Item>
+                <Item Key="MapsURL">http://maps.google.com/maps/api/js?key=MyGoogleMapsAPIKEY</Item>
                 <Item Key="Block">ContentLarge</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Default">1</Item>
