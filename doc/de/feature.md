@@ -4,6 +4,35 @@ Dieses Paket enthält erweitert das OTRS Dashboard um eine Kundenkarte (Google M
 Auf dieser Karte werden Standorte von Kunden angezeigt, welche über offene Tickets im 
 System verfügen. Diese Einstellung kann über die Sysconfig angepasst werden. 
 
+# Konfiguration
+
+Um Kundenstandorte anzuzeigen, ist es notwendig einen GoogleMaps Browser-API-Key zu besitzen.
+
+Sollten Sie noch keinen ihr Eigen nennen, können Sie diesen unter:
+
+https://developers.google.com/maps/documentation/javascript/get-api-key
+
+anfordern.
+
+Dieser Key ist dann in der SysConfig Option
+```
+Znuny4OTRS-CustomerMap->Frontend::Agent::Dashboard
+```
+im Konfigurationsfeld:
+```
+MapsURL
+```
+anstelle von
+```
+MyGoogleMapsAPIKEY
+```
+einzufügen.
+
+Siehe:
+![GoogleMapsAPIKey](doc/de/images/MapKeyInsert.jpg)
+
+# Koordinaten der Kundenstandorte ermitteln
+
 Um die Adressdaten in Geokoordinaten umzuwandeln, wird ein Skript benötigt welches sich im bin/
 Verzeichnis befindet. Damit die Umwandlung korrekt durchgeführt werden kann, ist es notwendig
 mindestens folgende Attribute im Kunden Mapping eingetragen zu haben:

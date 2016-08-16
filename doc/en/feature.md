@@ -4,8 +4,36 @@ This package provides you a customer map based on Google Maps on your OTRS dashb
 The locations show on this map representing customer with open tickets in your system.
 Of course, you can adjust settings via SysConfig.
 
+# Configuration
+
+To display customer locations, its obligatory to have a GoogleMaps Browser-API-Key.
+
+If you don't have one yet, you can obtain it via:
+
+https://developers.google.com/maps/documentation/javascript/get-api-key
+
+This Key has to be inserted in the SysConfig Option:
+```
+Znuny4OTRS-CustomerMap->Frontend::Agent::Dashboard
+```
+at Key:
+```
+MapsURL
+```
+by replacing
+```
+MyGoogleMapsAPIKEY
+```
+with the API Key.
+
+Like:
+![GoogleMapsAPIKey](doc/de/images/MapKeyInsert.jpg)
+
+# Determin customer locations
+
 You'll find a script in the bin folder which is needed to fetch the coordinates of you customer.
 Please run the script on regular basis.
+
 Your customer data needs the following attributes to be able to determine the geo location of a customer:
 
  - UserCity
