@@ -17,7 +17,26 @@ Download the package and install it via admin interface -> package manager or us
 
 - OTRS 5
 
+- Google Maps Browser-API-Key - can be optained from https://developers.google.com/maps/documentation/javascript/get-api-key
+
 **Configuration**
+
+The Google Maps API Key has to be inserted in the SysConfig Option:
+```
+Znuny4OTRS-CustomerMap->Frontend::Agent::Dashboard
+```
+at Key:
+```
+MapsURL
+```
+by replacing
+```
+MyGoogleMapsAPIKEY
+```
+with the API Key.
+
+Like:
+<img src="https://raw.github.com/znuny/Znuny4OTRS-CustomerMap/master/doc/de/images/MapKeyInsert.jpg" />
 
 You need to have customer sources with the following attributes for the extension to work
 UserStreet
