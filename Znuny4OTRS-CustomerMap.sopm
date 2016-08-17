@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_package version="1.0">
     <Name>Znuny4OTRS-CustomerMap</Name>
-    <Version>1.6.2</Version>
+    <Version>4.0.1</Version>
+    <ChangeLog Version="4.0.1" Date="2016-08-17 11:09:29 +0200">Implemented GoogleMaps API Key configuration.</ChangeLog>
     <ChangeLog Version="1.6.2" Date="2015-11-21 12:11:22 UTC">added english manual</ChangeLog>
     <ChangeLog Version="1.6.0" Date="2015-01-26 12:36:48 +0100">ported to 4.0</ChangeLog>
     <Framework>4.0.x</Framework>
