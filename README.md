@@ -36,7 +36,7 @@ MyGoogleMapsAPIKEY
 with the API Key.
 
 Like:
-<img src="https://raw.github.com/znuny/Znuny4OTRS-CustomerMap/master/doc/de/images/MapKeyInsert.jpg" />
+<img src="https://raw.github.com/znuny/Znuny4OTRS-CustomerMap/master/doc/en/images/MapKeyInsert.jpg" />
 
 You need to have customer sources with the following attributes for the extension to work
 UserStreet
