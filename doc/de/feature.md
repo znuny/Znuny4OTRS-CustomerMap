@@ -37,7 +37,7 @@ Um die Adressdaten in Geokoordinaten umzuwandeln, versichern Sie sich bitte dass
 
 Wenn Sie diese Uhrzeit ändern wollen, können Sie dies in der SysConfig Option Daemon::SchedulerCronTaskManager::Task###UpdateCustomerMap unter "Schedule" machen.
 
-Schedule besteht wie bei Cron aus 5 konfigurationsoptionen.
+Schedule besteht wie bei Cron aus 5 Konfigurationsoptionen.
 
 Die erste steht für Minuten.
 Beispiele:
@@ -52,13 +52,13 @@ um das Update alle 10 Minuten (in jeder durch 10 ohne Restwert teilbaren Minuten
 
 Mögliche Werte: 0-59 sowie *
 
-Die erste steht für  Stunden. Mögliche Werte: 0-23 sowie *
+Die zweite steht für  Stunden. Mögliche Werte: 0-23 sowie *
 
-Die erste steht für Tag eines Monats. Mögliche Werte: 1-31 sowie *
+Die dritte steht für Tag eines Monats. Mögliche Werte: 1-31 sowie *
 
-Die erste steht für das Monat. Mögliche Werte: 1-12 sowie *
+Die vierte steht für das Monat. Mögliche Werte: 1-12 sowie *
 
-Die erste steht für Wochentag. Mögliche Werte: 0-6  sowie * wobei 0 Sonntag, 6 Samstag repräsentiert.
+Die fünfte steht für Wochentag. Mögliche Werte: 0-6  sowie * wobei 0 Sonntag, 6 Samstag repräsentiert.
 
 Damit die Umwandlung korrekt durchgeführt werden kann, ist es notwendig
 mindestens folgende Attribute im Kunden Mapping eingetragen zu haben:
