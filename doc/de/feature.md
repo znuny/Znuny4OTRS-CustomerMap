@@ -2,7 +2,7 @@
 
 Dieses Paket erweitert das OTRS Dashboard um eine Kundenkarte (Google Maps).
 Auf dieser Karte werden Standorte von Kunden angezeigt, welche über offene Tickets im
-System verfügen. Diese Einstellung kann über die Sysconfig angepasst werden.
+System verfügen. Diese Einstellung kann über die Sysconfig angepasst werden um alle Kunden die, jemals ein Ticket hatten, darzustellen.
 
 # Konfiguration
 
@@ -83,3 +83,6 @@ Das Umwandeln kann über die Console manuell ausgeführt werden:
  - Znuny4OTRSCustomerMapOnlyOpenTickets
  - Znuny4OTRSCustomerMapCustomerDataAttributes
  - Znuny4OTRSCustomerMapRequiredCustomerDataAttributes
+
+## Hinweis zur Darstellung von Kunden die noch kein Ticket hatten
+Da OTRS ab einer der nächsten größeren Versionen die CustomerUserList Funktion entfernt, die sämtliche Kunden aus der Datenbank holt ([siehe Git Commit](https://github.com/OTRS/otrs/commit/3a59683b3cd8cf5c1008150706d23677116736fc)), wurde die Möglichkeit, alle Kunden auf der Karte darzustellen entfernt.
