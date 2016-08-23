@@ -2,9 +2,9 @@
 
 Google Maps Integration
 =======================
-With the Google Maps integration you will be able to see all customers on a map (customers with open tickets are marked in an extra color). The map is available in Dashboard and also as an own dedicated one large page map (just click on “more” in dashboard).
+With the Google Maps integration you will be able to see all customers that ever had a ticket on a map (customers with open tickets are marked in an extra color). The map is available in Dashboard and also as an own dedicated one large page map (just click on “more” in dashboard).
 
-<img src="https://raw.github.com/znuny/Znuny4OTRS-CustomerMap/master/screenshots/customermap.png" />
+<img src="https://raw.github.com/znuny/Znuny4OTRS-CustomerMap/master/doc/en/images/customermap.png" />
 
 **Installation**
 
