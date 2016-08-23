@@ -171,6 +171,18 @@ sub DataBuild {
 
         next CUSTOMERUSERIDLOOP if !%Customer;
 
+        # check required infos
+        for my $Key ( @{ $Self->{RequiredAttributes} } ) {
+            next USER if !$Customer{$Key};
+        }
+
+        # cleanup
+        CUSTOMERLOOP:
+        for my $Key ( sort keys %Customer ) {
+            next CUSTOMERLOOP if !$Customer{$Key};
+            $Customer{$Key} =~ s/(\r|\n|\t)//g;
+        }
+
         my $Query;
         MAPATTRIBUTESLOOP:
         for my $KeyOrig ( sort keys %{ $Self->{MapAttributes} } ) {
