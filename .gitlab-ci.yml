@@ -1,14 +1,15 @@
 image: otrs5ci
 
 stages:
-  - deploy
+  - test
 
-job_deploy_otrs_Znuny4OTRSCustomerMap:
-  stage: deploy
+job_unit_otrs_Znuny4OTRSCustomerMap:
+  stage: test
   script:
-    - git checkout $CI_BUILD_REF_NAME
-    - git pull --rebase origin $CI_BUILD_REF_NAME
-    - git filter-branch --force --index-filter "git rm --cached --ignore-unmatch './.gitlab-ci.yml'" --prune-empty --tag-name-filter cat -- $CI_BUILD_REF_NAME
-    - if git remote | grep github > /dev/null; then git remote rm github; fi
-    - git remote add github git@github.com:znuny/Znuny4OTRS-CustomerMap.git
-    - git push github $CI_BUILD_REF_NAME
+    - env
+    - pwd
+    - /run.sh
+    - su -c "git clone https://github.com/OTRS/module-tools.git" -s /bin/bash otrs
+    - su -c "module-tools/link.pl . /opt/otrs/" -s /bin/bash otrs
+    - su -c "perl /opt/otrs/bin/otrs.Console.pl Znuny4OTRS::AdvancedPackageManager::InstallSOPM /opt/otrs/Znuny4OTRS-CustomerMap.sopm" -s /bin/bash otrs
+    - su -c "perl /opt/otrs/bin/otrs.Console.pl Dev::UnitTest::Run --verbose --test Znuny4OTRSGMapsCustomerMap" -s /bin/bash otrs
