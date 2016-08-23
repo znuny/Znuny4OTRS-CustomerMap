@@ -27,6 +27,10 @@ our @ObjectDependencies = (
     'Kernel::System::Log',
     'Kernel::System::Ticket',
     'Kernel::System::VirtualFS',
+    'Kernel::System::Cache',
+    'Kernel::System::DB',
+    'Kernel::System::State',
+    'Kernel::System::Time',
 );
 
 =head1 NAME
@@ -83,6 +87,7 @@ sub new {
     bless( $Self, $Type );
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $StateObject  = $Kernel::OM->Get('Kernel::System::State');
 
     # required attributes
     $Self->{RequiredAttributes}
@@ -95,8 +100,27 @@ sub new {
         'UserCountry' => 'UserCountry',
     };
 
-    # open ticket state types
-    $Self->{StateType} = [ 'new', 'open', 'pending reminder', 'pending auto' ];
+    $Self->{TicketStateTypes} = [ 'new', 'open', 'pending reminder', 'pending auto' ];
+    @{ $Self->{OpenStateIDs} } = $StateObject->StateGetStatesByType(
+        StateType => [ 'new', 'open', 'pending reminder', 'pending auto' ],
+        Result    => 'ID',
+    );
+
+    $Self->{CacheType} = 'GMapsCustomerMap';
+
+    # This Cache Key will store a hash of Address to Geolocation assignments
+    #
+    # Each Address to Geolocation assignment will have it's own TTL
+    #
+    # each call of this Routine (normally done nightly)
+    # will set the CacheTTL to 1 year ahead
+    # so this cache key just gets deleted by manual cache deletion
+    #
+    # Reason for it: Address to Geolocation may become huge on big systems
+    # and is required just once every night
+    #
+    # To avoid storing 100.000s of Address Keys the TTL will be assigned to each Address Key
+    $Self->{CacheTTL} = 365 * 86400;
 
     return $Self;
 }
@@ -119,19 +143,58 @@ sub DataBuild {
     my $LogObject          = $Kernel::OM->Get('Kernel::System::Log');
     my $JSONObject         = $Kernel::OM->Get('Kernel::System::JSON');
     my $VirtualFSObject    = $Kernel::OM->Get('Kernel::System::VirtualFS');
+    my $DBObject           = $Kernel::OM->Get('Kernel::System::DB');
+    my $TimeObject         = $Kernel::OM->Get('Kernel::System::Time');
+    my $CacheObject        = $Kernel::OM->Get('Kernel::System::Cache');
+    my $CacheKey           = 'AddressToGeolocation';
+    my $InternalCacheTTL   = 86400 * ( $ConfigObject->Get('Znuny4OTRSCustomerMapCustomerCacheTTL') // 30 );
+    my $OnlyOpenTickets    = $ConfigObject->Get('Znuny4OTRSCustomerMapOnlyOpenTickets') // 1;
 
-    my %List = $CustomerUserObject->CustomerUserList(
-        Valid => 1,
+    # Getting Data is triggered once every night so one systemtime for cache comparison is enough
+    my $SystemTime = $TimeObject->SystemTime();
+
+    my $Cache = $CacheObject->Get(
+        Type => $Self->{CacheType},
+        Key  => $CacheKey,
     );
+
+    my %NewCache = ();
+
+    if ( ref $Cache ne 'HASH' ) {
+        $Cache = {};
+    }
+
+    my $SQL = ''
+        . 'SELECT DISTINCT customer_user_id'
+        . ' FROM ticket t';
+
+    if ($OnlyOpenTickets) {
+        $SQL .= ' WHERE t.ticket_state_id IN(' . ( join ',', @{ $Self->{OpenStateIDs} } ) . ')';
+    }
+
+    return if !$DBObject->Prepare( SQL => $SQL );
+
+    my @CustomerUserIDs;
+
+    # fetch the result
+    ROWLOOP:
+    while ( my @Data = $DBObject->FetchrowArray() ) {
+
+        next ROWLOOP if !$Data[0];
+
+        push @CustomerUserIDs, $Data[0];
+    }
 
     my @Data;
     my $Counter      = 0;
     my $CounterLimit = 120_000;
-    USER:
-    for my $UserID ( sort keys %List ) {
+
+    CUSTOMERUSERIDLOOP:
+    for my $UserID (@CustomerUserIDs) {
         my %Customer = $CustomerUserObject->CustomerUserDataGet(
             User => $UserID,
         );
+        next CUSTOMERUSERIDLOOP if !%Customer;
 
         # check required infos
         for my $Key ( @{ $Self->{RequiredAttributes} } ) {
@@ -145,31 +208,17 @@ sub DataBuild {
             $Customer{$Key} =~ s/(\r|\n|\t)//g;
         }
 
-        # geo lookup
         my $Query;
-        MAPATTRIBUTELOOP:
+        MAPATTRIBUTESLOOP:
         for my $KeyOrig ( sort keys %{ $Self->{MapAttributes} } ) {
             my $Key = $Self->{MapAttributes}->{$KeyOrig};
-            next MAPATTRIBUTELOOP if !$Customer{$Key};
+            next MAPATTRIBUTESLOOP if !$Customer{$Key};
             chomp $Customer{$Key};
             if ($Query) {
                 $Query .= ', ';
             }
             $Query .= $Customer{$Key};
         }
-        my %Response = $GmapsObject->Geocoding(
-            Query => $Query,
-        );
-        next USER if !%Response;
-
-        usleep(300000);
-
-        # required check
-        next USER if $Response{Status} !~ /ok/i;
-
-        # counter check
-        $Counter++;
-        last USER if $Counter == $CounterLimit;
 
         my $Count = $TicketObject->TicketSearch(
             Result            => 'COUNT',
@@ -177,11 +226,78 @@ sub DataBuild {
             CustomerUserLogin => $Customer{UserLogin},
             UserID            => 1,
         );
-        if ( $ConfigObject->Get('Znuny4OTRSCustomerMapOnlyOpenTickets') ) {
-            next USER if !$Count;
+
+        next CUSTOMERUSERIDLOOP if ( $OnlyOpenTickets && !$Count );
+
+        if (
+            $Cache->{$Query}
+            && defined $Cache->{$Query}->{Latitude}
+            && defined $Cache->{$Query}->{Longitude}
+            )
+        {
+
+            $Counter++;
+            last CUSTOMERUSERIDLOOP if $Counter == $CounterLimit;
+
+            if ( $Cache->{$Query}->{TTL} > $SystemTime ) {
+                push @Data,
+                    [ $Cache->{$Query}->{Latitude}, $Cache->{$Query}->{Longitude}, $Customer{UserLogin}, $Count ];
+                next CUSTOMERUSERIDLOOP;
+            }
+
+            # Cache itself lives forever
+            # so if the TTL of an exisiting Address Query
+            # aged out, we delete it manually
+            #
+            # Reason: if the Geocoding response fails, and will fail continually
+            # (Example: an old Address doesn't exist any more because a Street/City was renamed)
+            # the old stored Cache Entry neither would be overwritten
+            # nore deleted so deleting here is necessary for cache sanity
+            #
+            # For customers that don't have open tickets any more over years
+            # it will be still necessary to delete the cache manually every 3-5 years
+            # (which normally should be done if a system gets upgraded to a new OTRS Version)
+            delete $Cache->{$Query};
         }
+
+        my %Response = $GmapsObject->Geocoding(
+            Query => $Query,
+        );
+
+        usleep(300000);
+
+        next CUSTOMERUSERIDLOOP if !%Response;
+
+        next CUSTOMERUSERIDLOOP if $Response{Status} !~ /ok/i;
+
+        $Counter++;
+        last CUSTOMERUSERIDLOOP if $Counter == $CounterLimit;
+
         push @Data, [ $Response{Latitude}, $Response{Longitude}, $Customer{UserLogin}, $Count ];
+
+        $NewCache{$Query} = {
+            Latitude  => $Response{Latitude},
+            Longitude => $Response{Longitude},
+            TTL       => ( $SystemTime + $InternalCacheTTL ),
+        };
     }
+
+    %NewCache = (
+        %{$Cache},
+        %NewCache,
+    );
+
+    $CacheObject->Configure(
+        CacheInMemory  => 0,
+        CacheInBackend => 1,
+    );
+
+    $CacheObject->Set(
+        Type  => $Self->{CacheType},
+        TTL   => $Self->{CacheTTL},
+        Key   => $CacheKey,
+        Value => \%NewCache,
+    );
 
     if ( !@Data ) {
         $LogObject->Log(

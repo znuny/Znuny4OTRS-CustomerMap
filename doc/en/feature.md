@@ -2,7 +2,7 @@
 
 This package provides you a customer map based on Google Maps on your OTRS dashboard.
 The locations show on this map representing customer with open tickets in your system.
-Of course, you can adjust settings via SysConfig.
+Of course, you can adjust settings via SysConfig to show all Customers that ever had a Ticket.
 
 # Configuration
 
@@ -57,3 +57,6 @@ As an alternative add the provided script to your OTRS crontab. The needed entry
  - Znuny4OTRSCustomerMapOnlyOpenTickets
  - Znuny4OTRSCustomerMapCustomerDataAttributes
  - Znuny4OTRSCustomerMapRequiredCustomerDataAttributes
+
+## Note for displaying customers that don't have Tickets yet
+OTRS removed the CustomerUserList function that queried all customer users from the database for one of the next major versions ([siehe Git Commit](https://github.com/OTRS/otrs/commit/3a59683b3cd8cf5c1008150706d23677116736fc)). That's why we removed the functionality and reduced it to show only customers which had at least a Ticket.

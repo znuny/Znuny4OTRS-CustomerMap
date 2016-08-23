@@ -36,7 +36,7 @@
         <SubGroup>Core</SubGroup>
         <Setting>
             <Option SelectedID="1">
-                <Item Key="0">All Customers</Item>
+                <Item Key="0">All Customers that ever had a Ticket</Item>
                 <Item Key="1">Only Customers with open Tickets</Item>
             </Option>
         </Setting>
@@ -61,6 +61,14 @@
             <Array>
                 <Item>UserCity</Item>
             </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Znuny4OTRSCustomerMapAddressCacheTTL" Required="0" Valid="1">
+        <Description Translatable="1">Address cache time to live in days. 0 means no cache. Default is 30 days.</Description>
+        <Group>Znuny4OTRS-CustomerMap</Group>
+        <SubGroup>Core</SubGroup>
+        <Setting>
+            <String Regex="">30</String>
         </Setting>
     </ConfigItem>
 </otrs_config>
