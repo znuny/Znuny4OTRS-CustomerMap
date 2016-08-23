@@ -367,14 +367,14 @@ $Cache = $CacheObject->Get(
 
 $Self->True(
     IsHashRefWithData($Cache),
-    "Had cache after MapsBuild after closing Ticket.",
+    "Had cache after MapsBuild after switching SysConfig to show all Ticket Customers.",
 );
 
 $JSON = $GMapsCustomerObject->DataRead();
 
 $Self->True(
     $JSON,
-    "Had JSON String for Map after closing Ticket.",
+    "Had JSON String for Map after switching SysConfig to show all Ticket Customers.",
 );
 
 $MapData = $JSONObject->Decode(
@@ -388,7 +388,7 @@ for my $CustomerUser (@CustomerUsers) {
 
     $Self->True(
         $Cache->{$CacheKey},
-        "Had Cache record for $CustomerUser->{UserLogin} after closing Ticket",
+        "Had Cache record for $CustomerUser->{UserLogin} after switching SysConfig to show all Ticket Customers",
     );
 
     my $Success;
@@ -408,7 +408,7 @@ for my $CustomerUser (@CustomerUsers) {
 
     $Self->True(
         $Success,
-        "Had LatLng Entry for $CustomerUser->{UserLogin} after closing Ticket",
+        "Had LatLng Entry for $CustomerUser->{UserLogin} after switching SysConfig to show all Ticket Customers",
     );
 }
 
