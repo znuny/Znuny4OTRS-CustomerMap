@@ -9,6 +9,9 @@
                 <Description>Agent CustomerMap</Description>
                 <Title>Overview</Title>
                 <NavBarName>CustomerMap</NavBarName>
+                <Loader>
+                    <JavaScript>Core.Agent.CustomerMap.js</JavaScript>
+                </Loader>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
