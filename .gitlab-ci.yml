@@ -13,3 +13,4 @@ job_unit_otrs_Znuny4OTRSCustomerMap:
     - su -c "module-tools/link.pl . /opt/otrs/" -s /bin/bash otrs
     - su -c "perl /opt/otrs/bin/otrs.Console.pl Znuny4OTRS::AdvancedPackageManager::InstallSOPM /opt/otrs/Znuny4OTRS-CustomerMap.sopm" -s /bin/bash otrs
     - su -c "perl /opt/otrs/bin/otrs.Console.pl Dev::UnitTest::Run --verbose --test Znuny4OTRSGMapsCustomerMap" -s /bin/bash otrs
+    - su -c "perl /opt/otrs/bin/otrs.Console.pl Dev::UnitTest::Run --verbose --test Selenium/Agent/Znuny4OTRSAgentCustomerMap" -s /bin/bash otrs
