@@ -198,7 +198,7 @@ sub DataBuild {
 
         # check required infos
         for my $Key ( @{ $Self->{RequiredAttributes} } ) {
-            next USER if !$Customer{$Key};
+            next CUSTOMERUSERIDLOOP if !$Customer{$Key};
         }
 
         # cleanup
