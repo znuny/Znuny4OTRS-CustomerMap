@@ -14,8 +14,8 @@
     <Vendor>Znuny GmbH</Vendor>
     <URL>http://znuny.com/en/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
-    <Description Lang="en">A Google Maps integraton. A visualisation of your customers in a dashboard plugin.</Description>
-    <Description Lang="de">Ein Google Maps Integration. Eine neuartige Darstellung der Kunden in einem Dashboard-Plugin.</Description>
+    <Description Lang="en">Google Maps integraton to show your customers on a map in the dashboard.</Description>
+    <Description Lang="de">Google-Maps-Integration zur Anzeige Ihrer Kunden auf einer Karte im Dashboard.</Description>
     <Filelist>
         <File Permission="660" Location="Kernel/Config/Files/XML/Znuny4OTRSCustomerMap.xml"/>
         <File Permission="660" Location="Kernel/Language/de_Znuny4OTRSCustomerMap.pm"/>
