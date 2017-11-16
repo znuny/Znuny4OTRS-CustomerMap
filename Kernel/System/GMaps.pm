@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 # Copyright (C) 2013 Juergen Sluyterman, http://www.rsag.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -13,12 +13,11 @@ use warnings;
 
 use utf8;
 
+use Kernel::System::VariableCheck qw(:all);
+
 our @ObjectDependencies = (
-    'Kernel::Config',
-    'Kernel::System::Encode',
-    'Kernel::System::Log',
-    'Kernel::System::Main',
     'Kernel::System::JSON',
+    'Kernel::System::Log',
     'Kernel::System::WebUserAgent',
 );
 
@@ -32,16 +31,10 @@ All google maps functions.
 
 =head1 PUBLIC INTERFACE
 
-=over 4
-
-=cut
-
-=item new()
+=head2 new()
 
 create an object
 
-    use Kernel::System::ObjectManager;
-    local $Kernel::OM = Kernel::System::ObjectManager->new();
     my $GMapsObject   = $Kernel::OM->Get('Kernel::System::GMaps');
 
 =cut
@@ -49,17 +42,15 @@ create an object
 sub new {
     my ( $Type, %Param ) = @_;
 
-    # allocate new hash for object
     my $Self = {};
     bless( $Self, $Type );
 
-    # config
     $Self->{GeocodingURL} = 'http://maps.googleapis.com/maps/api/geocode/json?';
 
     return $Self;
 }
 
-=item Geocoding()
+=head2 Geocoding()
 
 return the content of requested URL
 
@@ -88,7 +79,6 @@ sub Geocoding {
 
     NEEDED:
     for my $Needed (qw(Query)) {
-
         next NEEDED if $Param{$Needed};
 
         $LogObject->Log(
@@ -103,36 +93,36 @@ sub Geocoding {
     my %Response = $WebUserAgentObject->Request(
         URL => $URL,
     );
-    return if !$Response{Content};
+    return if !%Response || !$Response{Content};
 
-    my $JSONResponse = ${ $Response{Content} };
-    my $Hash = $JSONObject->Decode( Data => $JSONResponse );
+    my $GeocodingJSONResponse = ${ $Response{Content} };
+    my $GeocodingData = $JSONObject->Decode( Data => $GeocodingJSONResponse );
 
     if (
-        !$Hash
-        || !$Hash->{status}
+        !IsHashRefWithData($GeocodingData)
+        || !$GeocodingData->{status}
         )
     {
         $LogObject->Log(
             Priority => 'error',
-            Message  => "Can't process '$URL' got no json data back! '$JSONResponse'",
+            Message  => "Can't process '$URL',  got no JSON data back! '$GeocodingJSONResponse'.",
         );
         return;
     }
-    my $Status = $Hash->{status};
+    my $Status = $GeocodingData->{status};
     if ( lc($Status) ne 'ok' ) {
         $LogObject->Log(
             Priority => 'error',
-            Message  => "Can't process '$URL', status '$Status'",
+            Message  => "Can't process '$URL', status '$Status'.",
         );
         return;
     }
-    return if !$Hash->{results};
-    return if !$Hash->{results}->[0];
+    return if !$GeocodingData->{results};
+    return if !$GeocodingData->{results}->[0];
 
-    my $Accuracy  = $Hash->{results}->[0]->{geometry}->{location_type};
-    my $Longitude = $Hash->{results}->[0]->{geometry}->{location}->{lng};
-    my $Latitude  = $Hash->{results}->[0]->{geometry}->{location}->{lat};
+    my $Accuracy  = $GeocodingData->{results}->[0]->{geometry}->{location_type};
+    my $Longitude = $GeocodingData->{results}->[0]->{geometry}->{location}->{lng};
+    my $Latitude  = $GeocodingData->{results}->[0]->{geometry}->{location}->{lat};
 
     return (
         Status    => $Status,
@@ -142,5 +132,3 @@ sub Geocoding {
     );
 }
 1;
-
-=back

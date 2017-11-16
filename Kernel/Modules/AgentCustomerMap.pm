@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -13,13 +13,13 @@ use warnings;
 
 our $ObjectManagerDisabled = 1;
 
+use Kernel::System::VariableCheck qw(:all);
 use Kernel::System::CustomerUser;
 use Kernel::System::GMapsCustomer;
 
 sub new {
     my ( $Type, %Param ) = @_;
 
-    # allocate new hash for object
     my $Self = {%Param};
     bless( $Self, $Type );
 
@@ -29,28 +29,30 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
+    my $ConfigObject        = $Kernel::OM->Get('Kernel::Config');
     my $ParamObject         = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $LayoutObject        = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $GMapsCustomerObject = $Kernel::OM->Get('Kernel::System::GMapsCustomer');
+    my $SessionObject       = $Kernel::OM->Get('Kernel::System::AuthSession');
+    my $UserObject          = $Kernel::OM->Get('Kernel::System::User');
+    my $CustomerUserObject  = $Kernel::OM->Get('Kernel::System::CustomerUser');
 
-    # ---
+    #
     # update preferences
-    # ---
+    #
     if ( $Self->{Subaction} eq 'Update' ) {
-        KEYLOOP:
         for my $Key (qw( Latitude Longitude Zoom )) {
             my $Value = $ParamObject->GetParam( Param => $Key );
             my $SessionKey = 'UserCustomerMap' . $Key;
 
-            # update ssession
-            $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
+            $SessionObject->UpdateSessionID(
                 SessionID => $Self->{SessionID},
                 Key       => $SessionKey,
                 Value     => $Value,
             );
 
             # update preferences
-            $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
+            $UserObject->SetPreferences(
                 UserID => $Self->{UserID},
                 Key    => $SessionKey,
                 Value  => $Value,
@@ -69,12 +71,12 @@ sub Run {
         );
     }
 
-    # ---
+    #
     # get user data
-    # ---
+    #
     if ( $Self->{Subaction} eq 'Customer' ) {
         my $Login = $ParamObject->GetParam( Param => 'Login' );
-        my %Customer = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
+        my %Customer = $CustomerUserObject->CustomerUserDataGet(
             User => $Login,
         );
         my $JSON = $LayoutObject->JSONEncode(
@@ -88,9 +90,9 @@ sub Run {
         );
     }
 
-    # ---
+    #
     # deliver data
-    # ---
+    #
     if ( $Self->{Subaction} eq 'Data' ) {
         my $JSON = $GMapsCustomerObject->DataRead();
         if ( ref $JSON eq 'SCALAR' ) {
@@ -104,55 +106,56 @@ sub Run {
         );
     }
 
-    # load backends
-    my $Config = $Kernel::OM->Get('Kernel::Config')->Get('DashboardBackend');
-    if ( !$Config ) {
+    # Fetch first dashboard backend config which uses the customer map module.
+    my $Config = $ConfigObject->Get('DashboardBackend');
+    if ( !IsHashRefWithData($Config) ) {
         return $LayoutObject->ErrorScreen(
-            Message => 'No such config for Dashboard',
+            Message => 'No dashbord backend config found.',
         );
     }
 
-    CONFIGLOOP:
-    for my $Name ( sort keys %{$Config} ) {
-        next CONFIGLOOP if $Config->{$Name}->{Module} ne 'Kernel::Output::HTML::Dashboard::CustomerMap';
+    my @CustomerMapDashboardBackendConfigs = map { $Config->{$_} } grep {
+        $Config->{$_}->{Module} eq 'Kernel::Output::HTML::Dashboard::CustomerMap'
+    } keys %{$Config};
+    if ( !@CustomerMapDashboardBackendConfigs ) {
+        return $LayoutObject->ErrorScreen(
+            Message => 'No dashbord backend config for customer map found.',
+        );
+    }
+    my $CustomerMapDashboardBackendConfig = shift @CustomerMapDashboardBackendConfigs;
 
-        my $JSON = $GMapsCustomerObject->DataRead();
-        if ( !$JSON ) {
-            $LayoutObject->Block(
-                Name => 'ContentLargeCustomerMapConfig',
-                Data => {
-                    %{ $Config->{$Name} },
-                    Name => $Self->{Name},
-                },
-            );
-        }
-        else {
-            $LayoutObject->Block(
-                Name => 'ContentLargeCustomerMapData',
-                Data => {
-                    %{ $Config->{$Name} },
-                    Name     => $Name,
-                    Latitude => $Self->{UserCustomerMapLatitude}
-                        || $Config->{$Name}->{DefaultLatitude},
-                    Longitude => $Self->{UserCustomerMapLongitude}
-                        || $Config->{$Name}->{DefaultLongitude},
-                    Zoom => $Self->{UserCustomerMapZoom} || $Config->{$Name}->{DefaultZoom},
-                    Width  => '100%',
-                    Height => '550px',
-                },
-            );
-        }
-        $Param{Map} = $LayoutObject->Output(
-            TemplateFile => 'AgentDashboardCustomerMap',
-            Data         => {
-                %{ $Config->{$Name} },
-                Name => $Name,
+    my $JSON = $GMapsCustomerObject->DataRead();
+    if ($JSON) {
+        $LayoutObject->Block(
+            Name => 'ContentLargeCustomerMapData',
+            Data => {
+                %{$CustomerMapDashboardBackendConfig},
+                Latitude => $Self->{UserCustomerMapLatitude}
+                    || $CustomerMapDashboardBackendConfig->{DefaultLatitude},
+                Longitude => $Self->{UserCustomerMapLongitude}
+                    || $CustomerMapDashboardBackendConfig->{DefaultLongitude},
+                Zoom => $Self->{UserCustomerMapZoom} || $CustomerMapDashboardBackendConfig->{DefaultZoom},
+                Width  => '100%',
+                Height => '550px',
             },
         );
-        last CONFIGLOOP;
+    }
+    else {
+        $LayoutObject->Block(
+            Name => 'ContentLargeCustomerMapConfigMissing',
+            Data => {
+                %{$CustomerMapDashboardBackendConfig},
+            },
+        );
     }
 
-    # start with page ...
+    $Param{Map} = $LayoutObject->Output(
+        TemplateFile => 'AgentDashboardCustomerMap',
+        Data         => {
+            %{$CustomerMapDashboardBackendConfig},
+        },
+    );
+
     my $Output = $LayoutObject->Header();
     $Output .= $LayoutObject->NavigationBar();
     $Output .= $LayoutObject->Output(

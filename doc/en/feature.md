@@ -1,84 +1,65 @@
-# Customer Map
+#Customer overview on a map
 
-This package provides you a customer map based on Google Maps on your OTRS dashboard.
-The locations show on this map representing customer with open tickets in your system.
-Of course, you can adjust settings via SysConfig to show all Customers that ever had a Ticket.
+This package extends the OTRS dashboard by displaying customers on a map (Google Maps).
+This map displays the locations of customers for whom open tickets exist. Alternatively, this can be extended to all (not only open) tickets.
 
-# Configuration
+## Configuration
 
-To display customer locations, its obligatory to have a GoogleMaps Browser-API-Key.
+To display customer locations it is necessary to have a Google Maps Browser API key.
+This can be obtained at https://developers.google.com/maps/documentation/javascript/get-api-key
 
-If you don't have one yet, you can obtain it via:
+This key must then be inserted in the SysConfig option `DashboardBackend####0001-CustomerMap` in the configuration field `MapsURL` instead of `MyGoogleMapsAPIKEY`.
 
-https://developers.google.com/maps/documentation/javascript/get-api-key
+## Determine the coordinates of the customer's locations
 
-This Key has to be inserted in the SysConfig Option:
-```
-Znuny4OTRS-CustomerMap->Frontend::Agent::Dashboard
-```
-at Key:
-```
-MapsURL
-```
-by replacing
-```
-MyGoogleMapsAPIKEY
-```
-with the API Key.
+The OTRS daemon must be running to convert the address data into geocoordinates. It carries out the update daily at 3:45 a. m.
 
-Like:
-![GoogleMapsAPIKey](doc/de/images/MapKeyInsert.jpg)
+If you want to change this time, you can do so in the SysConfig option `Daemon:: SchedulerCronTaskManager::Task####UpdateCustomerMap` under "Schedule".
 
-# Determin customer locations
+"Schedule" consists of five configuration options, as with Cron.
 
-Please make sure the OTRS Daemon is running. It will take care of updating the Map every day at 3:45 in the morning.
-
-If you want to change that Time, please visit the SysConfig Daemon::SchedulerCronTaskManager::Task###UpdateCustomerMap and change the Schedule part there.
-
-Like in Cron it consists of 5 config options.
-
-First stands for minutes.
+The first one is for minutes.
 Examples:
-05
-for executing at 5 minutes past full hour.
+`05` to run the update five minutes after every full hour.
 
-*
-for executing every minute.
+``*` to run the update every minute.
 
-*/10
-for executing every 10 minutes
+`*/10` to run the update every ten minutes (each with a number of minutes divisible by ten without residual value), i. e.: 00,: 10,: 20,: 30,: 40,: 50 o' clock.
 
-Possible Values: 0-59 and *
+Possible values: `0-59` and `*`.
 
-Second stands for hour. Possible Values: 0-23 and *
+The second option stands for hours. Possible values: `0-23` and `*`.
 
-Third stands for day of a month. Possible Values: 1-31 and *
+The third option stands for the day of a month. Possible values: `1-31` and `*`.
 
-Fourth stands for month. Possible Values: 1-12 and *
+The fourth option is for the month. Possible values: `1-12` and `*`.
 
-Fifth stands for day of the week. Possible Values: 0-6  and * where 0 is Sunday, 6 is Saturday.
+The fifth option stands for the day of the week. Possible values: `0-6` and `*` where `0` represents Sunday and `6` Saturday.
 
-Your customer data needs the following attributes to be able to determine the geo location of a customer:
+In order for the conversion to be carried out correctly, it is necessary to
+enter at least the following attributes in the customer mapping:
 
  - UserCity
- - UserStreet *optional
+ - UserStreet (optional)
  - UserCountry
 
-Do you use other attributes? No problem, just change the settings via SysConfig as needed.
-Reminder:
-There's a daily limit for requests against Google Geocoding API.
+If these attributes do not correspond to yours, they can be adjusted via SysConfig.
+Hint:
+Requests to the Google Geocoding API are limited to about 2000 per day.
 
-Doing the location update manually:
+The conversion can be done manually from the OTRS console:
 
-    shell> bin/otrs.Console.pl Znuny::CustomerMapBuild
-    NOTICE: Done (wrote 209 records).
+```
+    shell> bin/otrs.Console.pl Znuny::CustomerMap::Build
+    NOTICE: Done (red 209 records).
     shell>
+```
 
-## Sysconfig
+## Additional SysConfig options
 
- - Znuny4OTRSCustomerMapOnlyOpenTickets
- - Znuny4OTRSCustomerMapCustomerDataAttributes
- - Znuny4OTRSCustomerMapRequiredCustomerDataAttributes
+ Znuny4OTRS::CustomerMap::CustomerSelection
+ Znuny4OTRS::CustomerMap::CustomerDataAttributes
+ Znuny4OTRS::CustomerMap::RequiredCustomerDataAttributes
 
-## Note for displaying customers that don't have Tickets yet
-OTRS removed the CustomerUserList function that queried all customer users from the database for one of the next major versions ([siehe Git Commit](https://github.com/OTRS/otrs/commit/3a59683b3cd8cf5c1008150706d23677116736fc)). That's why we removed the functionality and reduced it to show only customers which had at least a Ticket.
+## Note on displaying customers who have not yet had a ticket
+Since the CustomerUserList function, which retrieves all customers from the database (see Git Commit](https://github.com/OTRS/otrs/commit/3a59683b3cd8cf5c1008150706d23677116736fc)), has been removed from OTRS, it is not possible to display customers without ticket allocation on the map.

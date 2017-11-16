@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -7,14 +7,8 @@
 # --
 
 <div class="MainBox ARIARoleMain">
-
-    <h1>[% Translate("Customer Map") | html %]</h1>
-
-[% RenderBlockStart("TicketBack") %]
-      <a href="[% Env("Baselink") %][% Env("LastScreenView") %]" onmouseover="window.status=[% Translate("Back") | JSON %]; return true;" onmouseout="window.status='';" class="menuitem">[% Translate("Back") | html %]</a>
-[% RenderBlockEnd("TicketBack") %]
-
+    <h1>[% Translate("Customer map") | html %]</h1>
     <div class="ContentColumn">
-    [% Data.Map %]
+        [% Data.Map %]
     </div>
 </div>

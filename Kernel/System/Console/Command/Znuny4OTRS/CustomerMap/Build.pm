@@ -1,17 +1,17 @@
 # --
-# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::System::Console::Command::Znuny::CustomerMapBuild;
+package Kernel::System::Console::Command::Znuny4OTRS::CustomerMap::Build;
 
 use strict;
 use warnings;
 
-use base qw(Kernel::System::Console::BaseCommand);
+use parent qw(Kernel::System::Console::BaseCommand);
 
 our @ObjectDependencies = (
     'Kernel::System::GMapsCustomer',
@@ -22,14 +22,13 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description("Geo data collector\nCopyright (C) 2012-2016 Znuny GmbH, http://znuny.com/");
+    $Self->Description("Collects geo data for customer map.\nCopyright (C) 2012-2017 Znuny GmbH, http://znuny.com/");
 
     $Self->AddOption(
         Name        => 'force-pid',
-        Description => "Start even if another process is still registered in the database.",
+        Description => "Start geodata collector even if another process is still running.",
         Required    => 0,
         HasValue    => 0,
-        ValueRegex  => qr/.*/smx,
     );
 
     $Self->AddOption(
@@ -44,41 +43,41 @@ sub Configure {
 
 sub PreRun {
     my ($Self) = @_;
+
+    my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
     my $PIDObject = $Kernel::OM->Get('Kernel::System::PID');
 
     my $PIDCreated = $PIDObject->PIDCreate(
         Name  => $Self->Name(),
         Force => $Self->GetOption('force-pid'),
-        TTL   => 60 * 60 * 24 * 3,
+        TTL   => 3 * 24 * 60 * 60,
     );
     if ( !$PIDCreated ) {
-        my $Error = "Unable to register the process in the database. Is another instance still running?\n";
-        $Error .= "You can use --force-pid to override this check.\n";
+        my $Error = "Unable to register the process in the database. Is another process still running?\n"
+            . "You can use --force-pid to override this check.\n";
         die $Error;
     }
 
-    my $Debug = $Self->GetOption('debug');
-    my $Name  = $Self->Name();
+    return if !$Self->GetOption('debug');
 
-    return if !$Debug;
-
-    $Kernel::OM->Get('Kernel::System::Log')->Log(
+    $LogObject->Log(
         Priority => 'debug',
-        Message  => "Znuny4OTRS CustomerMapBuild ($Name) started.",
+        Message  => 'Znuny4OTRS-CustomerMap: Build (' . $Self->Name() . ') started.',
     );
+
+    return;
 }
 
 sub Run {
     my ( $Self, %Param ) = @_;
 
     my $GMapsObject = $Kernel::OM->Get('Kernel::System::GMapsCustomer');
-    $Self->Print("\nGeo data collector\n");
-    $Self->Print("\nCopyright (C) 2012-2016 Znuny GmbH, http://znuny.com/\n");
+    $Self->Print("$Self->{Description}\n");
     $Self->Print("<yellow>Builds customer maps...</yellow>\n\n");
 
     my $Count = $GMapsObject->DataBuild();
     if ($Count) {
-        $Self->Print("\n<green> Done (wrote $Count records).</green>\n");
+        $Self->Print("\n <green>Done (wrote $Count records).</green>\n");
     }
     else {
         $Self->Print("\n<red>ERROR: Failed!</red>\n");
@@ -90,23 +89,21 @@ sub Run {
 sub PostRun {
     my ($Self) = @_;
 
-    my $Debug = $Self->GetOption('debug');
-    my $Name  = $Self->Name();
+    my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
+    my $PIDObject = $Kernel::OM->Get('Kernel::System::PID');
 
-    if ($Debug) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
+    if ( $Self->GetOption('debug') ) {
+        $LogObject->Log(
             Priority => 'debug',
-            Message  => "Znuny4OTRS CustomerMapBuild ($Name) stopped.",
+            Message  => 'Znuny4OTRS-CustomerMap: Build (' . $Self->Name() . ') stopped.',
         );
     }
 
-    my $Result = $Kernel::OM->Get('Kernel::System::PID')->PIDDelete( Name => $Self->Name() );
+    my $Result = $PIDObject->PIDDelete( Name => $Self->Name() );
     return $Result;
 }
 
 1;
-
-=back
 
 =head1 TERMS AND CONDITIONS
 

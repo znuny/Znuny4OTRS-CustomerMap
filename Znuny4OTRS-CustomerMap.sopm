@@ -9,7 +9,7 @@
     <ChangeLog Version="1.7.1" Date="2016-01-12 14:30:01 UTC">ported to 5.0</ChangeLog>
     <ChangeLog Version="1.6.2" Date="2015-11-21 12:11:22 UTC">added english manual</ChangeLog>
     <ChangeLog Version="1.6.0" Date="2015-01-26 12:36:48 +0100">ported to 4.0</ChangeLog>
-    <Framework>5.0.x</Framework>
+    <Framework>6.0.x</Framework>
     <PackageRequired Version="2.0.2">Znuny4OTRS-Repo</PackageRequired>
     <Vendor>Znuny GmbH</Vendor>
     <URL>http://znuny.com/en/</URL>
@@ -17,25 +17,17 @@
     <Description Lang="en">A Google Maps integraton. A visualisation of your customers in a dashboard plugin.</Description>
     <Description Lang="de">Ein Google Maps Integration. Eine neuartige Darstellung der Kunden in einem Dashboard-Plugin.</Description>
     <Filelist>
-        <File Permission="644" Location="Kernel/Config/Files/Znuny4OTRSCustomerMap.xml"/>
-        <File Permission="644" Location="Kernel/Language/de_Znuny4OTRSCustomerMap.pm"/>
-        <File Permission="644" Location="Kernel/Modules/AgentCustomerMap.pm"/>
-        <File Permission="644" Location="Kernel/Output/HTML/Dashboard/CustomerMap.pm"/>
-        <File Permission="644" Location="Kernel/Output/HTML/Templates/Standard/AgentCustomerMap.tt"/>
-        <File Permission="644" Location="Kernel/Output/HTML/Templates/Standard/AgentDashboardCustomerMap.tt"/>
-        <File Permission="644" Location="Kernel/System/Console/Command/Znuny/CustomerMapBuild.pm"/>
-        <File Permission="644" Location="Kernel/System/GMaps.pm"/>
-        <File Permission="644" Location="Kernel/System/GMapsCustomer.pm"/>
-        <File Permission="644" Location="scripts/test/Selenium/Agent/Znuny4OTRSAgentCustomerMap.t"/>
-        <File Permission="644" Location="scripts/test/Znuny4OTRSGMapsCustomerMap.t"/>
-        <File Permission="644" Location="var/httpd/htdocs/js/Core.Agent.CustomerMap.js"/>
+        <File Permission="660" Location="Kernel/Config/Files/XML/Znuny4OTRSCustomerMap.xml"/>
+        <File Permission="660" Location="Kernel/Language/de_Znuny4OTRSCustomerMap.pm"/>
+        <File Permission="660" Location="Kernel/Modules/AgentCustomerMap.pm"/>
+        <File Permission="660" Location="Kernel/Output/HTML/Dashboard/CustomerMap.pm"/>
+        <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AgentCustomerMap.tt"/>
+        <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AgentDashboardCustomerMap.tt"/>
+        <File Permission="660" Location="Kernel/System/Console/Command/Znuny4OTRS/CustomerMap/Build.pm"/>
+        <File Permission="660" Location="Kernel/System/GMaps.pm"/>
+        <File Permission="660" Location="Kernel/System/GMapsCustomer.pm"/>
+        <File Permission="660" Location="scripts/test/Znuny4OTRSCustomerMap/Selenium/Agent/Znuny4OTRSAgentCustomerMap.t"/>
+        <File Permission="660" Location="scripts/test/Znuny4OTRSCustomerMap/Znuny4OTRSGMapsCustomerMap.t"/>
+        <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Znuny4OTRSCustomerMap.js"/>
     </Filelist>
-    <CodeInstall Type="post"><![CDATA[
-        return if !$Kernel::OM->Get('Kernel::System::ZnunyHelper');
-        my $Helper = $Kernel::OM->Get('Kernel::System::ZnunyHelper');
-        $Helper->_LoaderAdd(
-            AgentDashboard => ['Core.Agent.CustomerMap.js'],
-            AgentCustomerMap => ['Core.Agent.CustomerMap.js'],
-        );
-    ]]></CodeInstall>
 </otrs_package>

@@ -1,4 +1,11 @@
-image: otrs5ci
+image: registry.znuny.com/znuny/docker-otrs6ci:latest
+
+services:
+  - mysql:latest
+
+variables:
+  MYSQL_DATABASE: otrs
+  MYSQL_ROOT_PASSWORD: znuny4otrs
 
 stages:
   - test
@@ -10,5 +17,5 @@ job_unit_otrs_Znuny4OTRSCustomerMap:
     - pwd
     - /run.sh
     - su -c "perl /opt/otrs/bin/otrs.Console.pl Znuny4OTRS::AdvancedPackageManager::InstallSOPM /opt/otrs/Znuny4OTRS-CustomerMap.sopm" -s /bin/bash otrs
-    - su -c "perl /opt/otrs/bin/otrs.Console.pl Dev::UnitTest::Run --verbose --test Znuny4OTRSGMapsCustomerMap" -s /bin/bash otrs
-    - su -c "perl /opt/otrs/bin/otrs.Console.pl Dev::UnitTest::Run --verbose --test Selenium/Agent/Znuny4OTRSAgentCustomerMap" -s /bin/bash otrs
+    - su -c "perl /opt/otrs/bin/otrs.Console.pl Dev::UnitTest::Run --verbose --test Znuny4OTRSCustomerMap/Znuny4OTRSGMapsCustomerMap" -s /bin/bash otrs
+    - su -c "perl /opt/otrs/bin/otrs.Console.pl Dev::UnitTest::Run --verbose --test Znuny4OTRSCustomerMap/Selenium/Agent/Znuny4OTRSAgentCustomerMap" -s /bin/bash otrs
