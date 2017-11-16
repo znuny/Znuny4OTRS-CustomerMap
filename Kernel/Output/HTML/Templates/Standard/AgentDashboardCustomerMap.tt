@@ -1,45 +1,43 @@
 # --
-# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
+# nofilter(TidyAll::Plugin::OTRS::TT::ScriptUsage)
+# TODO: put JS code into JS files
 
 [% RenderBlockStart("ContentLargeCustomerMapData") %]
 <script type="text/javascript" src="[% Data.MapsURL %]"></script>
 <script type="text/javascript" src="https://raw.githubusercontent.com/googlemaps/js-marker-clusterer/6b9afb11a6a2fee365d1727918cc28e7baae0372/src/markerclusterer.js"></script>
 
-<div id="map_canvas" style="width: [% Data.Width %]; height: [% Data.Height %];">
+<div id="customer-map-canvas" style="width: [% Data.Width %]; height: [% Data.Height %];">
     <p>
           [% Translate("Loading...") | html %]
     </p>
     <p>
-        The map is not loaded for manual load, press <a href="#" onclick="initialize(); return false;">here</a>.
+        [% Translate("The map has not been loaded.") | html %] <a href="#" onclick="initialize(); return false;">[% Translate("Load map.") | html %]</a>
     </p>
 </div>
 
 [% WRAPPER JSOnDocumentComplete %]
 <script language="JavaScript" type="text/javascript">
-    Core.Agent.CustomerMap.Init([% Data.Latitude %], [% Data.Longitude %], [% Data.Zoom %]);
+    Core.Agent.Znuny4OTRSCustomerMap.Init([% Data.Latitude %], [% Data.Longitude %], [% Data.Zoom %]);
 </script>
 [% END %]
 [% RenderBlockEnd("ContentLargeCustomerMapData") %]
 
-[% RenderBlockStart("ContentLargeCustomerMapConfig") %]
+[% RenderBlockStart("ContentLargeCustomerMapConfigMissing") %]
 <p>
-[% Translate("Extension not configured!") | html %]
+    [% Translate("Customer map is not configured.") | html %]
 </p>
 
 <p>
-[% Translate("Please check the following points first.") | html %]
+    <ol>
+        <li>1. [% Translate("Make sure that UserStreet, UserCity and UserCountry are configured in your customer user mapping config.") | html %]</li>
+        <li>2. [% Translate("Execute \"%s\" to generate geo location data for your customers.", "bin/otrs.Console.pl Znuny4OTRS::CustomerMap::Build") | html %]</li>
+        <li>3. [% Translate("Reload this page and check if the customer map is being shown.") | html %]</li>
+    </ol>
 </p>
-
-<p>
-<ol>
-    <li>1. [% Translate("Make sure that UserStreet, UserCity and UserCountry are used attributes in your CustomerMap-Config.") | html %]</li>
-    <li>2. [% Translate("Execute \"%s\" to generate geo location data for your customers.", "bin/znuny.GMapsCustomerBuild.pl") | html %]</li>
-    <li>3. [% Translate("After you have done all this, check with \"browser reload\" if it's working now.") | html %]</li>
-</ol>
-</p>
-[% RenderBlockEnd("ContentLargeCustomerMapConfig") %]
+[% RenderBlockEnd("ContentLargeCustomerMapConfigMissing") %]

@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -14,13 +14,6 @@ use Kernel::System::VariableCheck qw(:all);
 
 use vars (qw($Self));
 
-$Kernel::OM->ObjectParamAdd(
-    'Kernel::System::UnitTest::Helper' => {
-        RestoreSystemConfiguration => 1,
-    },
-);
-
-# get the Znuny4OTRS Selenium object
 my $SeleniumObject      = $Kernel::OM->Get('Kernel::System::UnitTest::Selenium');
 my $ZnunyHelperObject   = $Kernel::OM->Get('Kernel::System::ZnunyHelper');
 my $HelperObject        = $Kernel::OM->Get('Kernel::System::UnitTest::Helper');
@@ -31,17 +24,20 @@ my $JSONObject          = $Kernel::OM->Get('Kernel::System::JSON');
 my $SysConfigObject     = $Kernel::OM->Get('Kernel::System::SysConfig');
 my $ConfigObject        = $Kernel::OM->Get('Kernel::Config');
 
-my ( $RandomID1, $RandomID2, $RandomID3 )
-    = ( $HelperObject->GetRandomID(), $HelperObject->GetRandomID(), $HelperObject->GetRandomID() );
+my @RandomIDs;
+for ( 0 .. 2 ) {
+    push @RandomIDs, $HelperObject->GetRandomID();
+}
+
 my @CustomerTemplate = (
     {
         Source         => 'CustomerUser',
-        UserFirstname  => $RandomID1,
-        UserLastname   => $RandomID1,
-        UserCustomerID => $RandomID1,
-        UserLogin      => $RandomID1,
-        UserPassword   => $RandomID1,
-        UserEmail      => "$RandomID1\@example.com",
+        UserFirstname  => $RandomIDs[0],
+        UserLastname   => $RandomIDs[0],
+        UserCustomerID => $RandomIDs[0],
+        UserLogin      => $RandomIDs[0],
+        UserPassword   => $RandomIDs[0],
+        UserEmail      => "$RandomIDs[0]\@example.com",
         UserStreet     => 'Marienstraße 11',
         UserZip        => '10117',
         UserCity       => 'Berlin',
@@ -49,12 +45,12 @@ my @CustomerTemplate = (
     },
     {
         Source         => 'CustomerUser',
-        UserFirstname  => $RandomID2,
-        UserLastname   => $RandomID2,
-        UserCustomerID => $RandomID2,
-        UserLogin      => $RandomID2,
-        UserPassword   => $RandomID2,
-        UserEmail      => "$RandomID2\@example.com",
+        UserFirstname  => $RandomIDs[1],
+        UserLastname   => $RandomIDs[1],
+        UserCustomerID => $RandomIDs[1],
+        UserLogin      => $RandomIDs[1],
+        UserPassword   => $RandomIDs[1],
+        UserEmail      => "$RandomIDs[1]\@example.com",
         UserStreet     => 'Martinsbruggstrasse 35',
         UserZip        => '9016',
         UserCity       => 'St. Gallen',
@@ -62,12 +58,12 @@ my @CustomerTemplate = (
     },
     {
         Source         => 'CustomerUser',
-        UserFirstname  => $RandomID3,
-        UserLastname   => $RandomID3,
-        UserCustomerID => $RandomID3,
-        UserLogin      => $RandomID3,
-        UserPassword   => $RandomID3,
-        UserEmail      => "$RandomID3\@example.com",
+        UserFirstname  => $RandomIDs[2],
+        UserLastname   => $RandomIDs[2],
+        UserCustomerID => $RandomIDs[2],
+        UserLogin      => $RandomIDs[2],
+        UserPassword   => $RandomIDs[2],
+        UserEmail      => "$RandomIDs[2]\@example.com",
         UserStreet     => 'Willy-Brandt-Straße 1',
         UserZip        => '10557',
         UserCity       => 'Berlin',
@@ -120,7 +116,7 @@ my $SeleniumTest = sub {
     my $HelperObject      = $Kernel::OM->Get('Kernel::System::UnitTest::Helper');
     my $ZnunyHelperObject = $Kernel::OM->Get('Kernel::System::ZnunyHelper');
 
-    # setup a full featured test environment
+    # set up a full featured test environment
     my $TestEnvironmentData = $HelperObject->SetupTestEnvironment();
 
     # create test user and login

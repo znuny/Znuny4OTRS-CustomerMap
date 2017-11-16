@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -16,7 +16,6 @@ our $ObjectManagerDisabled = 1;
 sub new {
     my ( $Type, %Param ) = @_;
 
-    # allocate new hash for object
     my $Self = {%Param};
     bless( $Self, $Type );
 
@@ -31,47 +30,21 @@ sub Preferences {
 
     # disable params
     return;
-
-    my @Params = (
-        {
-            Desc  => 'Shown',
-            Name  => $Self->{PrefKeyShown},
-            Block => 'Option',
-
-            #            Block => 'Input',
-            Data => {
-                TicketOpen => 'Customers with open Ticket',
-                All        => 'All Customers',
-            },
-            SelectedID => $Self->{Limit},
-        },
-        {
-            Desc  => 'Max. shown',
-            Name  => $Self->{PrefKeyShownMax},
-            Block => 'Option',
-
-            #            Block => 'Input',
-            Data => {
-                1_000  => ' 1.000 (e. g. 60kb data)',
-                2_000  => ' 2.000 (e. g. 120k data - performance issue on firefox)',
-                10_000 => '10.000 (e. g. 600k data - performance issue on all browsers)',
-            },
-            SelectedID => $Self->{Limit},
-        },
-    );
-
-    return @Params;
 }
 
 sub Config {
     my ( $Self, %Param ) = @_;
 
-    return (
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    my %Config = (
         %{ $Self->{Config} },
-        Link      => $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{Baselink} . 'Action=AgentCustomerMap',
-        LinkTitle => 'Detail',
+        Link                      => $LayoutObject->{Baselink} . 'Action=AgentCustomerMap',
+        LinkTitle                 => 'Detail',
         PreferencesReloadRequired => 1,
     );
+
+    return %Config;
 }
 
 sub Run {

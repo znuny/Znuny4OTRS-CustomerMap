@@ -1,5 +1,5 @@
 // --
-// Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+// Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you
@@ -11,11 +11,11 @@ Core.Agent = Core.Agent || {};
 
 /**
  * @namespace
- * @exports TargetNS as Core.Agent.CustomerMap
+ * @exports TargetNS as Core.Agent.Znuny4OTRSCustomerMap
  * @description
  *      This namespace contains the special module functions for the CustomerMap.
  */
-Core.Agent.CustomerMap = (function (TargetNS) {
+Core.Agent.Znuny4OTRSCustomerMap = (function (TargetNS) {
     /**
      * @function
      * @return nothing
@@ -39,7 +39,7 @@ Core.Agent.CustomerMap = (function (TargetNS) {
         TargetNS.geocoder = new google.maps.Geocoder();
 
         TargetNS.map = new google.maps.Map(
-            document.getElementById("map_canvas"),
+            document.getElementById("customer-map-canvas"),
             Options
         );
 
@@ -165,4 +165,4 @@ Core.Agent.CustomerMap = (function (TargetNS) {
         TargetNS.Markers.push(marker);
     };
     return TargetNS;
-}(Core.Agent.CustomerMap || {}));
+}(Core.Agent.Znuny4OTRSCustomerMap || {}));
