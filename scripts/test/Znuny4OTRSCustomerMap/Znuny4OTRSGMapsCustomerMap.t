@@ -145,6 +145,9 @@ $Self->True(
 );
 
 my $JSON = $GMapsCustomerObject->DataRead();
+if ( ref $JSON eq 'SCALAR' ) {
+    $JSON = $$JSON;
+}
 
 $Self->True(
     $JSON,
@@ -152,7 +155,7 @@ $Self->True(
 );
 
 my $MapData = $JSONObject->Decode(
-    Data => $$JSON,
+    Data => $JSON,
 );
 
 $CustomerUserCounter = 0;
@@ -229,6 +232,9 @@ $Self->True(
 );
 
 $JSON = $GMapsCustomerObject->DataRead();
+if ( ref $JSON eq 'SCALAR' ) {
+    $JSON = $$JSON;
+}
 
 $Self->True(
     $JSON,
@@ -236,7 +242,7 @@ $Self->True(
 );
 
 $MapData = $JSONObject->Decode(
-    Data => $$JSON,
+    Data => $JSON,
 );
 
 for my $CustomerUser (@CustomerUsers) {
@@ -297,6 +303,9 @@ $Self->True(
 );
 
 $JSON = $GMapsCustomerObject->DataRead();
+if ( ref $JSON eq 'SCALAR' ) {
+    $JSON = $$JSON;
+}
 
 $Self->True(
     $JSON,
@@ -304,7 +313,7 @@ $Self->True(
 );
 
 $MapData = $JSONObject->Decode(
-    Data => $$JSON,
+    Data => $JSON,
 );
 
 $CustomerUserCounter = 0;
@@ -373,6 +382,9 @@ $Self->True(
 );
 
 $JSON = $GMapsCustomerObject->DataRead();
+if ( ref $JSON eq 'SCALAR' ) {
+    $JSON = $$JSON;
+}
 
 $Self->True(
     $JSON,
@@ -380,7 +392,7 @@ $Self->True(
 );
 
 $MapData = $JSONObject->Decode(
-    Data => $$JSON,
+    Data => $JSON,
 );
 
 for my $CustomerUser (@CustomerUsers) {
