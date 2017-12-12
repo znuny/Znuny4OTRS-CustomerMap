@@ -79,7 +79,7 @@ sub Run {
     $Self->Print("<yellow>Builds customer maps...</yellow>\n\n");
 
     my $Count = $GMapsObject->DataBuild();
-    if ($Count) {
+    if ( defined $Count ) {
         $Self->Print("\n<green> Done (wrote $Count records).</green>\n");
     }
     else {
