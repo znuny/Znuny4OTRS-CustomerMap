@@ -64,7 +64,7 @@ elsif ( $Opts{f} && !$PIDObject->PIDCreate( Name => 'GMapsCustomer' ) ) {
 }
 
 my $Count = $GMapsObject->DataBuild();
-if ($Count) {
+if ( defined $Count ) {
     print "NOTICE: Done (wrote $Count records).\n";
 }
 else {
