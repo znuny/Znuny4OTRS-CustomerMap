@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -66,10 +66,13 @@ sub Preferences {
 sub Config {
     my ( $Self, %Param ) = @_;
 
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $Baselink     = $LayoutObject->{Baselink};
+
     return (
         %{ $Self->{Config} },
-        Link      => $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{Baselink} . 'Action=AgentCustomerMap',
-        LinkTitle => 'Detail',
+        Link                      => $Baselink . 'Action=AgentCustomerMap',
+        LinkTitle                 => 'Detail',
         PreferencesReloadRequired => 1,
     );
 }

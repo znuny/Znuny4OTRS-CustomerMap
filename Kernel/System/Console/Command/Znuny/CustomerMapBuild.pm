@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -22,7 +22,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description("Geo data collector\nCopyright (C) 2012-2016 Znuny GmbH, http://znuny.com/");
+    $Self->Description("Geo data collector\nCopyright (C) 2012-2017 Znuny GmbH, http://znuny.com/");
 
     $Self->AddOption(
         Name        => 'force-pid',
@@ -43,7 +43,9 @@ sub Configure {
 }
 
 sub PreRun {
-    my ($Self) = @_;
+    my ( $Self, %Param ) = @_;
+
+    my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
     my $PIDObject = $Kernel::OM->Get('Kernel::System::PID');
 
     my $PIDCreated = $PIDObject->PIDCreate(
@@ -62,7 +64,7 @@ sub PreRun {
 
     return if !$Debug;
 
-    $Kernel::OM->Get('Kernel::System::Log')->Log(
+    $LogObject->Log(
         Priority => 'debug',
         Message  => "Znuny4OTRS CustomerMapBuild ($Name) started.",
     );
@@ -73,7 +75,7 @@ sub Run {
 
     my $GMapsObject = $Kernel::OM->Get('Kernel::System::GMapsCustomer');
     $Self->Print("\nGeo data collector\n");
-    $Self->Print("\nCopyright (C) 2012-2016 Znuny GmbH, http://znuny.com/\n");
+    $Self->Print("\nCopyright (C) 2012-2017 Znuny GmbH, http://znuny.com/\n");
     $Self->Print("<yellow>Builds customer maps...</yellow>\n\n");
 
     my $Count = $GMapsObject->DataBuild();
@@ -90,17 +92,20 @@ sub Run {
 sub PostRun {
     my ($Self) = @_;
 
+    my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
+    my $PIDObject = $Kernel::OM->Get('Kernel::System::PID');
+
     my $Debug = $Self->GetOption('debug');
     my $Name  = $Self->Name();
 
     if ($Debug) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
+        $LogObject->Log(
             Priority => 'debug',
             Message  => "Znuny4OTRS CustomerMapBuild ($Name) stopped.",
         );
     }
 
-    my $Result = $Kernel::OM->Get('Kernel::System::PID')->PIDDelete( Name => $Self->Name() );
+    my $Result = $PIDObject->PIDDelete( Name => $Self->Name() );
     return $Result;
 }
 

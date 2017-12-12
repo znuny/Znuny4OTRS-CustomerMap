@@ -1,5 +1,7 @@
 # --
-# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
+# --
+# $origin: otrs - 0000000000000000000000000000000000000000 - Kernel/Modules/AgentCustomerMap.pm
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -29,28 +31,32 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
+    my $ConfigObject        = $Kernel::OM->Get('Kernel::Config');
     my $ParamObject         = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $LayoutObject        = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $GMapsCustomerObject = $Kernel::OM->Get('Kernel::System::GMapsCustomer');
+    my $SessionObject       = $Kernel::OM->Get('Kernel::System::AuthSession');
+    my $UserObject          = $Kernel::OM->Get('Kernel::System::User');
+    my $CustomerUserObject  = $Kernel::OM->Get('Kernel::System::CustomerUser');
 
-    # ---
+# ---
     # update preferences
-    # ---
+# ---
     if ( $Self->{Subaction} eq 'Update' ) {
-        KEYLOOP:
+        KEY:
         for my $Key (qw( Latitude Longitude Zoom )) {
             my $Value = $ParamObject->GetParam( Param => $Key );
             my $SessionKey = 'UserCustomerMap' . $Key;
 
             # update ssession
-            $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
+            $SessionObject->UpdateSessionID(
                 SessionID => $Self->{SessionID},
                 Key       => $SessionKey,
                 Value     => $Value,
             );
 
             # update preferences
-            $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
+            $UserObject->SetPreferences(
                 UserID => $Self->{UserID},
                 Key    => $SessionKey,
                 Value  => $Value,
@@ -69,12 +75,12 @@ sub Run {
         );
     }
 
-    # ---
+# ---
     # get user data
-    # ---
+# ---
     if ( $Self->{Subaction} eq 'Customer' ) {
         my $Login = $ParamObject->GetParam( Param => 'Login' );
-        my %Customer = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
+        my %Customer = $CustomerUserObject->CustomerUserDataGet(
             User => $Login,
         );
         my $JSON = $LayoutObject->JSONEncode(
@@ -88,9 +94,9 @@ sub Run {
         );
     }
 
-    # ---
+# ---
     # deliver data
-    # ---
+# ---
     if ( $Self->{Subaction} eq 'Data' ) {
         my $JSON = $GMapsCustomerObject->DataRead();
         if ( ref $JSON eq 'SCALAR' ) {
@@ -105,16 +111,16 @@ sub Run {
     }
 
     # load backends
-    my $Config = $Kernel::OM->Get('Kernel::Config')->Get('DashboardBackend');
+    my $Config = $ConfigObject->Get('DashboardBackend');
     if ( !$Config ) {
         return $LayoutObject->ErrorScreen(
             Message => 'No such config for Dashboard',
         );
     }
 
-    CONFIGLOOP:
+    CONFIG:
     for my $Name ( sort keys %{$Config} ) {
-        next CONFIGLOOP if $Config->{$Name}->{Module} ne 'Kernel::Output::HTML::Dashboard::CustomerMap';
+        next CONFIG if $Config->{$Name}->{Module} ne 'Kernel::Output::HTML::Dashboard::CustomerMap';
 
         my $JSON = $GMapsCustomerObject->DataRead();
         if ( !$JSON ) {
@@ -149,7 +155,7 @@ sub Run {
                 Name => $Name,
             },
         );
-        last CONFIGLOOP;
+        last CONFIG;
     }
 
     # start with page ...
