@@ -265,22 +265,15 @@ sub DataBuild {
         Value => \%NewCache,
     );
 
-    if ( !@Data ) {
-        $LogObject->Log(
-            Priority => 'error',
-            Message =>
-                "No customer data found with 'UserCity' attribute (UserStreet, UserCity and UserCountry is used in general)!",
-        );
-        return;
-    }
-
-    my $Content = $JSONObject->Encode(
-        Data => \@Data,
-    );
-
     $VirtualFSObject->Delete(
         Filename        => '/GMapsCustomerMap/Data.json',
         DisableWarnings => 1,
+    );
+
+    return 0 if !@Data;
+
+    my $Content = $JSONObject->Encode(
+        Data => \@Data,
     );
 
     my $Success = $VirtualFSObject->Write(
