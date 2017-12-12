@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -21,16 +21,16 @@ use Kernel::System::VirtualFS;
 
 our @ObjectDependencies = (
     'Kernel::Config',
+    'Kernel::System::Cache',
     'Kernel::System::CustomerUser',
+    'Kernel::System::DB',
     'Kernel::System::GMaps',
     'Kernel::System::JSON',
     'Kernel::System::Log',
-    'Kernel::System::Ticket',
-    'Kernel::System::VirtualFS',
-    'Kernel::System::Cache',
-    'Kernel::System::DB',
     'Kernel::System::State',
+    'Kernel::System::Ticket',
     'Kernel::System::Time',
+    'Kernel::System::VirtualFS',
 );
 
 =head1 NAME
@@ -177,10 +177,10 @@ sub DataBuild {
     my @CustomerUserIDs;
 
     # fetch the result
-    ROWLOOP:
+    ROW:
     while ( my @Data = $DBObject->FetchrowArray() ) {
 
-        next ROWLOOP if !$Data[0];
+        next ROW if !$Data[0];
 
         push @CustomerUserIDs, $Data[0];
     }
@@ -189,30 +189,30 @@ sub DataBuild {
     my $Counter      = 0;
     my $CounterLimit = 120_000;
 
-    CUSTOMERUSERIDLOOP:
+    CUSTOMERUSERID:
     for my $UserID (@CustomerUserIDs) {
         my %Customer = $CustomerUserObject->CustomerUserDataGet(
             User => $UserID,
         );
-        next CUSTOMERUSERIDLOOP if !%Customer;
+        next CUSTOMERUSERID if !%Customer;
 
         # check required infos
         for my $Key ( @{ $Self->{RequiredAttributes} } ) {
-            next CUSTOMERUSERIDLOOP if !$Customer{$Key};
+            next CUSTOMERUSERID if !$Customer{$Key};
         }
 
         # cleanup
-        CUSTOMERLOOP:
+        CUSTOMER:
         for my $Key ( sort keys %Customer ) {
-            next CUSTOMERLOOP if !$Customer{$Key};
+            next CUSTOMER if !$Customer{$Key};
             $Customer{$Key} =~ s/(\r|\n|\t)//g;
         }
 
         my $Query;
-        MAPATTRIBUTESLOOP:
+        MAPATTRIBUTES:
         for my $KeyOrig ( sort keys %{ $Self->{MapAttributes} } ) {
             my $Key = $Self->{MapAttributes}->{$KeyOrig};
-            next MAPATTRIBUTESLOOP if !$Customer{$Key};
+            next MAPATTRIBUTES if !$Customer{$Key};
             chomp $Customer{$Key};
             if ($Query) {
                 $Query .= ', ';
@@ -227,7 +227,7 @@ sub DataBuild {
             UserID            => 1,
         );
 
-        next CUSTOMERUSERIDLOOP if ( $OnlyOpenTickets && !$Count );
+        next CUSTOMERUSERID if ( $OnlyOpenTickets && !$Count );
 
         if (
             $Cache->{$Query}
@@ -237,12 +237,12 @@ sub DataBuild {
         {
 
             $Counter++;
-            last CUSTOMERUSERIDLOOP if $Counter == $CounterLimit;
+            last CUSTOMERUSERID if $Counter == $CounterLimit;
 
             if ( $Cache->{$Query}->{TTL} > $SystemTime ) {
                 push @Data,
                     [ $Cache->{$Query}->{Latitude}, $Cache->{$Query}->{Longitude}, $Customer{UserLogin}, $Count ];
-                next CUSTOMERUSERIDLOOP;
+                next CUSTOMERUSERID;
             }
 
             # Cache itself lives forever
@@ -266,12 +266,12 @@ sub DataBuild {
 
         usleep(300000);
 
-        next CUSTOMERUSERIDLOOP if !%Response;
+        next CUSTOMERUSERID if !%Response;
 
-        next CUSTOMERUSERIDLOOP if $Response{Status} !~ /ok/i;
+        next CUSTOMERUSERID if $Response{Status} !~ /ok/i;
 
         $Counter++;
-        last CUSTOMERUSERIDLOOP if $Counter == $CounterLimit;
+        last CUSTOMERUSERID if $Counter == $CounterLimit;
 
         push @Data, [ $Response{Latitude}, $Response{Longitude}, $Customer{UserLogin}, $Count ];
 
@@ -303,7 +303,7 @@ sub DataBuild {
         $LogObject->Log(
             Priority => 'error',
             Message =>
-                "No Customer Data found with 'UserCity' attribute (UserStreet, UserCity and UserCountry is used in generel)!",
+                "No customer data found with 'UserCity' attribute (UserStreet, UserCity and UserCountry is used in general)!",
         );
         return;
     }
@@ -352,10 +352,10 @@ sub DataRead {
 
 =head1 TERMS AND CONDITIONS
 
-This software is part of the OTRS project (http://otrs.org/).
+This software is part of the OTRS project (L<http://otrs.org/>).
 
 This software comes with ABSOLUTELY NO WARRANTY. For details, see
 the enclosed file COPYING for license information (AGPL). If you
-did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
 
 =cut
