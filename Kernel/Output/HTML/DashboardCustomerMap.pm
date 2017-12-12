@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -19,7 +19,6 @@ sub new {
     bless( $Self, $Type );
 
     # get needed objects
-    OBJECTLOOP:
     for my $Object (
         qw(Config Name ConfigObject LogObject DBObject LayoutObject ParamObject TicketObject UserID)
         )

@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -22,9 +22,9 @@ sub new {
     bless( $Self, $Type );
 
     # check all needed objects
-    OBJECTLOOP:
+    OBJECT:
     for my $Object (qw(TicketObject ParamObject DBObject QueueObject LayoutObject ConfigObject LogObject)) {
-        next OBJECTLOOP if $Self->{$Object};
+        next OBJECT if $Self->{$Object};
         $Self->{LayoutObject}->FatalError( Message => "Got no $Object!" );
     }
 
@@ -37,9 +37,7 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    # ---
     # update preferences
-    # ---
     if ( $Self->{Subaction} eq 'Update' ) {
         for my $Key (qw( Latitude Longitude Zoom )) {
             my $Value = $Self->{ParamObject}->GetParam( Param => $Key );
@@ -72,9 +70,7 @@ sub Run {
         );
     }
 
-    # ---
     # get user data
-    # ---
     if ( $Self->{Subaction} eq 'Customer' ) {
         my $Login = $Self->{ParamObject}->GetParam( Param => 'Login' );
         my %Customer = $Self->{CustomerUserObject}->CustomerUserDataGet(
@@ -91,9 +87,7 @@ sub Run {
         );
     }
 
-    # ---
     # deliver data
-    # ---
     if ( $Self->{Subaction} eq 'Data' ) {
         my $JSON = $Self->{GMapsCustomerObject}->DataRead();
         if ( ref $JSON eq 'SCALAR' ) {
@@ -115,9 +109,9 @@ sub Run {
         );
     }
 
-    CONFIGLOOP:
+    CONFIG:
     for my $Name ( sort keys %{$Config} ) {
-        next CONFIGLOOP if $Config->{$Name}->{Module} ne 'Kernel::Output::HTML::DashboardCustomerMap';
+        next CONFIG if $Config->{$Name}->{Module} ne 'Kernel::Output::HTML::DashboardCustomerMap';
 
         my $JSON = $Self->{GMapsCustomerObject}->DataRead();
         if ( !$JSON ) {
@@ -152,7 +146,7 @@ sub Run {
                 Name => $Name,
             },
         );
-        last CONFIGLOOP;
+        last CONFIG;
     }
 
     # start with page ...

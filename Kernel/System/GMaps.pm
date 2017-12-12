@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2016 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 # Copyright (C) 2013 Juergen Sluyterman, http://www.rsag.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -15,11 +15,8 @@ use warnings;
 use utf8;
 
 our @ObjectDependencies = (
-    'Kernel::Config',
-    'Kernel::System::Encode',
-    'Kernel::System::Log',
-    'Kernel::System::Main',
     'Kernel::System::JSON',
+    'Kernel::System::Log',
     'Kernel::System::WebUserAgent',
 );
 
