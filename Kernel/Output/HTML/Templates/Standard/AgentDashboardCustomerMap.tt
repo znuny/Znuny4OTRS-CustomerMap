@@ -35,7 +35,7 @@
 
 <p>
     <ol>
-        <li>1. [% Translate("Make sure that UserStreet, UserCity and UserCountry are configured in your customer user mapping config.") | html %]</li>
+        <li>1. [% Translate("Make sure that UserStreet, UserCity and UserCountry are configured in SysConfig option Znuny4OTRS::CustomerMap::CustomerDataAttributes and used as attributes in your customer user mapping config.") | html %]</li>
         <li>2. [% Translate("Execute \"%s\" to generate geo location data for your customers.", "bin/otrs.Console.pl Znuny4OTRS::CustomerMap::Build") | html %]</li>
         <li>3. [% Translate("Reload this page and check if the customer map is being shown.") | html %]</li>
     </ol>
