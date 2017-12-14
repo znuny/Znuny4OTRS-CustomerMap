@@ -10,7 +10,9 @@
 
 [% RenderBlockStart("ContentLargeCustomerMapData") %]
 <script type="text/javascript" src="[% Data.MapsURL %]"></script>
-<script type="text/javascript" src="https://raw.githubusercontent.com/googlemaps/js-marker-clusterer/6b9afb11a6a2fee365d1727918cc28e7baae0372/src/markerclusterer.js"></script>
+# Note: depends on Google maps, loaded above.
+# Somehow, loading marker clusterer from github directly does not work.
+<script type="text/javascript" src="[% Config("Frontend::WebPath") %]js/GoogleMapsMarkerClusterer.js"></script>
 
 <div id="customer-map-canvas" style="width: [% Data.Width %]; height: [% Data.Height %];">
     <p>
