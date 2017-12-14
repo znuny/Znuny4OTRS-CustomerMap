@@ -16,6 +16,7 @@
     <Description Lang="en">A Google Maps integraton. A visualisation of your customers in a dashboard plugin.</Description>
     <Description Lang="de">Ein Google Maps Integration. Eine neuartige Darstellung der Kunden in einem Dashboard-Plugin.</Description>
     <Filelist>
+        <File Permission="755" Location="bin/znuny.GMapsCustomerBuild.pl"/>
         <File Permission="644" Location="Kernel/Config/Files/CustomerMap.xml"/>
         <File Permission="644" Location="Kernel/Modules/AgentCustomerMap.pm"/>
         <File Permission="644" Location="Kernel/Output/HTML/DashboardCustomerMap.pm"/>
@@ -23,11 +24,11 @@
         <File Permission="644" Location="Kernel/Output/HTML/Standard/AgentDashboardCustomerMap.tt"/>
         <File Permission="644" Location="Kernel/System/GMaps.pm"/>
         <File Permission="644" Location="Kernel/System/GMapsCustomer.pm"/>
-        <File Permission="755" Location="bin/znuny.GMapsCustomerBuild.pl"/>
         <File Permission="644" Location="scripts/test/Selenium/Agent/Znuny4OTRSAgentCustomerMap.t"/>
         <File Permission="644" Location="scripts/test/Znuny4OTRSGMapsCustomerMap.t"/>
         <File Permission="644" Location="var/cron/customermap"/>
         <File Permission="644" Location="var/httpd/htdocs/js/Core.Agent.CustomerMap.js"/>
+        <File Permission="644" Location="var/httpd/htdocs/js/GoogleMapsMarkerClusterer.js"/>
     </Filelist>
     <CodeInstall Type="post"><![CDATA[
         return if !$Kernel::OM->Get('Kernel::System::ZnunyHelper');
