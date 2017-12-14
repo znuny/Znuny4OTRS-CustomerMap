@@ -30,5 +30,6 @@
         <File Permission="660" Location="scripts/test/Znuny4OTRSCustomerMap/Selenium/Agent/Znuny4OTRSAgentCustomerMap.t"/>
         <File Permission="660" Location="scripts/test/Znuny4OTRSCustomerMap/Znuny4OTRSGMapsCustomerMap.t"/>
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Znuny4OTRSCustomerMap.js"/>
+        <File Permission="660" Location="var/httpd/htdocs/js/GoogleMapsMarkerClusterer.js"/>
     </Filelist>
 </otrs_package>
