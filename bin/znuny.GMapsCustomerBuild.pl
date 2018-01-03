@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # --
-# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2018 Znuny GmbH, http://znuny.com/
 # --
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU AFFERO General Public License as published by
@@ -43,7 +43,7 @@ my %Opts;
 getopt( 'hqtdf', \%Opts );
 if ( $Opts{h} ) {
     print "znuny.GMapsCustomerBuild.pl - geo data collector\n";
-    print "Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/\n";
+    print "Copyright (C) 2012-2018 Znuny GmbH, http://znuny.com/\n";
     print "usage: znuny.GMapsCustomerBuild.pl [-f force]\n";
     exit 1;
 }
