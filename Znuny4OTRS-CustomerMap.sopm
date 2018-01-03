@@ -30,6 +30,11 @@
         <File Permission="644" Location="scripts/test/Znuny4OTRSGMapsCustomerMap.t"/>
         <File Permission="644" Location="var/httpd/htdocs/js/Core.Agent.CustomerMap.js"/>
         <File Permission="644" Location="var/httpd/htdocs/js/GoogleMapsMarkerClusterer.js"/>
+        <File Permission="644" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m1.png"/>
+        <File Permission="644" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m2.png"/>
+        <File Permission="644" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m3.png"/>
+        <File Permission="644" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m4.png"/>
+        <File Permission="644" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m5.png"/>
     </Filelist>
     <CodeInstall Type="post"><![CDATA[
         return if !$Kernel::OM->Get('Kernel::System::ZnunyHelper');
