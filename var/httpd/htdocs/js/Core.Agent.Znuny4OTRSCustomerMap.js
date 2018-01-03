@@ -103,7 +103,11 @@ Core.Agent.Znuny4OTRSCustomerMap = (function (TargetNS) {
                     }
                 }
                 /*global MarkerClusterer:true*/
-                markerCluster = new MarkerClusterer(TargetNS.map, TargetNS.Markers);
+                markerCluster = new MarkerClusterer(TargetNS.map, TargetNS.Markers,
+                    {
+                        imagePath: '../Znuny4OTRSCustomerMap/m'
+                    }
+                );
             },
             'json'
         );
