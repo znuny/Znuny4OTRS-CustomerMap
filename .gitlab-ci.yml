@@ -2,11 +2,10 @@ image: registry.znuny.com/znuny/docker-otrs5ci:latest
 
 services:
   - name: docker.io/elgalu/selenium:latest
-  - name: registry.znuny.com/znuny/docker-mysql-utf8:latest
-    alias: mysql
 
 stages:
   - test
+  - deploy
 
 job_unit_otrs_Znuny4OTRSCustomerMap:
   stage: test
@@ -14,6 +13,11 @@ job_unit_otrs_Znuny4OTRSCustomerMap:
     - env
     - pwd
     - /run.sh
-    - su -c "perl /opt/otrs/bin/otrs.Console.pl Znuny4OTRS::AdvancedPackageManager::InstallSOPM /opt/otrs/Znuny4OTRS-CustomerMap.sopm" -s /bin/bash otrs
-    - su -c "perl /opt/otrs/bin/otrs.Console.pl Dev::UnitTest::Run --verbose --test Znuny4OTRSGMapsCustomerMap" -s /bin/bash otrs
-    - su -c "perl /opt/otrs/bin/otrs.Console.pl Dev::UnitTest::Run --verbose --test Selenium/Agent/Znuny4OTRSAgentCustomerMap" -s /bin/bash otrs
+    - su -c "/opt/otrs/bin/otrs.Console.pl Znuny4OTRS::AdvancedPackageManager::InstallSOPM /opt/otrs/Znuny4OTRS-CustomerMap.sopm" - otrs
+    - su -c "/opt/otrs/bin/otrs.Console.pl Dev::UnitTest::Run --verbose --test Znuny4OTRSGMapsCustomerMap" - otrs
+    - su -c "/opt/otrs/bin/otrs.Console.pl Dev::UnitTest::Run --verbose --test Selenium/Agent/Znuny4OTRSAgentCustomerMap" - otrs
+
+job_deploy_otrs_Znuny4OTRSCustomerMap:
+  stage: deploy
+  script:
+    - sh /sync_repo.sh git@github.com:znuny/Znuny4OTRS-CustomerMap.git
