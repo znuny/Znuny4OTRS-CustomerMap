@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_package version="1.0">
     <Name>Znuny4OTRS-CustomerMap</Name>
-    <Version>5.0.4</Version>
+    <Version>5.0.5</Version>
+    <ChangeLog Version="5.0.5" Date="2018-01-05 14:00:14 +0100">Set option for MarkerClusterer and added images.</ChangeLog>
     <ChangeLog Version="5.0.4" Date="2016-08-24 18:16:22 +0200">Code cleanup.</ChangeLog>
     <ChangeLog Version="5.0.3" Date="2016-08-24 10:37:20 +0200">Fixed AgentCustomerMap displaying.</ChangeLog>
     <ChangeLog Version="5.0.2" Date="2016-08-24 09:46:05 +0200">Rewrote map building to take into account the removal of CustomerUserList() functionality in future framework versions and work on installations using LDAP for CustomerUser backends.</ChangeLog>
