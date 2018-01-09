@@ -46,6 +46,7 @@ mindestens folgende Attribute im Customer-Mapping einzutragen:
 Sollten diese Attribute nicht Ihren entsprechen, können diese über die SysConfig angepasst werden.
 Hinweis:
 Die Anfragen an die Google-Geocoding-API sind auf ca. 2000 pro Tag limitiert.
+Die konfigurierten Felder werden als kombinierter Adressstring zur Standortabfrage an Google übertragen.
 
 Die Umwandlung kann über die OTRS-Konsole manuell ausgeführt werden:
 

@@ -46,6 +46,7 @@ enter at least the following attributes in the customer mapping:
 If these attributes do not correspond to yours, they can be adjusted via SysConfig.
 Hint:
 Requests to the Google Geocoding API are limited to about 2000 per day.
+The configured fields will be sent as a combined address string to Google to retrieve location data.
 
 The conversion can be done manually from the OTRS console:
 
