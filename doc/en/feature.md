@@ -43,6 +43,7 @@ Your customer data needs the following attributes to be able to determine the ge
 Do you use other attributes? No problem, just change the settings via SysConfig as needed.
 Reminder:
 There's a daily limit for requests against Google Geocoding API.
+The configured fields will be sent as a combined address string to Google to retrieve location data.
 
 Doing the location update manually:
 
@@ -52,7 +53,7 @@ Doing the location update manually:
 
 As an alternative add the provided script to your OTRS crontab. The needed entry is located in var/cron/customermap
 
-## Sysconfig
+## SysConfig
 
  - Znuny4OTRSCustomerMapOnlyOpenTickets
  - Znuny4OTRSCustomerMapCustomerDataAttributes

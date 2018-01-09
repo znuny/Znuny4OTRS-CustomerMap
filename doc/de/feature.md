@@ -44,6 +44,7 @@ mindestens folgende Attribute im Kunden Mapping eingetragen zu haben:
 Sollten diese Attribute nicht Ihren entsprechen, können diese über die SysConfig angepasst werden.
 Hinweis:
 Die Anfragen an der Google Geocoding API sind auf ca 2000 Anfragen pro Tag limittiert.
+Die konfigurierten Felder werden als kombinierter Adressstring zur Standortabfrage an Google übertragen.
 
 Das Umwandeln kann über die Konsole manuell ausgeführt werden:
 
@@ -54,7 +55,7 @@ Das Umwandeln kann über die Konsole manuell ausgeführt werden:
 Alternativ ist es möglich das Skript in die Crontab zu übernehmen. Die passende Vorlage
 findet sich unter var/cron/customermap
 
-## Sysconfig
+## SysConfig
 
  - Znuny4OTRSCustomerMapOnlyOpenTickets
  - Znuny4OTRSCustomerMapCustomerDataAttributes
