@@ -42,6 +42,8 @@ You need to have customer sources with the following attributes for the extensio
 * UserCountry
 
 configured in your CustomerUserMap (just take a look in your Kernel/Config.pm to check if you use them).
+The configured fields will be sent as a combined address string to Google to retrieve location data.
+
 
 **Build geo location data of your customer records**
 
