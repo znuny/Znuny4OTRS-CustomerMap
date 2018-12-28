@@ -1,8 +1,13 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 # --
-# bin/znuny.GMapsCustomerBuild.pl - create customer/ticket address geo tag pool
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2018 Znuny GmbH, http://znuny.com/
 # --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+## nofilter(TidyAll::Plugin::OTRS::Znuny4OTRS::AGPLValidator)
+## nofilter(TidyAll::Plugin::OTRS::Znuny4OTRS::STDERRCheck)
 
 use strict;
 use warnings;
@@ -28,7 +33,7 @@ my %Opts;
 getopt( 'hqtdf', \%Opts );
 if ( $Opts{h} ) {
     print "znuny.GMapsCustomerBuild.pl - geo data collector\n";
-    print "Copyright (C) 2014 Znuny GmbH, http://znuny.com/\n";
+    print "Copyright (C) 2012-2018 Znuny GmbH, http://znuny.com/\n";
     print "usage: znuny.GMapsCustomerBuild.pl [-f force]\n";
     exit 1;
 }

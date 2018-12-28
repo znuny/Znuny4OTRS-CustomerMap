@@ -1,6 +1,11 @@
 # --
-# Kernel/Modules/AgentCustomerMap.pm - customer gmap
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2018 Znuny GmbH, http://znuny.com/
+# --
+# $origin: otrs - 0000000000000000000000000000000000000000 - Kernel/Modules/AgentCustomerMap.pm
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::Modules::AgentCustomerMap;
@@ -34,9 +39,9 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    # ---
+# ---
     # update preferences
-    # ---
+# ---
     if ( $Self->{Subaction} eq 'Update' ) {
         for my $Key (qw( Latitude Longitude Zoom )) {
             my $Value = $Self->{ParamObject}->GetParam( Param => $Key );
@@ -69,9 +74,9 @@ sub Run {
         );
     }
 
-    # ---
+# ---
     # get user data
-    # ---
+# ---
     if ( $Self->{Subaction} eq 'Customer' ) {
         my $Login = $Self->{ParamObject}->GetParam( Param => 'Login' );
         my %Customer = $Self->{CustomerUserObject}->CustomerUserDataGet(
@@ -88,9 +93,9 @@ sub Run {
         );
     }
 
-    # ---
+# ---
     # deliver data
-    # ---
+# ---
     if ( $Self->{Subaction} eq 'Data' ) {
         my $JSON = $Self->{GMapsCustomerObject}->DataRead();
         if ( ref $JSON eq 'SCALAR' ) {
@@ -116,7 +121,7 @@ sub Run {
         next if $Config->{$Name}->{Module} ne 'Kernel::Output::HTML::DashboardCustomerMap';
 
         my $JSON = $Self->{GMapsCustomerObject}->DataRead();
-        if (!$JSON) {
+        if ( !$JSON ) {
             $Self->{LayoutObject}->Block(
                 Name => 'ContentLargeCustomerMapConfig',
                 Data => {
@@ -135,7 +140,7 @@ sub Run {
                         || $Config->{$Name}->{DefaultLatitude},
                     Longitude => $Self->{UserCustomerMapLongitude}
                         || $Config->{$Name}->{DefaultLongitude},
-                    Zoom => $Self->{UserCustomerMapZoom} || $Config->{$Name}->{DefaultZoom},
+                    Zoom   => $Self->{UserCustomerMapZoom} || $Config->{$Name}->{DefaultZoom},
                     Width  => '100%',
                     Height => '550px',
                 },
@@ -154,7 +159,10 @@ sub Run {
     # start with page ...
     my $Output = $Self->{LayoutObject}->Header();
     $Output .= $Self->{LayoutObject}->NavigationBar();
-    $Output .= $Self->{LayoutObject}->Output( TemplateFile => 'AgentCustomerMap', Data => \%Param );
+    $Output .= $Self->{LayoutObject}->Output(
+        TemplateFile => 'AgentCustomerMap',
+        Data         => \%Param
+    );
     $Output .= $Self->{LayoutObject}->Footer();
     return $Output;
 }

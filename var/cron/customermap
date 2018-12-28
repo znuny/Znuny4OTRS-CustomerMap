@@ -1,8 +1,7 @@
 # --
 # var/cron/customermap - build customer geo location database
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2018 Znuny GmbH, http://znuny.com/
 # --
 
 # build customer geo location database once a day
 45 3 * * *  $HOME/bin/znuny.GMapsCustomerBuild.pl >> /dev/null
-

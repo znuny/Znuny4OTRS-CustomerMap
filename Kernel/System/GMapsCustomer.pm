@@ -1,7 +1,12 @@
 # --
-# Kernel/System/GMapsCustomer.pm - a GMaps customer
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2018 Znuny GmbH, http://znuny.com/
 # --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+# nofilter(TidyAll::Plugin::OTRS::Perl::Pod::SpellCheck)
+# nofilter(TidyAll::Plugin::OTRS::Perl::PerlCritic)
 
 package Kernel::System::GMapsCustomer;
 
@@ -81,7 +86,8 @@ sub new {
     $Self->{VirtualFSObject}    = Kernel::System::VirtualFS->new( %{$Self} );
 
     # required attributes
-    $Self->{RequiredAttributes} = $Self->{ConfigObject}->Get( 'Znuny4OTRSCustomerMapRequiredCustomerDataAttributes' ) || ['UserCity'];
+    $Self->{RequiredAttributes}
+        = $Self->{ConfigObject}->Get('Znuny4OTRSCustomerMapRequiredCustomerDataAttributes') || ['UserCity'];
 
     # attribute map
     $Self->{MapAttributes} = $Self->{ConfigObject}->Get('Znuny4OTRSCustomerMapCustomerDataAttributes') || {
@@ -126,14 +132,14 @@ sub DataBuild {
         }
 
         # cleanup
-        for my $Key ( keys %Customer ) {
+        for my $Key ( sort keys %Customer ) {
             next if !$Customer{$Key};
             $Customer{$Key} =~ s/(\r|\n|\t)//g;
         }
 
         # geo lookup
         my $Query;
-        for my $KeyOrig ( keys %{$Self->{MapAttributes}} ) {
+        for my $KeyOrig ( sort keys %{ $Self->{MapAttributes} } ) {
             my $Key = $Self->{MapAttributes}->{$KeyOrig};
             next if !$Customer{$Key};
             chomp $Customer{$Key};
@@ -220,11 +226,10 @@ sub DataRead {
 
 =head1 TERMS AND CONDITIONS
 
-This software is part of the OTRS project (http://otrs.org/).
+This software is part of the OTRS project (L<http://otrs.org/>).
 
 This software comes with ABSOLUTELY NO WARRANTY. For details, see
 the enclosed file COPYING for license information (AGPL). If you
-did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
 
 =cut
-

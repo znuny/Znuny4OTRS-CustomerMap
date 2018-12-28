@@ -1,6 +1,9 @@
 # --
-# AgentCustomerMap.dtl - provides HTML form for customer map
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2018 Znuny GmbH, http://znuny.com/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 <div class="MainBox ARIARoleMain">
@@ -8,10 +11,10 @@
     <h1>$Text{"Customer Map"}</h1>
 
 <!-- dtl:block:TicketBack -->
-      <a href="$Env{"Baselink"}$Env{"LastScreenView"}" onmouseover="window.status='$JSText{"Back"}'; return true;" onmouseout="window.status='';" class="menuitem">$Text{"Back"}</a>
+    <a href="$Env{"Baselink"}$Env{"LastScreenView"}" onmouseover="window.status='$JSText{"Back"}'; return true;" onmouseout="window.status='';" class="menuitem">$Text{"Back"}</a>
 <!-- dtl:block:TicketBack -->
 
     <div class="ContentColumn">
-    $Data{"Map"}
+        $Data{"Map"}
     </div>
 </div>

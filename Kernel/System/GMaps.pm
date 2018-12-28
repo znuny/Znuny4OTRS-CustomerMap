@@ -1,7 +1,10 @@
 # --
-# Kernel/System/GMaps.pm - lib for gmaps
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2018 Znuny GmbH, http://znuny.com/
 # Copyright (C) 2013 Juergen Sluyterman, http://www.rsag.de/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::System::GMaps;
@@ -66,8 +69,8 @@ sub new {
     bless( $Self, $Type );
 
     # check needed objects
-    for (qw(DBObject ConfigObject LogObject MainObject)) {
-        $Self->{$_} = $Param{$_} || die "Got no $_!";
+    for my $Needed (qw(DBObject ConfigObject LogObject MainObject)) {
+        $Self->{$Needed} = $Param{$Needed} || die "Got no $Needed!";
     }
 
     # config
@@ -98,9 +101,12 @@ see also: http://code.google.com/apis/maps/documentation/geocoding/
 sub Geocoding {
     my ( $Self, %Param ) = @_;
 
-    for (qw(Query)) {
-        if ( !$Param{$_} ) {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "Need $_!" );
+    for my $Needed (qw(Query)) {
+        if ( !$Param{$Needed} ) {
+            $Self->{LogObject}->Log(
+                Priority => 'error',
+                Message  => "Need $Needed!"
+            );
             return;
         }
     }
@@ -120,21 +126,18 @@ sub Geocoding {
     return if !$Response{Content};
 
     my $JSONResponse = ${ $Response{Content} };
-    my $Hash = decode_json( $JSONResponse );
-
-#    use Data::Dumper;
-#    print STDERR Dumper($Hash);
+    my $Hash         = decode_json($JSONResponse);
 
     if ( !$Hash || !$Hash->{status} ) {
-	    $Self->{LogObject}->Log(
+        $Self->{LogObject}->Log(
             Priority => 'error',
             Message  => "Can't process '$URL' got no json data back! '$JSONResponse'",
         );
         return;
     }
-    my $Status    = $Hash->{status};
+    my $Status = $Hash->{status};
     if ( lc($Status) ne 'ok' ) {
-	    $Self->{LogObject}->Log(
+        $Self->{LogObject}->Log(
             Priority => 'error',
             Message  => "Can't process '$URL', status '$Status'",
         );
@@ -146,10 +149,10 @@ sub Geocoding {
     my $Longitude = $Hash->{results}->[0]->{geometry}->{location}->{lng};
     my $Latitude  = $Hash->{results}->[0]->{geometry}->{location}->{lat};
 
-#    $Self->{LogObject}->Log(
-#        Priority => 'error',
-#        Message  => $Status . " acc: " . $Accuracy . " lat: " . $Latitude . " lng: " . $Longitude,
-#    );
+    #    $Self->{LogObject}->Log(
+    #        Priority => 'error',
+    #        Message  => $Status . " acc: " . $Accuracy . " lat: " . $Latitude . " lng: " . $Longitude,
+    #    );
 
     return (
         Status    => $Status,
@@ -165,11 +168,10 @@ sub Geocoding {
 
 =head1 TERMS AND CONDITIONS
 
-This software is part of the OTRS project (http://otrs.org/).
+This software is part of the OTRS project (L<http://otrs.org/>).
 
 This software comes with ABSOLUTELY NO WARRANTY. For details, see
 the enclosed file COPYING for license information (AGPL). If you
-did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
 
 =cut
-

@@ -1,6 +1,9 @@
 # --
-# AgentDashboardCustomerMap.dtl - provides HTML for global dashboard
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2018 Znuny GmbH, http://znuny.com/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 <!-- dtl:block:ContentLargeCustomerMapData -->
@@ -139,7 +142,7 @@ function initialize() {
 <!--dtl:js_on_document_complete-->
 <div id="map_canvas" style="width: $Data{"Width"}; height: $Data{"Height"};">
     <p>
-          $Text{"Loading..."}
+        $Text{"Loading..."}
     </p>
     <p>
         The map is not loaded for manual load, press <a href="#" onclick="initialize(); return false;">here</a>.
@@ -165,11 +168,10 @@ $Text{"Please check the following points first."}
 </p>
 
 <p>
-<ol>
-    <li>1. $Text{"Make sure that UserStreet, UserCity and UserCountry are used attributes in your CustomerMap-Config."}</li>
-    <li>2. $Text{"Execute "%s" to generate geo location data for your customers.", "bin/znuny.GMapsCustomerBuild.pl"}</li>
-    <li>3. $Text{"After you have done all this, check with "browser reload" if it's working now."}</li>
-</ol>
+    <ol>
+        <li>1. $Text{"Make sure that UserStreet, UserCity and UserCountry are used attributes in your CustomerMap-Config."}</li>
+        <li>2. $Text{"Execute "%s" to generate geo location data for your customers.", "bin/znuny.GMapsCustomerBuild.pl"}</li>
+        <li>3. $Text{"After you have done all this, check with "browser reload" if it's working now."}</li>
+    </ol>
 </p>
 <!-- dtl:block:ContentLargeCustomerMapConfig -->
-
