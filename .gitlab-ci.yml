@@ -23,4 +23,4 @@ job_unit_otrs_Znuny4OTRSCustomerMap:
 job_deploy_otrs_Znuny4OTRSCustomerMap:
   stage: deploy
   script:
-    - echo sh /sync_repo.sh git@github.com:znuny/Znuny4OTRS-CustomerMap.git
+    - sh /sync_repo.sh git@github.com:znuny/Znuny4OTRS-CustomerMap.git
