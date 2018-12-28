@@ -125,10 +125,9 @@ sub Geocoding {
     return if !$Response{Content};
 
     my $JSONResponse = ${ $Response{Content} };
-    my $Hash = $Self->{JSONObject}->Decode(
+    my $Hash         = $Self->{JSONObject}->Decode(
         Data => $JSONResponse,
     );
-
 
     if ( !$Hash || !$Hash->{status} ) {
         $Self->{LogObject}->Log(
