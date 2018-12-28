@@ -13,7 +13,6 @@ use strict;
 use warnings;
 
 use Kernel::System::WebUserAgent;
-use JSON;
 
 =head1 NAME
 
@@ -69,7 +68,7 @@ sub new {
     bless( $Self, $Type );
 
     # check needed objects
-    for my $Needed (qw(DBObject ConfigObject LogObject MainObject)) {
+    for my $Needed (qw(DBObject ConfigObject LogObject MainObject JSONObject)) {
         $Self->{$Needed} = $Param{$Needed} || die "Got no $Needed!";
     }
 
@@ -126,7 +125,10 @@ sub Geocoding {
     return if !$Response{Content};
 
     my $JSONResponse = ${ $Response{Content} };
-    my $Hash         = decode_json($JSONResponse);
+    my $Hash = $Self->{JSONObject}->Decode(
+        Data => $JSONResponse,
+    );
+
 
     if ( !$Hash || !$Hash->{status} ) {
         $Self->{LogObject}->Log(
