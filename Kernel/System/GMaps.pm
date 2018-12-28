@@ -16,6 +16,7 @@ use utf8;
 use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
+    'Kernel::Config',
     'Kernel::System::JSON',
     'Kernel::System::Log',
     'Kernel::System::WebUserAgent',
@@ -45,7 +46,7 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{GeocodingURL} = 'http://maps.googleapis.com/maps/api/geocode/json?';
+    $Self->{GeocodingURL} = 'https://maps.googleapis.com/maps/api/geocode/json?';
 
     return $Self;
 }
@@ -76,6 +77,7 @@ sub Geocoding {
     my $WebUserAgentObject = $Kernel::OM->Get('Kernel::System::WebUserAgent');
     my $JSONObject         = $Kernel::OM->Get('Kernel::System::JSON');
     my $LogObject          = $Kernel::OM->Get('Kernel::System::Log');
+    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
 
     NEEDED:
     for my $Needed (qw(Query)) {
@@ -88,7 +90,8 @@ sub Geocoding {
         return;
     }
 
-    my $URL = $Self->{GeocodingURL} . 'address=' . $Param{Query} . '&sensor=false';
+    my $APIKey = $ConfigObject->Get('Znuny4OTRS::CustomerMap::GoogleAPIKey');
+    my $URL    = $Self->{GeocodingURL} . 'address=' . $Param{Query} . '&sensor=false&key=' . $APIKey;
 
     my %Response = $WebUserAgentObject->Request(
         URL => $URL,

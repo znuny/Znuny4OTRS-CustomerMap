@@ -36,6 +36,10 @@ sub Config {
     my ( $Self, %Param ) = @_;
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    my $APIKey = $ConfigObject->Get('Znuny4OTRS::CustomerMap::GoogleAPIKey');
+    $Self->{Config}->{MapsURL} .= $APIKey;
 
     my %Config = (
         %{ $Self->{Config} },
@@ -51,17 +55,22 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    my $APIKey = $ConfigObject->Get('Znuny4OTRS::CustomerMap::GoogleAPIKey');
+    $Self->{Config}->{MapsURL} .= $APIKey;
 
     $LayoutObject->Block(
         Name => 'ContentLargeCustomerMapData',
         Data => {
             %{ $Self->{Config} },
-            Name      => $Self->{Name},
-            Latitude  => $Self->{UserCustomerMapLatitude} || $Self->{Config}->{DefaultLatitude},
-            Longitude => $Self->{UserCustomerMapLongitude} || $Self->{Config}->{DefaultLongitude},
-            Zoom      => $Self->{UserCustomerMapZoom} || $Self->{Config}->{DefaultZoom},
-            Width     => '100%',
-            Height    => '400px',
+            Name        => $Self->{Name},
+            Latitude    => $Self->{UserCustomerMapLatitude} || $Self->{Config}->{DefaultLatitude},
+            Longitude   => $Self->{UserCustomerMapLongitude} || $Self->{Config}->{DefaultLongitude},
+            Zoom        => $Self->{UserCustomerMapZoom} || $Self->{Config}->{DefaultZoom},
+            Width       => '100%',
+            Height      => '400px',
+            MapLanguage => $LayoutObject->{UserLanguage},
         },
     );
 
