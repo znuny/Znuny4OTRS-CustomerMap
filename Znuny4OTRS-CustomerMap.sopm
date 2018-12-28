@@ -31,6 +31,7 @@
         <File Permission="660" Location="Kernel/System/GMapsCustomer.pm"/>
         <File Permission="660" Location="scripts/test/Znuny4OTRSCustomerMap/Selenium/Agent/Znuny4OTRSAgentCustomerMap.t"/>
         <File Permission="660" Location="scripts/test/Znuny4OTRSCustomerMap/Znuny4OTRSGMapsCustomerMap.t"/>
+        <File Permission="660" Location="scripts/test/var/packagesetup/Znuny4OTRSCustomerMap.t"/>
         <File Permission="660" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m1.png"/>
         <File Permission="660" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m2.png"/>
         <File Permission="660" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m3.png"/>
@@ -38,5 +39,21 @@
         <File Permission="660" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m5.png"/>
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Znuny4OTRSCustomerMap.js"/>
         <File Permission="660" Location="var/httpd/htdocs/js/GoogleMapsMarkerClusterer.js"/>
+        <File Permission="660" Location="var/packagesetup/Znuny4OTRSCustomerMap.pm"/>
     </Filelist>
+    <CodeReinstall Type="post"><![CDATA[
+        $Kernel::OM->Get('var::packagesetup::Znuny4OTRSCustomerMap')->CodeReinstall();
+    ]]></CodeReinstall>
+    <CodeInstall Type="post"><![CDATA[
+        $Kernel::OM->Get('var::packagesetup::Znuny4OTRSCustomerMap')->CodeInstall();
+    ]]></CodeInstall>
+    <CodeUninstall Type="pre"><![CDATA[
+        $Kernel::OM->Get('var::packagesetup::Znuny4OTRSCustomerMap')->CodeUninstall();
+    ]]></CodeUninstall>
+    <CodeUpgrade Type="post"><![CDATA[
+        $Kernel::OM->Get('var::packagesetup::Znuny4OTRSCustomerMap')->CodeUpgrade();
+    ]]></CodeUpgrade>
+    <CodeUpgrade Type="post" Version="6.0.4"><![CDATA[
+        $Kernel::OM->Get('var::packagesetup::Znuny4OTRSCustomerMap')->CodeUpgrade604();
+    ]]></CodeUpgrade>
 </otrs_package>

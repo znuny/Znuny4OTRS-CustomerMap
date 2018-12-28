@@ -134,7 +134,7 @@ sub Run {
                     || $CustomerMapDashboardBackendConfig->{DefaultLatitude},
                 Longitude => $Self->{UserCustomerMapLongitude}
                     || $CustomerMapDashboardBackendConfig->{DefaultLongitude},
-                Zoom => $Self->{UserCustomerMapZoom} || $CustomerMapDashboardBackendConfig->{DefaultZoom},
+                Zoom   => $Self->{UserCustomerMapZoom} || $CustomerMapDashboardBackendConfig->{DefaultZoom},
                 Width  => '100%',
                 Height => '550px',
             },
