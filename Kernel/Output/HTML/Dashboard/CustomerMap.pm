@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2018 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2019 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -56,9 +56,6 @@ sub Run {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-    my $APIKey = $ConfigObject->Get('Znuny4OTRS::CustomerMap::GoogleAPIKey');
-    $Self->{Config}->{MapsURL} .= $APIKey;
 
     $LayoutObject->Block(
         Name => 'ContentLargeCustomerMapData',

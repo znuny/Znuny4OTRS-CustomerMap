@@ -16,9 +16,9 @@ job_unit_otrs_Znuny4OTRSCustomerMap:
     - /run.sh
     - su -c "bin/otrs.Console.pl Znuny4OTRS::AdvancedPackageManager::InstallSOPM /opt/otrs/Znuny4OTRS-CustomerMap.sopm" - otrs
     - su -c "bin/otrs.Console.pl Admin::Config::Update --setting-name Znuny4OTRS::CustomerMap::GoogleAPIKey --value $GOOGLE_APIKEY" - otrs
-    - su -c "perl /opt/otrs/bin/otrs.Console.pl Dev::UnitTest::Run --verbose --test var/packagesetup/Znuny4OTRSCustomerMap" -s /bin/bash otrs
     - su -c "perl /opt/otrs/bin/otrs.Console.pl Dev::UnitTest::Run --verbose --test Znuny4OTRSCustomerMap/Selenium/Agent/Znuny4OTRSAgentCustomerMap" -s /bin/bash otrs
-    - su -c "perl /opt/otrs/bin/otrs.Console.pl Dev::UnitTest::Run --verbose --test Znuny4OTRSCustomerMap/Znuny4OTRSGMapsCustomerMap" -s /bin/bash otrs
+    - su -c "perl /opt/otrs/bin/otrs.Console.pl Dev::UnitTest::Run --verbose --test Znuny4OTRSCustomerMap/System/GMapsCustomer" -s /bin/bash otrs
+    - su -c "perl /opt/otrs/bin/otrs.Console.pl Dev::UnitTest::Run --verbose --test Znuny4OTRSCustomerMap/var/packagesetup/Znuny4OTRSCustomerMap" -s /bin/bash otrs
 
 job_deploy_otrs_Znuny4OTRSCustomerMap:
   stage: deploy

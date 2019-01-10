@@ -14,7 +14,7 @@
     <ChangeLog Version="1.6.2" Date="2015-11-21 12:11:22 UTC">added english manual</ChangeLog>
     <ChangeLog Version="1.6.0" Date="2015-01-26 12:36:48 +0100">ported to 4.0</ChangeLog>
     <Framework>6.0.x</Framework>
-    <PackageRequired Version="2.0.2">Znuny4OTRS-Repo</PackageRequired>
+    <PackageRequired Version="6.0.37">Znuny4OTRS-Repo</PackageRequired>
     <Vendor>Znuny GmbH</Vendor>
     <URL>http://znuny.com/en/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
@@ -31,15 +31,15 @@
         <File Permission="660" Location="Kernel/System/GMaps.pm"/>
         <File Permission="660" Location="Kernel/System/GMapsCustomer.pm"/>
         <File Permission="660" Location="scripts/test/Znuny4OTRSCustomerMap/Selenium/Agent/Znuny4OTRSAgentCustomerMap.t"/>
-        <File Permission="660" Location="scripts/test/Znuny4OTRSCustomerMap/Znuny4OTRSGMapsCustomerMap.t"/>
-        <File Permission="660" Location="scripts/test/var/packagesetup/Znuny4OTRSCustomerMap.t"/>
+        <File Permission="660" Location="scripts/test/Znuny4OTRSCustomerMap/System/GMapsCustomer.t"/>
+        <File Permission="660" Location="scripts/test/Znuny4OTRSCustomerMap/var/packagesetup/Znuny4OTRSCustomerMap.t"/>
+        <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Znuny4OTRSCustomerMap.js"/>
+        <File Permission="660" Location="var/httpd/htdocs/js/GoogleMapsMarkerClusterer.js"/>
         <File Permission="660" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m1.png"/>
         <File Permission="660" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m2.png"/>
         <File Permission="660" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m3.png"/>
         <File Permission="660" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m4.png"/>
         <File Permission="660" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m5.png"/>
-        <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Znuny4OTRSCustomerMap.js"/>
-        <File Permission="660" Location="var/httpd/htdocs/js/GoogleMapsMarkerClusterer.js"/>
         <File Permission="660" Location="var/packagesetup/Znuny4OTRSCustomerMap.pm"/>
     </Filelist>
     <CodeReinstall Type="post"><![CDATA[
