@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2018 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2019 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -271,7 +271,7 @@ for my $CustomerUser (@CustomerUsers) {
 
     $Self->True(
         $Success,
-        'LatLng entry for customer user $CustomerUser->{UserLogin} must be present after adding ticket.',
+        "LatLng entry for customer user $CustomerUser->{UserLogin} must be present after adding ticket.",
     );
 }
 
@@ -325,7 +325,7 @@ for my $CustomerUser (@CustomerUsers) {
 
     $Self->True(
         $Cache->{$CacheKey},
-        'Cache entry for customer user $CustomerUser->{UserLogin} must be present after closing ticket.',
+        "Cache entry for customer user $CustomerUser->{UserLogin} must be present after closing ticket.",
     );
 
     # Check if the Lat, Lng and UserLogin are in the JSON Data
@@ -343,13 +343,13 @@ for my $CustomerUser (@CustomerUsers) {
     if ( $CustomerUserCounter > 1 ) {
         $Self->True(
             $Success,
-            'LatLng entry for customer user $CustomerUser->{UserLogin} must be present after closing ticket.',
+            "LatLng entry for customer user $CustomerUser->{UserLogin} must be present after closing ticket.",
         );
     }
     else {
         $Self->False(
             $Success,
-            'LatLng entry for customer user $CustomerUser->{UserLogin} must not be present after closing ticket.',
+            "LatLng entry for customer user $CustomerUser->{UserLogin} must not be present after closing ticket.",
         );
     }
 }
