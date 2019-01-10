@@ -1,4 +1,4 @@
-# Customer Map
+# Funktionalität
 
 Dieses Paket erweitert das OTRS Dashboard um eine Kundenkarte (Google Maps).
 Auf dieser Karte werden Standorte von Kunden angezeigt, welche über offene Tickets im
