@@ -24,6 +24,11 @@ my $JSONObject          = $Kernel::OM->Get('Kernel::System::JSON');
 my $SysConfigObject     = $Kernel::OM->Get('Kernel::System::SysConfig');
 my $ConfigObject        = $Kernel::OM->Get('Kernel::Config');
 
+$Self->True(
+    $ENV{GOOGLE_APIKEY},
+    "GOOGLE_APIKEY $ENV{GOOGLE_APIKEY}"
+);
+
 my @RandomIDs;
 for ( 0 .. 2 ) {
     push @RandomIDs, $HelperObject->GetRandomID();

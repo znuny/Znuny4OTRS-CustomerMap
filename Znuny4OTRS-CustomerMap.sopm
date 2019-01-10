@@ -29,8 +29,8 @@
         <File Permission="644" Location="Kernel/System/GMaps.pm"/>
         <File Permission="644" Location="Kernel/System/GMapsCustomer.pm"/>
         <File Permission="644" Location="scripts/test/Znuny4OTRSCustomerMap/Selenium/Agent/Znuny4OTRSAgentCustomerMap.t"/>
+        <File Permission="644" Location="scripts/test/Znuny4OTRSCustomerMap/System/GMapsCustomer.t"/>
         <File Permission="644" Location="scripts/test/Znuny4OTRSCustomerMap/var/packagesetup/Znuny4OTRSCustomerMap.t"/>
-        <File Permission="644" Location="scripts/test/Znuny4OTRSCustomerMap/Znuny4OTRSGMapsCustomerMap.t"/>
         <File Permission="644" Location="var/httpd/htdocs/js/Core.Agent.Znuny4OTRSCustomerMap.js"/>
         <File Permission="644" Location="var/httpd/htdocs/js/GoogleMapsMarkerClusterer.js"/>
         <File Permission="644" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m1.png"/>

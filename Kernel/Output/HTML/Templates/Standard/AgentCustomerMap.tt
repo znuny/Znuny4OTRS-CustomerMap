@@ -8,7 +8,7 @@
 
 <div class="MainBox ARIARoleMain">
 
-    <h1>[% Translate("Customer Map") | html %]</h1>
+    <h1>[% Translate("Customer map") | html %]</h1>
 
 [% RenderBlockStart("TicketBack") %]
       <a href="[% Env("Baselink") %][% Env("LastScreenView") %]" onmouseover="window.status=[% Translate("Back") | JSON %]; return true;" onmouseout="window.status='';" class="menuitem">[% Translate("Back") | html %]</a>
