@@ -47,7 +47,7 @@ sub new {
 
     my $ZnunyHelperObject = $Kernel::OM->Get('Kernel::System::ZnunyHelper');
 
-    $ZnunyHelperObject->_RebuildConfig();
+    $ZnunyHelperObject->_PackageSetupInit();
 
     return $Self;
 }
