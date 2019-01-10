@@ -57,9 +57,6 @@ sub Run {
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    my $APIKey = $ConfigObject->Get('Znuny4OTRS::CustomerMap::GoogleAPIKey');
-    $Self->{Config}->{MapsURL} .= $APIKey;
-
     $LayoutObject->Block(
         Name => 'ContentLargeCustomerMapData',
         Data => {
