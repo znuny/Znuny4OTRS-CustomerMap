@@ -7,7 +7,7 @@
 # --
 
 [% RenderBlockStart("ContentLargeCustomerMapData") %]
-<script type="text/javascript" src="[% Data.MapsURL %]"></script>
+<script type="text/javascript" src="[% Data.MapsURL %][% IF Data.MapLanguage %]&language=[% Data.MapLanguage %][% END %]"></script>
 # Note: depends on Google maps, loaded above.
 # Somehow, loading marker clusterer from github directly does not work.
 <script type="text/javascript" src="[% Config("Frontend::WebPath") %]js/GoogleMapsMarkerClusterer.js"></script>

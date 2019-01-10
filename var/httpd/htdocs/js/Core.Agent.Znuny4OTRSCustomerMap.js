@@ -11,11 +11,11 @@ Core.Agent = Core.Agent || {};
 
 /**
  * @namespace
- * @exports TargetNS as Core.Agent.CustomerMap
+ * @exports TargetNS as Core.Agent.Znuny4OTRSCustomerMap
  * @description
  *      This namespace contains the special module functions for the CustomerMap.
  */
-Core.Agent.CustomerMap = (function (TargetNS) {
+Core.Agent.Znuny4OTRSCustomerMap = (function (TargetNS) {
     /**
      * @function
      * @return nothing
@@ -39,7 +39,7 @@ Core.Agent.CustomerMap = (function (TargetNS) {
         TargetNS.geocoder = new google.maps.Geocoder();
 
         TargetNS.map = new google.maps.Map(
-            document.getElementById("map_canvas"),
+            document.getElementById("customer-map-canvas"),
             Options
         );
 
@@ -169,4 +169,4 @@ Core.Agent.CustomerMap = (function (TargetNS) {
         TargetNS.Markers.push(marker);
     };
     return TargetNS;
-}(Core.Agent.CustomerMap || {}));
+}(Core.Agent.Znuny4OTRSCustomerMap || {}));

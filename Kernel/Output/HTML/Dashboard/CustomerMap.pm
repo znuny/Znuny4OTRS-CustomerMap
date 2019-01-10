@@ -16,7 +16,6 @@ our $ObjectManagerDisabled = 1;
 sub new {
     my ( $Type, %Param ) = @_;
 
-    # allocate new hash for object
     my $Self = {%Param};
     bless( $Self, $Type );
 
@@ -31,67 +30,47 @@ sub Preferences {
 
     # disable params
     return;
-
-    my @Params = (
-        {
-            Desc  => 'Shown',
-            Name  => $Self->{PrefKeyShown},
-            Block => 'Option',
-
-            #            Block => 'Input',
-            Data => {
-                TicketOpen => 'Customers with open Ticket',
-                All        => 'All Customers',
-            },
-            SelectedID => $Self->{Limit},
-        },
-        {
-            Desc  => 'Max. shown',
-            Name  => $Self->{PrefKeyShownMax},
-            Block => 'Option',
-
-            #            Block => 'Input',
-            Data => {
-                1_000  => ' 1.000 (e. g. 60kb data)',
-                2_000  => ' 2.000 (e. g. 120k data - performance issue on firefox)',
-                10_000 => '10.000 (e. g. 600k data - performance issue on all browsers)',
-            },
-            SelectedID => $Self->{Limit},
-        },
-    );
-
-    return @Params;
 }
 
 sub Config {
     my ( $Self, %Param ) = @_;
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $Baselink     = $LayoutObject->{Baselink};
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    return (
+    my $APIKey = $ConfigObject->Get('Znuny4OTRS::CustomerMap::GoogleAPIKey');
+    $Self->{Config}->{MapsURL} .= $APIKey;
+
+    my %Config = (
         %{ $Self->{Config} },
-        Link                      => $Baselink . 'Action=AgentCustomerMap',
+        Link                      => $LayoutObject->{Baselink} . 'Action=AgentCustomerMap',
         LinkTitle                 => 'Detail',
         PreferencesReloadRequired => 1,
     );
+
+    return %Config;
 }
 
 sub Run {
     my ( $Self, %Param ) = @_;
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    my $APIKey = $ConfigObject->Get('Znuny4OTRS::CustomerMap::GoogleAPIKey');
+    $Self->{Config}->{MapsURL} .= $APIKey;
 
     $LayoutObject->Block(
         Name => 'ContentLargeCustomerMapData',
         Data => {
             %{ $Self->{Config} },
-            Name      => $Self->{Name},
-            Latitude  => $Self->{UserCustomerMapLatitude} || $Self->{Config}->{DefaultLatitude},
-            Longitude => $Self->{UserCustomerMapLongitude} || $Self->{Config}->{DefaultLongitude},
-            Zoom      => $Self->{UserCustomerMapZoom} || $Self->{Config}->{DefaultZoom},
-            Width     => '100%',
-            Height    => '400px',
+            Name        => $Self->{Name},
+            Latitude    => $Self->{UserCustomerMapLatitude} || $Self->{Config}->{DefaultLatitude},
+            Longitude   => $Self->{UserCustomerMapLongitude} || $Self->{Config}->{DefaultLongitude},
+            Zoom        => $Self->{UserCustomerMapZoom} || $Self->{Config}->{DefaultZoom},
+            Width       => '100%',
+            Height      => '400px',
+            MapLanguage => $LayoutObject->{UserLanguage},
         },
     );
 

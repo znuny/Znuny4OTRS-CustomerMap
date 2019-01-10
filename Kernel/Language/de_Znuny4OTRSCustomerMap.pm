@@ -16,6 +16,9 @@ use utf8;
 sub Data {
     my $Self = shift;
 
+    # SysConfig
+    $Self->{Translation}->{'Required API key for using Google Maps and Geocoding API.'} = 'Erforderlicher API-Schlüssel für die Verwendung von Google Maps und der Geokodierungs-API.';
+
     $Self->{Translation}->{'Parameters for the dashboard backend. "Group" are used to restriced access to the plugin (e. g. Group: admin;group1;group2;). "Default" means if the plugin is enabled per default or if the user needs to enable it manually. "CacheTTL" means the cache time in minutes for the plugin.'}
         = 'Parameter für das Dashboard Backend. "Group" ist verwendet um den Zugriff auf das Plugin einzuschränken (z. B. Group: admin;group1;group2;). ""Default" bedeutet ob das Plugin per default aktiviert ist oder ob dies der Anwender manuell machen muss. "CacheTTL" ist die Cache-Zeit in Minuten nach der das Plugin erneut aufgerufen wird.';
 

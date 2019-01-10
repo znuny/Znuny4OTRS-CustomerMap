@@ -1,5 +1,4 @@
 # Funktionalität
 
-Dieses Paket erweitert das OTRS Dashboard um eine Kundenkarte (Google Maps).
-Auf dieser Karte werden Standorte von Kunden angezeigt, welche über offene Tickets im
-System verfügen. Diese Einstellung kann über die SysConfig angepasst werden um alle Kunden die, jemals ein Ticket hatten, darzustellen.
+Dieses Paket erweitert das OTRS-Dashboard um die Anzeige von Kunden auf einer Karte (Google Maps).
+Auf dieser Karte werden die Standorte von Kunden angezeigt, für welche offene Ticket existieren. Alternativ kann dies auf alle (also nicht nur offene) Tickets ausgeweitet werden.

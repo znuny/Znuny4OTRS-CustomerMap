@@ -16,8 +16,7 @@ use Kernel::System::VariableCheck qw(:all);
 
 $Kernel::OM->ObjectParamAdd(
     'Kernel::System::UnitTest::Helper' => {
-        RestoreSystemConfiguration => 1,
-        RestoreDatabase            => 1,
+        RestoreDatabase => 1,
     },
 );
 
@@ -31,17 +30,20 @@ my $JSONObject          = $Kernel::OM->Get('Kernel::System::JSON');
 my $SysConfigObject     = $Kernel::OM->Get('Kernel::System::SysConfig');
 my $ConfigObject        = $Kernel::OM->Get('Kernel::Config');
 
-my ( $RandomID1, $RandomID2, $RandomID3 )
-    = ( $HelperObject->GetRandomID(), $HelperObject->GetRandomID(), $HelperObject->GetRandomID() );
+my @RandomIDs;
+for ( 0 .. 2 ) {
+    push @RandomIDs, $HelperObject->GetRandomID();
+}
+
 my @CustomerTemplate = (
     {
         Source         => 'CustomerUser',
-        UserFirstname  => $RandomID1,
-        UserLastname   => $RandomID1,
-        UserCustomerID => $RandomID1,
-        UserLogin      => $RandomID1,
-        UserPassword   => $RandomID1,
-        UserEmail      => "$RandomID1\@example.com",
+        UserFirstname  => $RandomIDs[0],
+        UserLastname   => $RandomIDs[0],
+        UserCustomerID => $RandomIDs[0],
+        UserLogin      => $RandomIDs[0],
+        UserPassword   => $RandomIDs[0],
+        UserEmail      => "$RandomIDs[0]\@example.com",
         UserStreet     => 'Marienstraße 11',
         UserZip        => '10117',
         UserCity       => 'Berlin',
@@ -49,12 +51,12 @@ my @CustomerTemplate = (
     },
     {
         Source         => 'CustomerUser',
-        UserFirstname  => $RandomID2,
-        UserLastname   => $RandomID2,
-        UserCustomerID => $RandomID2,
-        UserLogin      => $RandomID2,
-        UserPassword   => $RandomID2,
-        UserEmail      => "$RandomID2\@example.com",
+        UserFirstname  => $RandomIDs[1],
+        UserLastname   => $RandomIDs[1],
+        UserCustomerID => $RandomIDs[1],
+        UserLogin      => $RandomIDs[1],
+        UserPassword   => $RandomIDs[1],
+        UserEmail      => "$RandomIDs[1]\@example.com",
         UserStreet     => 'Martinsbruggstrasse 35',
         UserZip        => '9016',
         UserCity       => 'St. Gallen',
@@ -62,12 +64,12 @@ my @CustomerTemplate = (
     },
     {
         Source         => 'CustomerUser',
-        UserFirstname  => $RandomID3,
-        UserLastname   => $RandomID3,
-        UserCustomerID => $RandomID3,
-        UserLogin      => $RandomID3,
-        UserPassword   => $RandomID3,
-        UserEmail      => "$RandomID3\@example.com",
+        UserFirstname  => $RandomIDs[2],
+        UserLastname   => $RandomIDs[2],
+        UserCustomerID => $RandomIDs[2],
+        UserLogin      => $RandomIDs[2],
+        UserPassword   => $RandomIDs[2],
+        UserEmail      => "$RandomIDs[2]\@example.com",
         UserStreet     => 'Willy-Brandt-Straße 1',
         UserZip        => '10557',
         UserCity       => 'Berlin',
@@ -76,15 +78,15 @@ my @CustomerTemplate = (
 );
 
 my @CustomerUsers;
-my $i = 0;
+my $CustomerUserCounter = 0;
 for my $CustomerUser (@CustomerTemplate) {
     my %CustomerCreated;
-    $i++;
+    $CustomerUserCounter++;
     my $CustomerUserLogin = $ZnunyHelperObject->_CustomerUserCreateIfNotExists( %{$CustomerUser} );
 
     $Self->True(
         $CustomerUserLogin,
-        "Created CustomerUserLogin $CustomerUserLogin.",
+        "Creation of customer user $CustomerUserLogin must succeed.",
     );
 
     %CustomerCreated = (
@@ -92,7 +94,7 @@ for my $CustomerUser (@CustomerTemplate) {
         CustomerLogin => $CustomerUserLogin,
     );
 
-    if ( $i > 1 ) {
+    if ( $CustomerUserCounter > 1 ) {
         my $TicketID = $HelperObject->TicketCreate(
             Title        => 'UnitTest ticket',
             Queue        => 'Raw',
@@ -107,13 +109,18 @@ for my $CustomerUser (@CustomerTemplate) {
 
         $Self->True(
             $TicketID,
-            "Created TicketID $TicketID for CustomerUser $CustomerUserLogin.",
+            "Creation of ticket for customer user $CustomerUserLogin.",
         );
 
         $CustomerCreated{TicketID} = $TicketID;
     }
     push @CustomerUsers, \%CustomerCreated;
 }
+
+$CacheObject->Delete(
+    Type => 'GMapsCustomerMap',
+    Key  => 'AddressToGeolocation',
+);
 
 my $Cache = $CacheObject->Get(
     Type => 'GMapsCustomerMap',
@@ -122,7 +129,7 @@ my $Cache = $CacheObject->Get(
 
 $Self->False(
     $Cache,
-    "Had no cache on start.",
+    'Cache must be empty.',
 );
 
 $GMapsCustomerObject->DataBuild();
@@ -134,37 +141,39 @@ $Cache = $CacheObject->Get(
 
 $Self->True(
     IsHashRefWithData($Cache),
-    "Had cache after MapsBuild.",
+    'Cache must be present after map has been built.',
 );
 
 my $JSON = $GMapsCustomerObject->DataRead();
+if ( ref $JSON eq 'SCALAR' ) {
+    $JSON = $$JSON;
+}
 
 $Self->True(
     $JSON,
-    "Had JSON String for Map.",
+    'JSON for map must be present.',
 );
 
 my $MapData = $JSONObject->Decode(
-    Data => $$JSON,
+    Data => $JSON,
 );
 
-$i = 0;
+$CustomerUserCounter = 0;
 for my $CustomerUser (@CustomerUsers) {
-    $i++;
+    $CustomerUserCounter++;
 
     my $CacheKey = "$CustomerUser->{UserCity}, $CustomerUser->{UserCountry}, $CustomerUser->{UserStreet}";
 
     # Check that UserStreet, UserCity and UserCountry are in a CacheKey Entry
 
-    if ( $i > 1 ) {
+    if ( $CustomerUserCounter > 1 ) {
         $Self->True(
             $Cache->{$CacheKey},
-            "Had Cache record for $CustomerUser->{UserLogin}",
+            "Cache entry for customer user $CustomerUser->{UserLogin} must be found.",
         );
 
-        my $Success;
-
         # Check if the Lat, Lng and UserLogin are in the JSON Data
+        my $Success;
         for my $Map ( @{$MapData} ) {
 
             if (
@@ -179,13 +188,13 @@ for my $CustomerUser (@CustomerUsers) {
 
         $Self->True(
             $Success,
-            "Had LatLng Entry for $CustomerUser->{UserLogin}",
+            "LatLng entry must be found for customer user $CustomerUser->{UserLogin}.",
         );
     }
     else {
         $Self->False(
             $Cache->{$CacheKey},
-            "Had No Cache record for $CustomerUser->{UserLogin}",
+            "Cache entry for customer user $CustomerUser->{UserLogin} must not be present.",
         );
     }
 }
@@ -205,7 +214,7 @@ my $TicketID = $HelperObject->TicketCreate(
 
 $Self->True(
     $TicketID,
-    "Created TicketID $TicketID for CustomerUser $CustomerUsers[0]->{UserLogin}.",
+    "Ticket for customer user $CustomerUsers[0]->{UserLogin} must have been created successfully.",
 );
 
 $CustomerUsers[0]->{TicketID} = $TicketID;
@@ -219,18 +228,21 @@ $Cache = $CacheObject->Get(
 
 $Self->True(
     IsHashRefWithData($Cache),
-    "Had cache after MapsBuild after adding Ticket.",
+    'Cache entry must be present after building the map.',
 );
 
 $JSON = $GMapsCustomerObject->DataRead();
+if ( ref $JSON eq 'SCALAR' ) {
+    $JSON = $$JSON;
+}
 
 $Self->True(
     $JSON,
-    "Had JSON String for Map after adding Ticket.",
+    'JSON for map must be present after ticket creation.',
 );
 
 $MapData = $JSONObject->Decode(
-    Data => $$JSON,
+    Data => $JSON,
 );
 
 for my $CustomerUser (@CustomerUsers) {
@@ -241,14 +253,12 @@ for my $CustomerUser (@CustomerUsers) {
 
     $Self->True(
         $Cache->{$CacheKey},
-        "Had Cache record for $CustomerUser->{UserLogin} after adding Ticket",
+        "Cache entry for customer user $CustomerUser->{UserLogin} must be present after adding ticket.",
     );
 
-    my $Success;
-
     # Check if the Lat, Lng and UserLogin are in the JSON Data
+    my $Success;
     for my $Map ( @{$MapData} ) {
-
         if (
             $Map->[0] eq $Cache->{$CacheKey}->{Latitude}
             && $Map->[1] eq $Cache->{$CacheKey}->{Longitude}
@@ -261,7 +271,7 @@ for my $CustomerUser (@CustomerUsers) {
 
     $Self->True(
         $Success,
-        "Had LatLng Entry for $CustomerUser->{UserLogin} after adding Ticket",
+        'LatLng entry for customer user $CustomerUser->{UserLogin} must be present after adding ticket.',
     );
 }
 
@@ -277,7 +287,7 @@ my $Success = $TicketObject->TicketStateSet(
 
 $Self->True(
     $Success,
-    "Closed Ticket successfully",
+    'Ticket must have been closed successfully',
 );
 
 $GMapsCustomerObject->DataBuild();
@@ -289,37 +299,38 @@ $Cache = $CacheObject->Get(
 
 $Self->True(
     IsHashRefWithData($Cache),
-    "Had cache after MapsBuild after closing Ticket.",
+    'cache entry after building map must be present.',
 );
 
 $JSON = $GMapsCustomerObject->DataRead();
+if ( ref $JSON eq 'SCALAR' ) {
+    $JSON = $$JSON;
+}
 
 $Self->True(
     $JSON,
-    "Had JSON String for Map after closing Ticket.",
+    'JSON for map must be present after closing ticket.',
 );
 
 $MapData = $JSONObject->Decode(
-    Data => $$JSON,
+    Data => $JSON,
 );
 
-$i = 0;
+$CustomerUserCounter = 0;
 for my $CustomerUser (@CustomerUsers) {
-    $i++;
+    $CustomerUserCounter++;
     my $CacheKey = "$CustomerUser->{UserCity}, $CustomerUser->{UserCountry}, $CustomerUser->{UserStreet}";
 
     # Check that UserStreet, UserCity and UserCountry are in a CacheKey Entry
 
     $Self->True(
         $Cache->{$CacheKey},
-        "Had Cache record for $CustomerUser->{UserLogin} after closing Ticket",
+        'Cache entry for customer user $CustomerUser->{UserLogin} must be present after closing ticket.',
     );
 
-    my $Success;
-
     # Check if the Lat, Lng and UserLogin are in the JSON Data
+    my $Success;
     for my $Map ( @{$MapData} ) {
-
         if (
             $Map->[0] eq $Cache->{$CacheKey}->{Latitude}
             && $Map->[1] eq $Cache->{$CacheKey}->{Longitude}
@@ -329,16 +340,16 @@ for my $CustomerUser (@CustomerUsers) {
             $Success = 1;
         }
     }
-    if ( $i > 1 ) {
+    if ( $CustomerUserCounter > 1 ) {
         $Self->True(
             $Success,
-            "Had LatLng Entry for $CustomerUser->{UserLogin} after closing Ticket",
+            'LatLng entry for customer user $CustomerUser->{UserLogin} must be present after closing ticket.',
         );
     }
     else {
         $Self->False(
             $Success,
-            "Had no LatLng Entry for $CustomerUser->{UserLogin} after closing Ticket",
+            'LatLng entry for customer user $CustomerUser->{UserLogin} must not be present after closing ticket.',
         );
     }
 }
@@ -346,7 +357,7 @@ for my $CustomerUser (@CustomerUsers) {
 # and finally check if we have at least our 3 customers
 # if all customers that have tickets (no matter if close or open) should be shown on the map not only those with open tickets
 $ConfigObject->Set(
-    Key   => 'Znuny4OTRSCustomerMapOnlyOpenTickets',
+    Key   => 'Znuny4OTRS::CustomerMap::CustomerSelection',
     Value => 0
 );
 
@@ -367,18 +378,21 @@ $Cache = $CacheObject->Get(
 
 $Self->True(
     IsHashRefWithData($Cache),
-    "Had cache after MapsBuild after switching SysConfig to show all Ticket Customers.",
+    'Cache entry must be present after switching SysConfig to show all ticket customers.',
 );
 
 $JSON = $GMapsCustomerObject->DataRead();
+if ( ref $JSON eq 'SCALAR' ) {
+    $JSON = $$JSON;
+}
 
 $Self->True(
     $JSON,
-    "Had JSON String for Map after switching SysConfig to show all Ticket Customers.",
+    'JSON map must be present after switching SysConfig to show all ticket customers.',
 );
 
 $MapData = $JSONObject->Decode(
-    Data => $$JSON,
+    Data => $JSON,
 );
 
 for my $CustomerUser (@CustomerUsers) {
@@ -388,14 +402,12 @@ for my $CustomerUser (@CustomerUsers) {
 
     $Self->True(
         $Cache->{$CacheKey},
-        "Had Cache record for $CustomerUser->{UserLogin} after switching SysConfig to show all Ticket Customers",
+        "Cache entry for customer user $CustomerUser->{UserLogin} must be present after switching SysConfig to show all ticket customers.",
     );
 
-    my $Success;
-
     # Check if the Lat, Lng and UserLogin are in the JSON Data
+    my $Success;
     for my $Map ( @{$MapData} ) {
-
         if (
             $Map->[0] eq $Cache->{$CacheKey}->{Latitude}
             && $Map->[1] eq $Cache->{$CacheKey}->{Longitude}
@@ -408,7 +420,7 @@ for my $CustomerUser (@CustomerUsers) {
 
     $Self->True(
         $Success,
-        "Had LatLng Entry for $CustomerUser->{UserLogin} after switching SysConfig to show all Ticket Customers",
+        "LatLng entry for customer user $CustomerUser->{UserLogin} must be present after switching SysConfig to show all ticket customers.",
     );
 }
 

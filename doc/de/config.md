@@ -1,83 +1,71 @@
 # Konfiguration
 
-Um Kundenstandorte anzuzeigen, ist es notwendig einen GoogleMaps Browser-API-Key zu besitzen.
+Um Kundenstandorte anzuzeigen ist es notwendig einen Google-Maps-Browser-API-Key zu besitzen.
+Dieser Key ist dann in der SysConfig-Option `Znuny4OTRS::CustomerMap::GoogleAPIKey` einzutragen.
 
-Sollten Sie noch keinen ihr Eigen nennen, können Sie diesen unter:
+## Koordinaten der Kundenstandorte ermitteln
 
-https://developers.google.com/maps/documentation/javascript/get-api-key
+Für die regelmäßige Umwandlung der Adressdaten ist es notwendig das der OTRS-Daemon läuft. Er führt die Aktualisierung täglich um 3:45 Uhr aus.
 
-anfordern.
-
-Dieser Key ist dann in der SysConfig Option
-```
-Znuny4OTRS-CustomerMap->Frontend::Agent::Dashboard
-```
-im Konfigurationsfeld:
-```
-MapsURL
-```
-anstelle von
-```
-MyGoogleMapsAPIKEY
-```
-einzufügen.
-
-Siehe:
-![GoogleMapsAPIKey](doc/de/images/MapKeyInsert.jpg)
-
-# Koordinaten der Kundenstandorte ermitteln
-
-Um die Adressdaten in Geokoordinaten umzuwandeln, versichern Sie sich bitte dass der OTRS Daemon läuft. Er führt die aktualisierung täglich um 03:45 Uhr durch.
-
-Wenn Sie diese Uhrzeit ändern wollen, können Sie dies in der SysConfig Option Daemon::SchedulerCronTaskManager::Task###UpdateCustomerMap unter "Schedule" machen.
-
-Schedule besteht wie bei Cron aus 5 Konfigurationsoptionen.
-
-Die erste steht für Minuten.
-Beispiele:
-05
-um das Update 5 Minuten nach jeder vollen Stunde auszuführen.
-
-*
-um das Update jede Minute auszuführen.
-
-*/10
-um das Update alle 10 Minuten (in jeder durch 10 ohne Restwert teilbaren Minutenzahl) auszuführen. (Sprich: :00, :10, :20, :30, :40, :50 Uhr)
-
-Mögliche Werte: 0-59 sowie *
-
-Die zweite steht für  Stunden. Mögliche Werte: 0-23 sowie *
-
-Die dritte steht für Tag eines Monats. Mögliche Werte: 1-31 sowie *
-
-Die vierte steht für das Monat. Mögliche Werte: 1-12 sowie *
-
-Die fünfte steht für Wochentag. Mögliche Werte: 0-6  sowie * wobei 0 Sonntag, 6 Samstag repräsentiert.
+Über die Änderung der SysConfig-Option `Daemon::SchedulerCronTaskManager::Task###UpdateCustomerMap` ist die Zeit der Ausführung änderbar.
 
 Damit die Umwandlung korrekt durchgeführt werden kann, ist es notwendig
-mindestens folgende Attribute im Kunden Mapping eingetragen zu haben:
+mindestens folgende Attribute im Customer-Mapping einzutragen:
 
  - UserCity
- - UserStreet *optional
+ - UserStreet (optional)
  - UserCountry
 
 Sollten diese Attribute nicht Ihren entsprechen, können diese über die SysConfig angepasst werden.
+
 Hinweis:
-Die Anfragen an der Google Geocoding API sind auf ca 2000 Anfragen pro Tag limitiert.
+Die Anfragen an die Google-Geocoding-API unterliegen Limitierungen. Details dazu entnehmen Sie bitte der Dokumentation der Google Maps API.
+
 Die konfigurierten Felder werden als kombinierter Adressstring zur Standortabfrage an Google übertragen.
 
-Das Umwandeln kann über die Console manuell ausgeführt werden:
+Die Umwandlung kann über die Konsole als OTRS-Benutzer auch manuell ausgeführt werden:
 
-    shell> bin/otrs.Console.pl Znuny::CustomerMapBuild
+```
+    shell> bin/otrs.Console.pl Znuny4OTRS::CustomerMap::Build
     NOTICE: Done (wrote 209 records).
     shell>
+```
+
+## Einstellungen System Configuration
+
+### Znuny4OTRS::CustomerMap::GoogleAPIKey
+In dieser Einstellung ist der API-Key einzutragen den Sie über den Link https://developers.google.com/maps/documentation/javascript/get-api-key erhalten. Ohne diese API-Key ist eine Nutzung des Addons nicht möglich.
+
+### Znuny4OTRS::CustomerMap::CustomerDataAttributes
+Hiermit wird festgelegt aus welchen Attributen Ihrer Kundenbenutzer-Datenbenk (CustomerUser) die für die Ermittlung er Koordinaten notwendigen Informationen bezogen werden. Tragen Sie dazu bitte als Wert den passenden Namen aus der ersten Spalte des Mappings ein. Die Namen der Schlüssel belassen Sie bitte unverändert.
+
+### Znuny4OTRS::CustomerMap::RequiredCustomerDataAttributes
+Diese Attribute werden mindestens benötigt um um die Koordinaten zu einer Adresse zu ermitteln.
+
+### Znuny4OTRS::CustomerMap::CustomerSelection
+Diese Einstellung legt fest ob nur die Standorte der Kunden mit offenen Tickets angezeigt werden sollen, oder die von den Kunden zu denen er geschlossene Tickets gibt.
 
 
-## SysConfig
+### Daemon::SchedulerCronTaskManager::Task###UpdateCustomerMap
+"Schedule" besteht wie bei Cron aus fünf Konfigurationsoptionen.
 
- - Znuny4OTRSCustomerMapOnlyOpenTickets
- - Znuny4OTRSCustomerMapCustomerDataAttributes
- - Znuny4OTRSCustomerMapRequiredCustomerDataAttributes
+Die erste steht für Minuten.
+Beispiele:
+`05` um das Update fünf Minuten nach jeder vollen Stunde auszuführen.
 
-## Hinweis zur Darstellung von Kunden die noch kein Ticket hatten
-Da OTRS ab einer der nächsten größeren Versionen die CustomerUserList Funktion entfernt, die sämtliche Kunden aus der Datenbank holt ([siehe Git Commit](https://github.com/OTRS/otrs/commit/3a59683b3cd8cf5c1008150706d23677116736fc)), wurde die Möglichkeit, alle Kunden auf der Karte darzustellen entfernt.
+`*` um das Update jede Minute auszuführen.
+
+`*/10` um das Update alle zehn Minuten (in jeder durch zehn ohne Restwert teilbaren Minutenzahl) auszuführen, sprich: :00, :10, :20, :30, :40, :50 Uhr.
+
+Mögliche Werte: `0-59` sowie `*`.
+
+Die zweite Option steht für Stunden. Mögliche Werte: `0-23` sowie `*`.
+
+Die dritte Option steht für den Tag eines Monats. Mögliche Werte: `1-31` sowie `*`.
+
+Die vierte Option steht für den Monat. Mögliche Werte: `1-12` sowie `*`.
+
+Die fünfte Option steht für den Wochentag. Mögliche Werte: `0-6`  sowie `*` wobei `0` Sonntag und `6` Samstag repräsentieren.
+
+## Hinweise
+Eine Darstellung von Kunden, die noch kein Ticket hatten ist nicht möglich. Die Funktion CustomerUserList, die sämtliche Kunden aus der Datenbank holt ([siehe Git Commit](https://github.com/OTRS/otrs/commit/3a59683b3cd8cf5c1008150706d23677116736fc)), wurde aus OTRS entfernt.

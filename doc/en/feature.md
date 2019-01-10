@@ -1,5 +1,4 @@
 # Functionality
 
-This package provides you a customer map based on Google Maps on your OTRS dashboard.
-The locations show on this map representing customer with open tickets in your system.
-Of course, you can adjust settings via SysConfig to show all Customers that ever had a Ticket.
+This package extends the OTRS dashboard by displaying customers on a map (Google Maps).
+This map displays the locations of customers for whom open tickets exist. Alternatively, this can be extended to all (not only open) tickets.
