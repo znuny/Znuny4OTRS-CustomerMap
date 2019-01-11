@@ -52,6 +52,11 @@ sub Data {
 
     $Self->{Translation}->{'Frontend module registration for the AgentCustomerMap object in the agent interface.'}
         = 'Frontendmodul-Registration des AgentCustomerMap-Objekts im Agent-Interface.';
+    $Self->{Translation}->{'Required API key for using Google Maps and Geocoding API.'} = 'Erforderlicher API-Schlüssel für die Verwendung von Google Maps und der Geokodierungs-API.';
+    $Self->{Translation}->{'Loader module registration for the agent interface.'} = 'Loadermodul Registrierung für die Agentenschnittstelle.';
+    $Self->{Translation}->{'Frontend module registration for the agent interface.'} = 'Frontend-Modulregistrierung für die Agentenschnittstelle.';
+    $Self->{Translation}->{'Back'} = 'zurück';
+
     return 1;
 }
 
