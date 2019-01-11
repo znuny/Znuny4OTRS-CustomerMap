@@ -65,9 +65,9 @@ sub new {
         UserCountry => 'UserCountry',
     };
 
-    $Self->{TicketStateTypes} = [ 'new', 'open', 'pending reminder', 'pending auto', ];
+    $Self->{StateType} = [ 'new', 'open', 'pending reminder', 'pending auto' ];
     @{ $Self->{OpenStateIDs} } = $StateObject->StateGetStatesByType(
-        StateType => $Self->{TicketStateTypes},
+        StateType => $Self->{StateType},
         Result    => 'ID',
     );
 
