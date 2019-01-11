@@ -62,14 +62,16 @@ sub new {
 return the content of requested URL
 
     my %Response = $GMapsObject->Geocoding(
-        Query => 'some location, country',
+        Query => 'Berlin, Deutschland, Marienstraße 11',
     );
 
 returns
 
     %Response = (
-        Status    => 200,
-        Accuracy  => 1,
+        Latitude  => '52.5219195',
+        Status    => 'OK',
+        Longitude => '13.3826705',
+        Accuracy  => 'ROOFTOP'
     );
 
 see also: http://code.google.com/apis/maps/documentation/geocoding/

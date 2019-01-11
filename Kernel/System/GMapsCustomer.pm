@@ -109,7 +109,7 @@ sub DataBuild {
 
     my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
     my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
-    my $GmapsObject        = $Kernel::OM->Get('Kernel::System::GMaps');
+    my $GMapsObject        = $Kernel::OM->Get('Kernel::System::GMaps');
     my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
     my $LogObject          = $Kernel::OM->Get('Kernel::System::Log');
     my $JSONObject         = $Kernel::OM->Get('Kernel::System::JSON');
@@ -232,7 +232,7 @@ sub DataBuild {
             delete $Cache->{$Query};
         }
 
-        my %Response = $GmapsObject->Geocoding(
+        my %Response = $GMapsObject->Geocoding(
             Query => $Query,
         );
 

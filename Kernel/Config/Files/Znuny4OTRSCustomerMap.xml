@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_config version="1.0" init="Application">
+    <!-- nofilter(TidyAll::Plugin::OTRS::Znuny4OTRS::ACLKeysLevel3Actions) -->
+    <!-- nofilter(TidyAll::Plugin::OTRS::Znuny4OTRS::AdvancedDynamicFields) -->
     <ConfigItem Name="Frontend::Module###AgentCustomerMap" Required="0" Valid="1">
         <Description  Translatable="1">Frontend module registration for the AgentCustomerMap object in the agent interface.</Description>
         <Group>Znuny4OTRS-CustomerMap</Group>
@@ -82,14 +84,6 @@
                     </Array>
                 </Item>
             </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Znuny4OTRSCustomerMapAddressCacheTTL" Required="0" Valid="1">
-        <Description Translatable="1">Address cache time to live in days. 0 means no cache. Default is 30 days.</Description>
-        <Group>Znuny4OTRS-CustomerMap</Group>
-        <SubGroup>Core</SubGroup>
-        <Setting>
-            <String Regex="">30</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Znuny4OTRS::CustomerMap::GoogleAPIKey" Required="0" Valid="1">

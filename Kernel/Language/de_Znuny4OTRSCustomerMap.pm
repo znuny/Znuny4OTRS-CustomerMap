@@ -36,7 +36,9 @@ sub Data {
     $Self->{Translation}->{'Attributes used to get geolocation.'}          = 'Attribute, die zum Abrufen der Geolocation verwendet werden.';
     $Self->{Translation}->{'Show only open Tickets in customer map.'}      = 'Nur offene Tickets in der Kundenkarte anzeigen.';
     $Self->{Translation}->{'Updates the customer map based on addresses.'} = 'Aktualisiert die Kundenkarte basierend auf Adressen.';
-    $Self->{Translation}->{'Agent CustomerMap'}                            = 'Agent CustomerMap';
+
+    $Self->{Translation}->{'Agent CustomerMap'} = 'Agent CustomerMap';
+    $Self->{Translation}->{'Back'}              = 'zurück';
 
     return 1;
 }

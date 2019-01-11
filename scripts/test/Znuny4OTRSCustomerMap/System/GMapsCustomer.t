@@ -281,7 +281,7 @@ for my $CustomerUser (@CustomerUsers) {
 
     $Self->True(
         $Success,
-        'LatLng entry for customer user $CustomerUser->{UserLogin} must be present after adding ticket.',
+        "LatLng entry for customer user $CustomerUser->{UserLogin} must be present after adding ticket.",
     );
 }
 
@@ -335,7 +335,7 @@ for my $CustomerUser (@CustomerUsers) {
 
     $Self->True(
         $Cache->{$CacheKey},
-        'Cache entry for customer user $CustomerUser->{UserLogin} must be present after closing ticket.',
+        "Cache entry for customer user $CustomerUser->{UserLogin} must be present after closing ticket.",
     );
 
     # Check if the Lat, Lng and UserLogin are in the JSON Data
@@ -350,16 +350,22 @@ for my $CustomerUser (@CustomerUsers) {
             $Success = 1;
         }
     }
+
+    use Data::Dumper;
+    print STDERR 'Debug Dump - ModuleName - $CustomerUser = ' . Dumper( \$CustomerUser ) . "\n";
+    print STDERR 'Debug Dump - ModuleName - $CustomerUserCounter = ' . Dumper( \$CustomerUserCounter ) . "\n";
+    print STDERR 'Debug Dump - ModuleName - $Success = ' . Dumper( \$Success ) . "\n";
+
     if ( $CustomerUserCounter > 1 ) {
         $Self->True(
             $Success,
-            'LatLng entry for customer user $CustomerUser->{UserLogin} must be present after closing ticket.',
+            "LatLng entry for customer user $CustomerUser->{UserLogin} must be present after closing ticket.",
         );
     }
     else {
         $Self->False(
             $Success,
-            'LatLng entry for customer user $CustomerUser->{UserLogin} must not be present after closing ticket.',
+            "LatLng entry for customer user $CustomerUser->{UserLogin} must not be present after closing ticket.",
         );
     }
 }
