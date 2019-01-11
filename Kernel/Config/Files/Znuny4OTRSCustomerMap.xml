@@ -35,8 +35,8 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Znuny4OTRSCustomerMapOnlyOpenTickets" Required="0" Valid="1">
-        <Description Translatable="1">Show only open Tickets in customer map.</Description>
+    <ConfigItem Name="Znuny4OTRS::CustomerMap::CustomerSelection" Required="0" Valid="1">
+        <Description Translatable="1">Select which customers will be shown on the map.</Description>
         <Group>Znuny4OTRS-CustomerMap</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -46,7 +46,7 @@
             </Option>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Znuny4OTRSCustomerMapCustomerDataAttributes" Required="0" Valid="1">
+    <ConfigItem Name="Znuny4OTRS::CustomerMap::CustomerDataAttributes" Required="0" Valid="1">
         <Description Translatable="1">Attributes used to get geolocation.</Description>
         <Group>Znuny4OTRS-CustomerMap</Group>
         <SubGroup>Core</SubGroup>
@@ -58,7 +58,7 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Znuny4OTRSCustomerMapRequiredCustomerDataAttributes" Required="0" Valid="1">
+    <ConfigItem Name="Znuny4OTRS::CustomerMap::RequiredCustomerDataAttributes" Required="0" Valid="1">
         <Description Translatable="1">Attributes used to get geolocation.</Description>
         <Group>Znuny4OTRS-CustomerMap</Group>
         <SubGroup>Core</SubGroup>

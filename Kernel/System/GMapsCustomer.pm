@@ -5,7 +5,7 @@
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
-
+#test 5
 package Kernel::System::GMapsCustomer;
 
 use strict;
@@ -62,36 +62,35 @@ sub new {
 
     # required attributes
     $Self->{RequiredAttributes}
-        = $ConfigObject->Get('Znuny4OTRSCustomerMapRequiredCustomerDataAttributes') || ['UserCity'];
+        = $ConfigObject->Get('Znuny4OTRS::CustomerMap::RequiredCustomerDataAttributes') || ['UserCity'];
 
     # attribute map
-    $Self->{MapAttributes} = $ConfigObject->Get('Znuny4OTRSCustomerMapCustomerDataAttributes') || {
-        'UserStreet'  => 'UserStreet',
-        'UserCity'    => 'UserCity',
-        'UserCountry' => 'UserCountry',
+    $Self->{MapAttributes} = $ConfigObject->Get('Znuny4OTRS::CustomerMap::CustomerDataAttributes') || {
+        UserStreet  => 'UserStreet',
+        UserCity    => 'UserCity',
+        UserCountry => 'UserCountry',
     };
 
-    $Self->{TicketStateTypes} = [ 'new', 'open', 'pending reminder', 'pending auto' ];
+    $Self->{StateType} = [ 'new', 'open', 'pending reminder', 'pending auto' ];
     @{ $Self->{OpenStateIDs} } = $StateObject->StateGetStatesByType(
-        StateType => $Self->{TicketStateTypes},
+        StateType => $Self->{StateType},
         Result    => 'ID',
     );
 
     $Self->{CacheType} = 'GMapsCustomerMap';
 
-    # This Cache Key will store a hash of Address to Geolocation assignments
+    # This Cache key will store a hash of addresses to geo location assignments.
     #
-    # Each Address to Geolocation assignment will have it's own TTL
+    # Each address to geo location assignment will have its own TTL.
     #
-    # each call of this Routine (normally done nightly)
-    # will set the CacheTTL to 1 year ahead
-    # so this cache key just gets deleted by manual cache deletion
+    # Each call (normally done nightly) will set the cache TTL to one year ahead.
+    # So this cache key only will be deleted by manual cache deletion.
     #
-    # Reason for it: Address to Geolocation may become huge on big systems
-    # and is required just once every night
+    # Reason: Address to geo location may become huge on big systems
+    # and is required just once every night.
     #
-    # To avoid storing 100.000s of Address Keys the TTL will be assigned to each Address Key
-    $Self->{CacheTTL} = 365 * 86400;
+    # To avoid storing 100,000s of address keys the TTL will be assigned to each address key.
+    $Self->{CacheTTL} = 365 * ( 24 * 60 * 60 );
 
     return $Self;
 }
@@ -119,53 +118,47 @@ sub DataBuild {
     my $CacheObject        = $Kernel::OM->Get('Kernel::System::Cache');
     my $CacheKey           = 'AddressToGeolocation';
     my $InternalCacheTTL   = 86400 * ( $ConfigObject->Get('Znuny4OTRSCustomerMapCustomerCacheTTL') // 30 );
-    my $OnlyOpenTickets    = $ConfigObject->Get('Znuny4OTRSCustomerMapOnlyOpenTickets') // 1;
+    my $OnlyOpenTickets    = $ConfigObject->Get('Znuny4OTRS::CustomerMap::CustomerSelection') // 1;
 
-    # Getting Data is triggered once every night so one systemtime for cache comparison is enough
+    # Getting data is triggered once every night so one systemtime for cache comparison is enough
     my $SystemTime = $TimeObject->SystemTime();
 
     my $Cache = $CacheObject->Get(
         Type => $Self->{CacheType},
         Key  => $CacheKey,
     );
-
-    my %NewCache = ();
-
     if ( ref $Cache ne 'HASH' ) {
         $Cache = {};
     }
 
-    my $SQL = ''
-        . 'SELECT DISTINCT customer_user_id'
-        . ' FROM ticket t';
+    my $SQL = '
+        SELECT DISTINCT customer_user_id
+        FROM   ticket t
+    ';
 
     if ($OnlyOpenTickets) {
-        $SQL .= ' WHERE t.ticket_state_id IN(' . ( join ',', @{ $Self->{OpenStateIDs} } ) . ')';
+        $SQL .= 'WHERE t.ticket_state_id IN(' . ( join ',', @{ $Self->{OpenStateIDs} } ) . ')';
     }
-
     return if !$DBObject->Prepare( SQL => $SQL );
 
     my @CustomerUserIDs;
-
-    # fetch the result
-    ROW:
-    while ( my @Data = $DBObject->FetchrowArray() ) {
-
-        next ROW if !$Data[0];
-
-        push @CustomerUserIDs, $Data[0];
+    CUSTOMERUSERID:
+    while ( my @Row = $DBObject->FetchrowArray() ) {
+        next CUSTOMERUSERID if !$Row[0];
+        push @CustomerUserIDs, $Row[0];
     }
 
+    my %NewCache;
     my @Data;
     my $Counter      = 0;
     my $CounterLimit = 120_000;
 
     CUSTOMERUSERID:
     for my $UserID (@CustomerUserIDs) {
+
         my %Customer = $CustomerUserObject->CustomerUserDataGet(
             User => $UserID,
         );
-
         next CUSTOMERUSERID if !%Customer;
 
         # check required infos
@@ -177,16 +170,16 @@ sub DataBuild {
         CUSTOMER:
         for my $Key ( sort keys %Customer ) {
             next CUSTOMER if !$Customer{$Key};
-            $Customer{$Key} =~ s/(\r|\n|\t)//g;
+            $Customer{$Key} =~ s{(\r|\n|\t)}{}g;
         }
 
         my $Query;
-        MAPATTRIBUTES:
+        MAPATTRIBUTE:
         for my $KeyOrig ( sort keys %{ $Self->{MapAttributes} } ) {
             my $Key = $Self->{MapAttributes}->{$KeyOrig};
-            next MAPATTRIBUTES if !$Customer{$Key};
+            next MAPATTRIBUTE if !$Customer{$Key};
             chomp $Customer{$Key};
-            if ($Query) {
+            if ( defined $Query ) {
                 $Query .= ', ';
             }
             $Query .= $Customer{$Key};
@@ -199,7 +192,7 @@ sub DataBuild {
             UserID            => 1,
         );
 
-        next CUSTOMERUSERID if ( $OnlyOpenTickets && !$Count );
+        next CUSTOMERUSERID if $OnlyOpenTickets && !$Count;
 
         if (
             $Cache->{$Query}
@@ -207,28 +200,31 @@ sub DataBuild {
             && defined $Cache->{$Query}->{Longitude}
             )
         {
-
             $Counter++;
             last CUSTOMERUSERID if $Counter == $CounterLimit;
 
             if ( $Cache->{$Query}->{TTL} > $SystemTime ) {
-                push @Data,
-                    [ $Cache->{$Query}->{Latitude}, $Cache->{$Query}->{Longitude}, $Customer{UserLogin}, $Count ];
+                push @Data, [
+                    $Cache->{$Query}->{Latitude},
+                    $Cache->{$Query}->{Longitude},
+                    $Customer{UserLogin},
+                    $Count
+                ];
                 next CUSTOMERUSERID;
             }
 
             # Cache itself lives forever
-            # so if the TTL of an exisiting Address Query
+            # so if the TTL of an exisiting address query
             # aged out, we delete it manually
             #
             # Reason: if the Geocoding response fails, and will fail continually
-            # (Example: an old Address doesn't exist any more because a Street/City was renamed)
-            # the old stored Cache Entry neither would be overwritten
-            # nore deleted so deleting here is necessary for cache sanity
+            # (Example: an old address doesn't exist anymore because a street/city was renamed)
+            # the old stored cache entry neither would be overwritten
+            # nor deleted so deleting here is necessary for cache sanity
             #
-            # For customers that don't have open tickets any more over years
-            # it will be still necessary to delete the cache manually every 3-5 years
-            # (which normally should be done if a system gets upgraded to a new OTRS Version)
+            # For customers that don't have open tickets anymore over years
+            # it will still be necessary to delete the cache manually every 3-5 years
+            # (which normally should be done if a system gets upgraded to a new OTRS version)
             delete $Cache->{$Query};
         }
 
@@ -239,18 +235,22 @@ sub DataBuild {
         usleep(300000);
 
         next CUSTOMERUSERID if !%Response;
-
-        next CUSTOMERUSERID if $Response{Status} !~ /ok/i;
+        next CUSTOMERUSERID if $Response{Status} !~ m{ok}i;
 
         $Counter++;
         last CUSTOMERUSERID if $Counter == $CounterLimit;
 
-        push @Data, [ $Response{Latitude}, $Response{Longitude}, $Customer{UserLogin}, $Count ];
+        push @Data, [
+            $Response{Latitude},
+            $Response{Longitude},
+            $Customer{UserLogin},
+            $Count
+        ];
 
         $NewCache{$Query} = {
             Latitude  => $Response{Latitude},
             Longitude => $Response{Longitude},
-            TTL       => ( $SystemTime + $InternalCacheTTL ),
+            TTL       => $SystemTime + $InternalCacheTTL,
         };
     }
 

@@ -351,11 +351,6 @@ for my $CustomerUser (@CustomerUsers) {
         }
     }
 
-    use Data::Dumper;
-    print STDERR 'Debug Dump - ModuleName - $CustomerUser = ' . Dumper( \$CustomerUser ) . "\n";
-    print STDERR 'Debug Dump - ModuleName - $CustomerUserCounter = ' . Dumper( \$CustomerUserCounter ) . "\n";
-    print STDERR 'Debug Dump - ModuleName - $Success = ' . Dumper( \$Success ) . "\n";
-
     if ( $CustomerUserCounter > 1 ) {
         $Self->True(
             $Success,
