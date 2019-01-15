@@ -25,7 +25,7 @@
         <File Permission="644" Location="Kernel/Output/HTML/Dashboard/CustomerMap.pm"/>
         <File Permission="644" Location="Kernel/Output/HTML/Templates/Standard/AgentCustomerMap.tt"/>
         <File Permission="644" Location="Kernel/Output/HTML/Templates/Standard/AgentDashboardCustomerMap.tt"/>
-        <File Permission="644" Location="Kernel/System/Console/Command/Znuny/CustomerMapBuild.pm"/>
+        <File Permission="644" Location="Kernel/System/Console/Command/Znuny4OTRS/CustomerMap/Build.pm"/>
         <File Permission="644" Location="Kernel/System/GMaps.pm"/>
         <File Permission="644" Location="Kernel/System/GMapsCustomer.pm"/>
         <File Permission="644" Location="scripts/test/Znuny4OTRSCustomerMap/Selenium/Agent/Znuny4OTRSAgentCustomerMap.t"/>

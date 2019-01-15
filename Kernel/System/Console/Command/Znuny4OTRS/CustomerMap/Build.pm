@@ -6,7 +6,7 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::System::Console::Command::Znuny::CustomerMapBuild;
+package Kernel::System::Console::Command::Znuny4OTRS::CustomerMap::Build;
 
 use strict;
 use warnings;
