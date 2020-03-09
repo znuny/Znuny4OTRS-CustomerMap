@@ -1,4 +1,7 @@
-![Znuny logo](http://znuny.com/assets/images/logo_small.png)
+![Znuny logo](https://www.znuny.com/assets/images/logo_small.png)
+
+
+![Build status](https://badge.proxy.znuny.com/Znuny4OTRS-CustomerMap/master)
 
 Google Maps Integration
 =======================
@@ -61,14 +64,14 @@ Enjoy the inspiration how to use this new kind of view (e. g. for optimizing you
 
 **Download**
 
-For download see [http://znuny.com/en/#!/addons](http://znuny.com/en/#!/addons)
+For download see [https://www.znuny.com/en/#!/addons](https://www.znuny.com/en/#!/addons)
 
 **Commercial Support**
 
-For this extension and for OTRS in general visit [http://znuny.com/](http://znuny.com/). Looking forward to hear from you!
+For this extension and for OTRS in general visit [www.znuny.com](https://www.znuny.com). Looking forward to hear from you!
 
 Enjoy!
 
- Your Znuny Team!
+Your Znuny Team!
 
- [http://znuny.com/](http://znuny.com/)
+[www.znuny.com](https://www.znuny.com)
