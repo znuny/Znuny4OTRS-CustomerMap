@@ -7,4 +7,5 @@ include:
 default:
   before_script:
     - /run.sh
+    - env
     - su -c "/opt/otrs/bin/otrs.Console.pl Znuny4OTRS::AdvancedPackageManager::InstallSOPM /opt/otrs/$CI_PROJECT_NAME.sopm" - otrs
