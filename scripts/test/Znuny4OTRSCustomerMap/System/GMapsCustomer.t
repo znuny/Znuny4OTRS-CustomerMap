@@ -35,6 +35,16 @@ for ( 0 .. 2 ) {
     push @RandomIDs, $HelperObject->GetRandomID();
 }
 
+$Self->True(
+    $ENV{'GOOGLE_APIKEY'},
+    "GOOGLE_APIKEY $ENV{GOOGLE_APIKEY}"
+);
+
+$ConfigObject->Set(
+    Key   => 'Znuny4OTRS::CustomerMap::GoogleAPIKey',
+    Value => $ENV{'GOOGLE_APIKEY'},
+);
+
 my @CustomerTemplate = (
     {
         Source         => 'CustomerUser',
