@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_package version="1.0">
     <Name>Znuny4OTRS-CustomerMap</Name>
-    <Version>6.0.5</Version>
+    <Version>6.0.6</Version>
+    <ChangeLog Version="6.0.6" Date="2020-04-07 17:55:45 +0200">Tidied code and improved UnitTests.</ChangeLog>
     <ChangeLog Version="6.0.5" Date="2019-01-15 10:26:09 +0100">Fixed small bugs and tidied code.</ChangeLog>
     <ChangeLog Version="6.0.4" Date="2018-12-28 14:48:26 +0100">Fixed CI and added language feature.</ChangeLog>
     <ChangeLog Version="6.0.3" Date="2018-01-09 15:40:20 +0100">Added info to documentation about location data sent to Google.</ChangeLog>
