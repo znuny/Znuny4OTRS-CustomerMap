@@ -38,15 +38,18 @@ my %Response = $GMapsObject->Geocoding(
     Query => $Query,
 );
 
-$Self->IsDeeply(
-    \%Response,
-    {
-        Latitude  => '52.5938008',
-        Status    => 'OK',
-        Longitude => '13.4285851',
-        Accuracy  => 'ROOFTOP'
-    },
-    "Geocoding for $Query",
+my @ResponseKeys = (
+    'Latitude',
+    'Status',
+    'Longitude',
+    'Accuracy',
 );
+
+for my $ResponseKey (@ResponseKeys) {
+    $Self->True(
+        defined $Response{$ResponseKey},
+        "Geocoding response key $ResponseKey is defined for $Query",
+    );
+}
 
 1;

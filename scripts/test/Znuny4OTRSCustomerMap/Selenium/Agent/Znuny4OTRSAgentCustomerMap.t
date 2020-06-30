@@ -39,7 +39,6 @@ $ConfigObject->Set(
     Value => $ENV{'GOOGLE_APIKEY'},
 );
 
-
 my @CustomerTemplate = (
     {
         Source         => 'CustomerUser',
