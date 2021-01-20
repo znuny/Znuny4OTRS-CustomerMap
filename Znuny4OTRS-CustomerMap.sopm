@@ -17,7 +17,7 @@
     <ChangeLog Version="1.6.2" Date="2015-11-21 12:11:22 UTC">added english manual</ChangeLog>
     <ChangeLog Version="1.6.0" Date="2015-01-26 12:36:48 +0100">ported to 4.0</ChangeLog>
     <Framework>6.0.x</Framework>
-    <PackageRequired Version="6.0.56">Znuny4OTRS-Repo</PackageRequired>
+    <PackageRequired Version="6.0.71">Znuny4OTRS-Repo</PackageRequired>
     <Vendor>Znuny GmbH</Vendor>
     <URL>http://znuny.com/en/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>

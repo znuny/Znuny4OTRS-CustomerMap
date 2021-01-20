@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2020 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2021 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -42,7 +42,7 @@ sub Run {
     #
     if ( $Self->{Subaction} eq 'Update' ) {
         for my $Key (qw( Latitude Longitude Zoom )) {
-            my $Value = $ParamObject->GetParam( Param => $Key );
+            my $Value      = $ParamObject->GetParam( Param => $Key );
             my $SessionKey = 'UserCustomerMap' . $Key;
 
             $SessionObject->UpdateSessionID(
@@ -75,7 +75,7 @@ sub Run {
     # get user data
     #
     if ( $Self->{Subaction} eq 'Customer' ) {
-        my $Login = $ParamObject->GetParam( Param => 'Login' );
+        my $Login    = $ParamObject->GetParam( Param => 'Login' );
         my %Customer = $CustomerUserObject->CustomerUserDataGet(
             User => $Login,
         );
