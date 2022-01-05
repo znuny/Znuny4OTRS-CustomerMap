@@ -1,7 +1,7 @@
 # Konfiguration
 
 Um Kundenstandorte anzuzeigen ist es notwendig einen Google-Maps-Browser-API-Key zu besitzen.
-Dieser Key ist dann in der SysConfig-Option `Znuny4OTRS::CustomerMap::GoogleAPIKey` einzutragen.
+Dieser Key ist dann in der SysConfig-Option `Znuny::CustomerMap::GoogleAPIKey` einzutragen.
 
 ## Koordinaten der Kundenstandorte ermitteln
 
@@ -26,23 +26,23 @@ Die konfigurierten Felder werden als kombinierter Adressstring zur Standortabfra
 Die Umwandlung kann über die Konsole als OTRS-Benutzer auch manuell ausgeführt werden:
 
 ```
-    shell> bin/otrs.Console.pl Znuny4OTRS::CustomerMap::Build
+    shell> bin/otrs.Console.pl Znuny::CustomerMap::Build
     NOTICE: Done (wrote 209 records).
     shell>
 ```
 
 ## Einstellungen System Configuration
 
-### Znuny4OTRS::CustomerMap::GoogleAPIKey
+### Znuny::CustomerMap::GoogleAPIKey
 In dieser Einstellung ist der API-Key einzutragen den Sie über den Link https://developers.google.com/maps/documentation/javascript/get-api-key erhalten. Ohne diese API-Key ist eine Nutzung des Addons nicht möglich.
 
-### Znuny4OTRS::CustomerMap::CustomerDataAttributes
+### Znuny::CustomerMap::CustomerDataAttributes
 Hiermit wird festgelegt aus welchen Attributen Ihrer Kundenbenutzer-Datenbenk (CustomerUser) die für die Ermittlung er Koordinaten notwendigen Informationen bezogen werden. Tragen Sie dazu bitte als Wert den passenden Namen aus der ersten Spalte des Mappings ein. Die Namen der Schlüssel belassen Sie bitte unverändert.
 
-### Znuny4OTRS::CustomerMap::RequiredCustomerDataAttributes
+### Znuny::CustomerMap::RequiredCustomerDataAttributes
 Diese Attribute werden mindestens benötigt um um die Koordinaten zu einer Adresse zu ermitteln.
 
-### Znuny4OTRS::CustomerMap::CustomerSelection
+### Znuny::CustomerMap::CustomerSelection
 Diese Einstellung legt fest ob nur die Standorte der Kunden mit offenen Tickets angezeigt werden sollen, oder die von den Kunden zu denen er geschlossene Tickets gibt.
 
 

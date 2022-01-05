@@ -1,5 +1,5 @@
 // --
-// Copyright (C) 2012-2021 Znuny GmbH, http://znuny.com/
+// Copyright (C) 2012-2022 Znuny GmbH, http://znuny.com/
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you
@@ -11,11 +11,11 @@ Core.Agent = Core.Agent || {};
 
 /**
  * @namespace
- * @exports TargetNS as Core.Agent.Znuny4OTRSCustomerMap
+ * @exports TargetNS as Core.Agent.ZnunyCustomerMap
  * @description
  *      This namespace contains the special module functions for the CustomerMap.
  */
-Core.Agent.Znuny4OTRSCustomerMap = (function (TargetNS) {
+Core.Agent.ZnunyCustomerMap = (function (TargetNS) {
     /**
      * @function
      * @return nothing
@@ -105,7 +105,7 @@ Core.Agent.Znuny4OTRSCustomerMap = (function (TargetNS) {
                 /*global MarkerClusterer:true*/
                 markerCluster = new MarkerClusterer(TargetNS.map, TargetNS.Markers,
                     {
-                        imagePath: '../Znuny4OTRSCustomerMap/m'
+                        imagePath: '../ZnunyCustomerMap/m'
                     }
                 );
             },
@@ -169,4 +169,4 @@ Core.Agent.Znuny4OTRSCustomerMap = (function (TargetNS) {
         TargetNS.Markers.push(marker);
     };
     return TargetNS;
-}(Core.Agent.Znuny4OTRSCustomerMap || {}));
+}(Core.Agent.ZnunyCustomerMap || {}));

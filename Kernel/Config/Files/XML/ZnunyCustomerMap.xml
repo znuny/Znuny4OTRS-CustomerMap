@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_config version="2.0" init="Application">
-    <!-- nofilter(TidyAll::Plugin::OTRS::Znuny4OTRS::Config::ACLKeysLevel3Actions) -->
-    <!-- nofilter(TidyAll::Plugin::OTRS::Znuny4OTRS::Advanced::DynamicFields) -->
+    <!-- nofilter(TidyAll::Plugin::OTRS::Znuny::Config::ACLKeysLevel3Actions) -->
+    <!-- nofilter(TidyAll::Plugin::OTRS::Znuny::Advanced::DynamicFields) -->
     <Setting Name="Frontend::Module###AgentCustomerMap" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the agent interface.</Description>
         <Navigation>Frontend::Agent::ModuleRegistration</Navigation>
@@ -23,27 +23,27 @@
             </Item>
         </Value>
     </Setting>
-    <Setting Name="Loader::Module::AgentCustomerMap###002-Znuny4OTRSCustomerMap" Required="0" Valid="1">
+    <Setting Name="Loader::Module::AgentCustomerMap###002-ZnunyCustomerMap" Required="0" Valid="1">
         <Description Translatable="1">Loader module registration for the agent interface.</Description>
         <Navigation>Frontend::Agent::ModuleRegistration::Loader</Navigation>
         <Value>
             <Hash>
                 <Item Key="JavaScript">
                     <Array>
-                        <Item>Core.Agent.Znuny4OTRSCustomerMap.js</Item>
+                        <Item>Core.Agent.ZnunyCustomerMap.js</Item>
                     </Array>
                 </Item>
             </Hash>
         </Value>
     </Setting>
-    <Setting Name="Loader::Module::AgentDashboard###002-Znuny4OTRSCustomerMap" Required="0" Valid="1">
+    <Setting Name="Loader::Module::AgentDashboard###002-ZnunyCustomerMap" Required="0" Valid="1">
         <Description Translatable="1">Loader module registration for the agent interface.</Description>
         <Navigation>Frontend::Agent::ModuleRegistration::Loader</Navigation>
         <Value>
             <Hash>
                 <Item Key="JavaScript">
                     <Array>
-                        <Item>Core.Agent.Znuny4OTRSCustomerMap.js</Item>
+                        <Item>Core.Agent.ZnunyCustomerMap.js</Item>
                     </Array>
                 </Item>
             </Hash>
@@ -67,9 +67,9 @@
             </Hash>
         </Value>
     </Setting>
-    <Setting Name="Znuny4OTRS::CustomerMap::CustomerSelection" Required="0" Valid="1">
+    <Setting Name="Znuny::CustomerMap::CustomerSelection" Required="0" Valid="1">
         <Description Translatable="1">Select which customers will be shown on the map.</Description>
-        <Navigation>Core::Znuny4OTRS::CustomerMap</Navigation>
+        <Navigation>Core::Znuny::CustomerMap</Navigation>
         <Value>
             <Item ValueType="Select" SelectedID="1">
                 <Item ValueType="Option" Value="0" Translatable="1">All customers assigned to a ticket</Item>
@@ -77,9 +77,9 @@
             </Item>
         </Value>
     </Setting>
-    <Setting Name="Znuny4OTRS::CustomerMap::CustomerDataAttributes" Required="0" Valid="1">
+    <Setting Name="Znuny::CustomerMap::CustomerDataAttributes" Required="0" Valid="1">
         <Description Translatable="1">Attributes used to get geo data for customer locations.</Description>
-        <Navigation>Core::Znuny4OTRS::CustomerMap</Navigation>
+        <Navigation>Core::Znuny::CustomerMap</Navigation>
         <Value>
             <Hash>
                 <Item Key="UserCity">UserCity</Item>
@@ -88,9 +88,9 @@
             </Hash>
         </Value>
     </Setting>
-    <Setting Name="Znuny4OTRS::CustomerMap::RequiredCustomerDataAttributes" Required="0" Valid="1">
+    <Setting Name="Znuny::CustomerMap::RequiredCustomerDataAttributes" Required="0" Valid="1">
         <Description Translatable="1">Required attributes used to get geo data for customer locations.</Description>
-        <Navigation>Core::Znuny4OTRS::CustomerMap</Navigation>
+        <Navigation>Core::Znuny::CustomerMap</Navigation>
         <Value>
             <Array>
                 <Item>UserCity</Item>
@@ -114,9 +114,9 @@
             </Hash>
         </Value>
     </Setting>
-    <Setting Name="Znuny4OTRS::CustomerMap::GoogleAPIKey" Required="0" Valid="1">
+    <Setting Name="Znuny::CustomerMap::GoogleAPIKey" Required="0" Valid="1">
         <Description Translatable="1">Required API key for using Google Maps and Geocoding API.</Description>
-        <Navigation>Core::Znuny4OTRS::CustomerMap</Navigation>
+        <Navigation>Core::Znuny::CustomerMap</Navigation>
         <Value>
             <Item ValueType="String" ValueRegex=""></Item>
         </Value>

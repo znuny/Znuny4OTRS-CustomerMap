@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_package version="1.0">
-    <Name>Znuny4OTRS-CustomerMap</Name>
+    <Name>Znuny-CustomerMap</Name>
     <Version>6.0.8</Version>
     <ChangeLog Version="6.0.8" Date="2021-02-12 17:42:12 +0100">Happy new year. Tidied code.</ChangeLog>
     <ChangeLog Version="6.0.7" Date="2020-06-30 17:30:52 +0200">Tidied code and improved UnitTests.</ChangeLog>
@@ -17,49 +17,49 @@
     <ChangeLog Version="1.7.1" Date="2016-01-12 14:30:01 UTC">ported to 5.0</ChangeLog>
     <ChangeLog Version="1.6.2" Date="2015-11-21 12:11:22 UTC">added english manual</ChangeLog>
     <ChangeLog Version="1.6.0" Date="2015-01-26 12:36:48 +0100">ported to 4.0</ChangeLog>
-    <Framework>6.0.x</Framework>
-    <PackageRequired Version="6.0.71">Znuny4OTRS-Repo</PackageRequired>
+    <Framework>6.1.x</Framework>
     <Vendor>Znuny GmbH</Vendor>
     <URL>http://znuny.com/en/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
     <Description Lang="en">Google Maps integraton to show your customers on a map in the dashboard.</Description>
     <Description Lang="de">Google-Maps-Integration zur Anzeige Ihrer Kunden auf einer Karte im Dashboard.</Description>
     <Filelist>
-        <File Permission="660" Location="Kernel/Config/Files/XML/Znuny4OTRSCustomerMap.xml"/>
-        <File Permission="660" Location="Kernel/Language/de_Znuny4OTRSCustomerMap.pm"/>
+        <File Permission="660" Location="Kernel/Config/Files/XML/ZnunyCustomerMap.xml"/>
+        <File Permission="660" Location="Kernel/Language/de_ZnunyCustomerMap.pm"/>
         <File Permission="660" Location="Kernel/Modules/AgentCustomerMap.pm"/>
         <File Permission="660" Location="Kernel/Output/HTML/Dashboard/CustomerMap.pm"/>
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AgentCustomerMap.tt"/>
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AgentDashboardCustomerMap.tt"/>
-        <File Permission="660" Location="Kernel/System/Console/Command/Znuny4OTRS/CustomerMap/Build.pm"/>
+        <File Permission="660" Location="Kernel/System/Console/Command/Znuny/CustomerMap/Build.pm"/>
         <File Permission="660" Location="Kernel/System/GMaps.pm"/>
         <File Permission="660" Location="Kernel/System/GMapsCustomer.pm"/>
-        <File Permission="660" Location="scripts/test/Znuny4OTRSCustomerMap/Selenium/Agent/Znuny4OTRSAgentCustomerMap.t"/>
-        <File Permission="660" Location="scripts/test/Znuny4OTRSCustomerMap/System/GMaps.t"/>
-        <File Permission="660" Location="scripts/test/Znuny4OTRSCustomerMap/System/GMapsCustomer.t"/>
-        <File Permission="660" Location="scripts/test/Znuny4OTRSCustomerMap/var/packagesetup/Znuny4OTRSCustomerMap.t"/>
-        <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Znuny4OTRSCustomerMap.js"/>
+        <File Permission="660" Location="scripts/test/ZnunyCustomerMap/Selenium/Agent/ZnunyAgentCustomerMap.t"/>
+        <File Permission="660" Location="scripts/test/ZnunyCustomerMap/System/GMaps.t"/>
+        <File Permission="660" Location="scripts/test/ZnunyCustomerMap/System/GMapsCustomer.t"/>
+        <File Permission="660" Location="scripts/test/ZnunyCustomerMap/var/packagesetup/ZnunyCustomerMap.t"/>
+        <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.ZnunyCustomerMap.js"/>
         <File Permission="660" Location="var/httpd/htdocs/js/GoogleMapsMarkerClusterer.js"/>
-        <File Permission="660" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m1.png"/>
-        <File Permission="660" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m2.png"/>
-        <File Permission="660" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m3.png"/>
-        <File Permission="660" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m4.png"/>
-        <File Permission="660" Location="var/httpd/htdocs/Znuny4OTRSCustomerMap/m5.png"/>
-        <File Permission="660" Location="var/packagesetup/Znuny4OTRSCustomerMap.pm"/>
+        <File Permission="660" Location="var/httpd/htdocs/ZnunyCustomerMap/m1.png"/>
+        <File Permission="660" Location="var/httpd/htdocs/ZnunyCustomerMap/m2.png"/>
+        <File Permission="660" Location="var/httpd/htdocs/ZnunyCustomerMap/m3.png"/>
+        <File Permission="660" Location="var/httpd/htdocs/ZnunyCustomerMap/m4.png"/>
+        <File Permission="660" Location="var/httpd/htdocs/ZnunyCustomerMap/m5.png"/>
+        <File Permission="660" Location="var/packagesetup/ZnunyCustomerMap.pm"/>
     </Filelist>
     <CodeReinstall Type="post"><![CDATA[
-        $Kernel::OM->Get('var::packagesetup::Znuny4OTRSCustomerMap')->CodeReinstall();
+        $Kernel::OM->Get('var::packagesetup::ZnunyCustomerMap')->CodeReinstall();
     ]]></CodeReinstall>
     <CodeInstall Type="post"><![CDATA[
-        $Kernel::OM->Get('var::packagesetup::Znuny4OTRSCustomerMap')->CodeInstall();
+        $Kernel::OM->Get('var::packagesetup::ZnunyCustomerMap')->CodeInstall();
     ]]></CodeInstall>
     <CodeUninstall Type="pre"><![CDATA[
-        $Kernel::OM->Get('var::packagesetup::Znuny4OTRSCustomerMap')->CodeUninstall();
+        $Kernel::OM->Get('var::packagesetup::ZnunyCustomerMap')->CodeUninstall();
     ]]></CodeUninstall>
     <CodeUpgrade Type="post"><![CDATA[
-        $Kernel::OM->Get('var::packagesetup::Znuny4OTRSCustomerMap')->CodeUpgrade();
+        $Kernel::OM->Get('var::packagesetup::ZnunyCustomerMap')->CodeUpgrade();
     ]]></CodeUpgrade>
     <CodeUpgrade Type="post" Version="6.0.4"><![CDATA[
-        $Kernel::OM->Get('var::packagesetup::Znuny4OTRSCustomerMap')->CodeUpgrade604();
+        $Kernel::OM->Get('var::packagesetup::ZnunyCustomerMap')->CodeUpgrade604();
     ]]></CodeUpgrade>
+    <PackageMerge Name="Znuny4OTRS-CustomerMap" TargetVersion="6.0.8"></PackageMerge>
 </otrs_package>
