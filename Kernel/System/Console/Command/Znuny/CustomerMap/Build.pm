@@ -1,12 +1,12 @@
 # --
-# Copyright (C) 2012-2021 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2022 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::System::Console::Command::Znuny4OTRS::CustomerMap::Build;
+package Kernel::System::Console::Command::Znuny::CustomerMap::Build;
 
 use strict;
 use warnings;
@@ -22,7 +22,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description("Collects geo data for customer map.\nCopyright (C) 2012-2021 Znuny GmbH, http://znuny.com/");
+    $Self->Description("Collects geo data for customer map.\nCopyright (C) 2012-2022 Znuny GmbH, http://znuny.com/");
 
     $Self->AddOption(
         Name        => 'force-pid',
@@ -62,7 +62,7 @@ sub PreRun {
 
     $LogObject->Log(
         Priority => 'debug',
-        Message  => 'Znuny4OTRS-CustomerMap: Build (' . $Self->Name() . ') started.',
+        Message  => 'Znuny-CustomerMap: Build (' . $Self->Name() . ') started.',
     );
 
     return;
@@ -95,7 +95,7 @@ sub PostRun {
     if ( $Self->GetOption('debug') ) {
         $LogObject->Log(
             Priority => 'debug',
-            Message  => 'Znuny4OTRS-CustomerMap: Build (' . $Self->Name() . ') stopped.',
+            Message  => 'Znuny-CustomerMap: Build (' . $Self->Name() . ') stopped.',
         );
     }
 
@@ -104,13 +104,3 @@ sub PostRun {
 }
 
 1;
-
-=head1 TERMS AND CONDITIONS
-
-This software is part of the OTRS project (L<http://otrs.org/>).
-
-This software comes with ABSOLUTELY NO WARRANTY. For details, see
-the enclosed file COPYING for license information (AGPL). If you
-did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
-
-=cut

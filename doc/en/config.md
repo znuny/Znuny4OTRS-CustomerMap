@@ -1,7 +1,7 @@
 # Configuration
 
 To display customer locations it is necessary to have a Google Maps Browser API key.
-This key must then be inserted in the SysConfig option `Znuny4OTRS::CustomerMap::GoogleAPIKey`.
+This key must then be inserted in the SysConfig option `Znuny::CustomerMap::GoogleAPIKey`.
 
 ## Determine the coordinates of the customer's locations
 
@@ -24,23 +24,23 @@ The configured fields will be sent as a combined address string to Google to ret
 This can also be done manually as the OTRS user from the console:
 
 ```
-    shell> bin/otrs.Console.pl Znuny4OTRS::CustomerMap::Build
+    shell> bin/otrs.Console.pl Znuny::CustomerMap::Build
     NOTICE: Done (wrote 209 records).
     shell>
 ```
 
 ### System Configuration settings
 
-### Znuny4OTRS::CustomerMap::GoogleAPIKey
+### Znuny::CustomerMap::GoogleAPIKey
 In this setting you have to enter the API key which you can get via the link https://developers.google.com/maps/documentation/javascript/get-api-key. Without this API key, use of the addon is not possible.
 
-#### Znuny4OTRS::CustomerMap::CustomerDataAttributes
+#### Znuny::CustomerMap::CustomerDataAttributes
 This determines from which attributes of your customer user configuration (CustomerUser) the information necessary for the determination of the coordinates is obtained. Please enter the appropriate name from the first column of the mapping as a value. Please leave the names of the keys unchanged.
 
-#### Znuny4OTRS::CustomerMap::RequiredCustomerDataAttributes
+#### Znuny::CustomerMap::RequiredCustomerDataAttributes
 These attributes are at least required to determine the coordinates to an address.
 
-#### Znuny4OTRS::CustomerMap::CustomerSelection
+#### Znuny::CustomerMap::CustomerSelection
 This setting determines whether only the locations of the customers with open tickets should be displayed, or those of the customers to whom also have closed tickets.
 
 ### Daemon::SchedulerCronTaskManager::Task###UpdateCustomerMap

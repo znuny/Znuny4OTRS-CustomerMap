@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2020 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2022 Znuny GmbH, http://znuny.com/
 # Copyright (C) 2013 Juergen Sluyterman, http://www.rsag.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -56,7 +56,7 @@ sub new {
 return the content of requested URL
 
     my %Response = $GMapsObject->Geocoding(
-        Query => 'Berlin, Deutschland, Marienstraße 11',
+        Query => 'Berlin, Deutschland, Marienstr. 11',
     );
 
 returns
@@ -92,7 +92,7 @@ sub Geocoding {
         return;
     }
 
-    my $APIKey = $ConfigObject->Get('Znuny4OTRS::CustomerMap::GoogleAPIKey');
+    my $APIKey = $ConfigObject->Get('Znuny::CustomerMap::GoogleAPIKey');
     my $URL    = $Self->{GeocodingURL} . 'address=' . $Param{Query} . '&sensor=false&key=' . $APIKey;
 
     my %Response = $WebUserAgentObject->Request(
@@ -101,7 +101,7 @@ sub Geocoding {
     return if !%Response || !$Response{Content};
 
     my $GeocodingJSONResponse = ${ $Response{Content} };
-    my $GeocodingData = $JSONObject->Decode( Data => $GeocodingJSONResponse );
+    my $GeocodingData         = $JSONObject->Decode( Data => $GeocodingJSONResponse );
 
     if (
         !IsHashRefWithData($GeocodingData)

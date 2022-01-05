@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2021 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2022 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -35,7 +35,7 @@ $Self->True(
 );
 
 $ConfigObject->Set(
-    Key   => 'Znuny4OTRS::CustomerMap::GoogleAPIKey',
+    Key   => 'Znuny::CustomerMap::GoogleAPIKey',
     Value => $ENV{'GOOGLE_APIKEY'},
 );
 
@@ -122,7 +122,7 @@ $GMapsCustomerObject->DataBuild();
 # store test function in variable so the Selenium object can handle errors/exceptions/dies etc.
 my $SeleniumTest = sub {
 
-    # initialize Znuny4OTRS Helpers and other needed objects
+    # initialize Znuny Helpers and other needed objects
     my $HelperObject      = $Kernel::OM->Get('Kernel::System::UnitTest::Helper');
     my $ZnunyHelperObject = $Kernel::OM->Get('Kernel::System::ZnunyHelper');
 

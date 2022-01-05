@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2021 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2022 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -24,7 +24,7 @@ our @ObjectDependencies = (
     'Kernel::System::State',
     'Kernel::System::Ticket',
     'Kernel::System::VirtualFS',
-    'Kernel::System::ZnunyTime',
+    'Kernel::System::Time',
 );
 
 =head1 NAME
@@ -56,10 +56,10 @@ sub new {
 
     # required attributes
     $Self->{RequiredAttributes}
-        = $ConfigObject->Get('Znuny4OTRS::CustomerMap::RequiredCustomerDataAttributes') || ['UserCity'];
+        = $ConfigObject->Get('Znuny::CustomerMap::RequiredCustomerDataAttributes') || ['UserCity'];
 
     # attribute map
-    $Self->{MapAttributes} = $ConfigObject->Get('Znuny4OTRS::CustomerMap::CustomerDataAttributes') || {
+    $Self->{MapAttributes} = $ConfigObject->Get('Znuny::CustomerMap::CustomerDataAttributes') || {
         UserStreet  => 'UserStreet',
         UserCity    => 'UserCity',
         UserCountry => 'UserCountry',
@@ -108,11 +108,11 @@ sub DataBuild {
     my $JSONObject         = $Kernel::OM->Get('Kernel::System::JSON');
     my $VirtualFSObject    = $Kernel::OM->Get('Kernel::System::VirtualFS');
     my $DBObject           = $Kernel::OM->Get('Kernel::System::DB');
-    my $TimeObject         = $Kernel::OM->Get('Kernel::System::ZnunyTime');
+    my $TimeObject         = $Kernel::OM->Get('Kernel::System::Time');
     my $CacheObject        = $Kernel::OM->Get('Kernel::System::Cache');
     my $CacheKey           = 'AddressToGeolocation';
-    my $InternalCacheTTL   = 86400 * ( $ConfigObject->Get('Znuny4OTRSCustomerMapCustomerCacheTTL') // 30 );
-    my $OnlyOpenTickets    = $ConfigObject->Get('Znuny4OTRS::CustomerMap::CustomerSelection') // 1;
+    my $InternalCacheTTL   = 86400 * ( $ConfigObject->Get('ZnunyCustomerMapCustomerCacheTTL') // 30 );
+    my $OnlyOpenTickets    = $ConfigObject->Get('Znuny::CustomerMap::CustomerSelection') // 1;
 
     # Getting data is triggered once every night so one systemtime for cache comparison is enough
     my $SystemTime = $TimeObject->SystemTime();

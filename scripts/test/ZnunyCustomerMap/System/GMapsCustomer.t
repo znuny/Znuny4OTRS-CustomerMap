@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2021 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2022 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -41,7 +41,7 @@ $Self->True(
 );
 
 $ConfigObject->Set(
-    Key   => 'Znuny4OTRS::CustomerMap::GoogleAPIKey',
+    Key   => 'Znuny::CustomerMap::GoogleAPIKey',
     Value => $ENV{'GOOGLE_APIKEY'},
 );
 
@@ -367,7 +367,7 @@ for my $CustomerUser (@CustomerUsers) {
 # and finally check if we have at least our 3 customers
 # if all customers that have tickets (no matter if close or open) should be shown on the map not only those with open tickets
 $ConfigObject->Set(
-    Key   => 'Znuny4OTRS::CustomerMap::CustomerSelection',
+    Key   => 'Znuny::CustomerMap::CustomerSelection',
     Value => 0
 );
 

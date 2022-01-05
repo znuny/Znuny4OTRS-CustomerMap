@@ -1,12 +1,12 @@
 # --
-# Copyright (C) 2012-2021 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2022 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::Language::de_Znuny4OTRSCustomerMap;
+package Kernel::Language::de_ZnunyCustomerMap;
 
 use strict;
 use warnings;
@@ -22,8 +22,8 @@ sub Data {
     $Self->{Translation}->{'The map has not been loaded.'}    = 'Die Karte wurde nich geladen.';
     $Self->{Translation}->{'Load map.'}                       = 'Karte laden.';
     $Self->{Translation}->{'Customer map is not configured.'} = 'Kundenkarte ist nicht konfiguriert.';
-    $Self->{Translation}->{'Make sure that UserStreet, UserCity and UserCountry are configured in SysConfig option Znuny4OTRS::CustomerMap::CustomerDataAttributes and used as attributes in your customer user mapping config.'}
-        = 'Stellen Sie sicher, dass UserStreet, UserCity und UserCountry in der SysConfig-Option Znuny4OTRS::CustomerMap::CustomerDataAttributes und in Ihrem Kundenbenutzer-Mapping konfiguriert sind.';
+    $Self->{Translation}->{'Make sure that UserStreet, UserCity and UserCountry are configured in SysConfig option Znuny::CustomerMap::CustomerDataAttributes and used as attributes in your customer user mapping config.'}
+        = 'Stellen Sie sicher, dass UserStreet, UserCity und UserCountry in der SysConfig-Option Znuny::CustomerMap::CustomerDataAttributes und in Ihrem Kundenbenutzer-Mapping konfiguriert sind.';
     $Self->{Translation}->{'Execute "%s" to generate geo location data for your customers.'}
         = 'Führen Sie "%s" aus, um die Geodaten für die Standorte Ihrer Kunden zu generieren.';
     $Self->{Translation}->{'Reload this page and check if the customer map is being shown.'}

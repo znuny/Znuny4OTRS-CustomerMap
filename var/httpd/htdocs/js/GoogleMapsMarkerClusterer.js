@@ -1,6 +1,7 @@
 // nofilter(TidyAll::Plugin::OTRS::JavaScript::ESLint)
+// nofilter(TidyAll::Plugin::Znuny4OTRS::Legal::AGPLValidator)
 // nofilter(TidyAll::Plugin::OTRS::Legal::AGPLValidator)
-// nofilter(TidyAll::Plugin::OTRS::Znuny4OTRS::Legal::AGPLValidator)
+// nofilter(TidyAll::Plugin::OTRS::Znuny::Legal::AGPLValidator)
 // http://raw.githubusercontent.com/googlemaps/js-marker-clusterer/6b9afb11a6a2fee365d1727918cc28e7baae0372/src/markerclusterer.js
 // ==ClosureCompiler==
 // @compilation_level ADVANCED_OPTIMIZATIONS
