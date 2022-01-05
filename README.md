@@ -1,7 +1,7 @@
 ![Znuny logo](https://www.znuny.com/assets/images/logo_small.png)
 
 
-![Build status](https://badge.proxy.znuny.com/Znuny4OTRS-CustomerMap/rel-6_1)
+![Build status](https://badge.proxy.znuny.com/Znuny4OTRS-CustomerMap/rel-6_2)
 
 Google Maps Integration
 =======================
@@ -11,12 +11,12 @@ With the Google Maps integration you will be able to see all customers on a map 
 
 **Prerequisites**
 
-- Znuny 6.1
+- Znuny 6.2
 - Google Maps Browser-API-Key - can be obtained from https://developers.google.com/maps/documentation/javascript/get-api-key
 
 **Installation**
 
-Download the [package](https://addons.znuny.com/api/addon_repos/public/2107/latest) and install it via admin interface -> package manager.
+Download the [package](https://addons.znuny.com/api/addon_repos/public/2125/latest) and install it via admin interface -> package manager.
 
 **Configuration**
 
@@ -60,7 +60,7 @@ Enjoy the inspiration how to use this new kind of view (e.g. for optimizing your
 
 **Download**
 
-Download the [latest version](https://addons.znuny.com/api/addon_repos/public/2107/latest).
+Download the [latest version](https://addons.znuny.com/api/addon_repos/public/2125/latest).
 
 **Professional Support**
 
