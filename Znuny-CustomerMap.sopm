@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_package version="1.0">
     <Name>Znuny-CustomerMap</Name>
-    <Version>6.0.8</Version>
+    <Version>6.1.1</Version>
+    <ChangeLog Version="6.1.1" Date="2022-01-05 10:45:51 +0100">Initial release for Znuny 6.1.</ChangeLog>
     <ChangeLog Version="6.0.8" Date="2021-02-12 17:42:12 +0100">Happy new year. Tidied code.</ChangeLog>
     <ChangeLog Version="6.0.7" Date="2020-06-30 17:30:52 +0200">Tidied code and improved UnitTests.</ChangeLog>
     <ChangeLog Version="6.0.6" Date="2020-04-07 17:55:45 +0200">Tidied code and improved UnitTests.</ChangeLog>
@@ -61,5 +62,5 @@
     <CodeUpgrade Type="post" Version="6.0.4"><![CDATA[
         $Kernel::OM->Get('var::packagesetup::ZnunyCustomerMap')->CodeUpgrade604();
     ]]></CodeUpgrade>
-    <PackageMerge Name="Znuny4OTRS-CustomerMap" TargetVersion="6.0.8"></PackageMerge>
+    <PackageMerge Name="Znuny4OTRS-CustomerMap" TargetVersion="6.0.8"/>
 </otrs_package>
