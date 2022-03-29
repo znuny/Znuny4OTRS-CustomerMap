@@ -39,6 +39,16 @@ $ConfigObject->Set(
     Value => $ENV{'GOOGLE_APIKEY'},
 );
 
+$ConfigObject->Set(
+    Key   => 'CheckEmailAddresses',
+    Value => 0,
+);
+
+$ConfigObject->Set(
+    Key   => 'CheckMXRecord',
+    Value => 0,
+);
+
 my @CustomerTemplate = (
     {
         Source         => 'CustomerUser',
