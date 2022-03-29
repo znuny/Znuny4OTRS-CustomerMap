@@ -19,7 +19,7 @@
     <ChangeLog Version="1.7.1" Date="2016-01-12 14:30:01 UTC">ported to 5.0</ChangeLog>
     <ChangeLog Version="1.6.2" Date="2015-11-21 12:11:22 UTC">added english manual</ChangeLog>
     <ChangeLog Version="1.6.0" Date="2015-01-26 12:36:48 +0100">ported to 4.0</ChangeLog>
-    <Framework>6.2.x</Framework>
+    <Framework>6.3.x</Framework>
     <Vendor>Znuny GmbH</Vendor>
     <URL>http://znuny.com/en/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
