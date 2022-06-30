@@ -93,11 +93,18 @@ sub Geocoding {
     }
 
     my $APIKey = $ConfigObject->Get('Znuny::CustomerMap::GoogleAPIKey');
-    my $URL    = $Self->{GeocodingURL} . 'address=' . $Param{Query} . '&sensor=false&key=' . $APIKey;
+
+    $Param{Query} =~ s/[ ]/\%20/g;
+
+    my $URL = $Self->{GeocodingURL}
+        . 'address=' . $Param{Query}
+        . '&sensor=false'
+        . '&key=' . $APIKey;
 
     my %Response = $WebUserAgentObject->Request(
         URL => $URL,
     );
+
     return if !%Response || !$Response{Content};
 
     my $GeocodingJSONResponse = ${ $Response{Content} };
