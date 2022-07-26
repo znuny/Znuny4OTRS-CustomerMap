@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_config version="2.0" init="Application">
-    <!-- nofilter(TidyAll::Plugin::OTRS::Znuny4OTRS::Config::ACLKeysLevel3Actions) -->
-    <!-- nofilter(TidyAll::Plugin::OTRS::Znuny4OTRS::Advanced::DynamicFields) -->
+    <!-- nofilter(TidyAll::Plugin::Znuny4OTRS::Config::ACLKeysLevel3Actions) -->
+    <!-- nofilter(TidyAll::Plugin::Znuny4OTRS::Advanced::DynamicFields) -->
     <Setting Name="Frontend::Module###AgentCustomerMap" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the agent interface.</Description>
         <Navigation>Frontend::Agent::ModuleRegistration</Navigation>

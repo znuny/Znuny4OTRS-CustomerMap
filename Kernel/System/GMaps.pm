@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2020 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2022 Znuny GmbH, http://znuny.com/
 # Copyright (C) 2013 Juergen Sluyterman, http://www.rsag.de/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -21,6 +21,8 @@ our @ObjectDependencies = (
     'Kernel::System::Log',
     'Kernel::System::WebUserAgent',
 );
+
+=encoding UTF-8
 
 =head1 NAME
 
@@ -93,15 +95,22 @@ sub Geocoding {
     }
 
     my $APIKey = $ConfigObject->Get('Znuny4OTRS::CustomerMap::GoogleAPIKey');
-    my $URL    = $Self->{GeocodingURL} . 'address=' . $Param{Query} . '&sensor=false&key=' . $APIKey;
+
+    $Param{Query} =~ s/[ ]/\%20/g;
+
+    my $URL = $Self->{GeocodingURL}
+        . 'address=' . $Param{Query}
+        . '&sensor=false'
+        . '&key=' . $APIKey;
 
     my %Response = $WebUserAgentObject->Request(
         URL => $URL,
     );
+
     return if !%Response || !$Response{Content};
 
     my $GeocodingJSONResponse = ${ $Response{Content} };
-    my $GeocodingData = $JSONObject->Decode( Data => $GeocodingJSONResponse );
+    my $GeocodingData         = $JSONObject->Decode( Data => $GeocodingJSONResponse );
 
     if (
         !IsHashRefWithData($GeocodingData)
