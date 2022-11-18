@@ -1,7 +1,16 @@
-// nofilter(TidyAll::Plugin::OTRS::JavaScript::ESLint)
+// --
+// Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+// Copyright (C) 2012-2022 Znuny GmbH, https://znuny.com/
+// --
+// $origin: znuny - 460ef44565300c6b979b0743833e3800fdbebf81 - var/httpd/htdocs/js/Core.Agent.Search.js
+// --
+// This software comes with ABSOLUTELY NO WARRANTY. For details, see
+// the enclosed file COPYING for license information (GPL). If you
+// did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
+// --
+// nofilter(TidyAll::Plugin::Znuny::JavaScript::ESLint)
 // nofilter(TidyAll::Plugin::Znuny4OTRS::Legal::AGPLValidator)
-// nofilter(TidyAll::Plugin::OTRS::Legal::AGPLValidator)
-// nofilter(TidyAll::Plugin::OTRS::Znuny::Legal::AGPLValidator)
+
 // http://raw.githubusercontent.com/googlemaps/js-marker-clusterer/6b9afb11a6a2fee365d1727918cc28e7baae0372/src/markerclusterer.js
 // ==ClosureCompiler==
 // @compilation_level ADVANCED_OPTIMIZATIONS

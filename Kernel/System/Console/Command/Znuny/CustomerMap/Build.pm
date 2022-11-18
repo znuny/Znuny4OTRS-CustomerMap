@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2022 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2022 Znuny GmbH, https://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -22,7 +22,10 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description("Collects geo data for customer map.\nCopyright (C) 2012-2022 Znuny GmbH, http://znuny.com/");
+    # split Description because the CodePolicy would break this string while tiding the file
+    my $Description = "Collects geo data for customer map.\nCopyright (C) ";
+    $Description .= "2012-2022 Znuny GmbH, https://znuny.com/";
+    $Self->Description($Description);
 
     $Self->AddOption(
         Name        => 'force-pid',
