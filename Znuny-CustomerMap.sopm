@@ -2,6 +2,12 @@
 <otrs_package version="1.0">
     <Name>Znuny-CustomerMap</Name>
     <Version>6.4.1</Version>
+    <Framework>6.4.x</Framework>
+    <Vendor>Znuny GmbH</Vendor>
+    <URL>http://znuny.com/en/</URL>
+    <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
+    <Description Lang="en">Google Maps integraton to show your customers on a map in the dashboard.</Description>
+    <Description Lang="de">Google-Maps-Integration zur Anzeige Ihrer Kunden auf einer Karte im Dashboard.</Description>
     <ChangeLog Version="6.4.1" Date="2022-07-27 22:17:48 +0200">initial release for Znuny 6.4</ChangeLog>
     <ChangeLog Version="6.3.3" Date="2022-06-30 15:43:06 +0200">Fixed encoding of URL parameter.</ChangeLog>
     <ChangeLog Version="6.3.2" Date="2022-06-10 11:07:47 +0200">Fixed SysConfig migration in package setup.</ChangeLog>
@@ -23,12 +29,6 @@
     <ChangeLog Version="1.7.1" Date="2016-01-12 14:30:01 UTC">ported to 5.0</ChangeLog>
     <ChangeLog Version="1.6.2" Date="2015-11-21 12:11:22 UTC">added english manual</ChangeLog>
     <ChangeLog Version="1.6.0" Date="2015-01-26 12:36:48 +0100">ported to 4.0</ChangeLog>
-    <Framework>6.4.x</Framework>
-    <Vendor>Znuny GmbH</Vendor>
-    <URL>http://znuny.com/en/</URL>
-    <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
-    <Description Lang="en">Google Maps integraton to show your customers on a map in the dashboard.</Description>
-    <Description Lang="de">Google-Maps-Integration zur Anzeige Ihrer Kunden auf einer Karte im Dashboard.</Description>
     <Filelist>
         <File Permission="660" Location="Kernel/Config/Files/XML/ZnunyCustomerMap.xml"/>
         <File Permission="660" Location="Kernel/Language/de_ZnunyCustomerMap.pm"/>
