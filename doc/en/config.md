@@ -29,21 +29,26 @@ This can also be done manually as the OTRS user from the console:
     shell>
 ```
 
-### System Configuration settings
+## System Configuration settings
 
 ### Znuny::CustomerMap::GoogleAPIKey
+
 In this setting you have to enter the API key which you can get via the link https://developers.google.com/maps/documentation/javascript/get-api-key. Without this API key, use of the addon is not possible.
 
-#### Znuny::CustomerMap::CustomerDataAttributes
+### Znuny::CustomerMap::CustomerDataAttributes
+
 This determines from which attributes of your customer user configuration (CustomerUser) the information necessary for the determination of the coordinates is obtained. Please enter the appropriate name from the first column of the mapping as a value. Please leave the names of the keys unchanged.
 
-#### Znuny::CustomerMap::RequiredCustomerDataAttributes
+### Znuny::CustomerMap::RequiredCustomerDataAttributes
+
 These attributes are at least required to determine the coordinates to an address.
 
-#### Znuny::CustomerMap::CustomerSelection
+### Znuny::CustomerMap::CustomerSelection
+
 This setting determines whether only the locations of the customers with open tickets should be displayed, or those of the customers to whom also have closed tickets.
 
 ### Daemon::SchedulerCronTaskManager::Task###UpdateCustomerMap
+
 "Schedule" consists of five configuration options, as with Cron.
 
 The first one is for minutes.

@@ -34,19 +34,24 @@ Die Umwandlung kann über die Konsole als OTRS-Benutzer auch manuell ausgeführt
 ## Einstellungen System Configuration
 
 ### Znuny::CustomerMap::GoogleAPIKey
+
 In dieser Einstellung ist der API-Key einzutragen den Sie über den Link https://developers.google.com/maps/documentation/javascript/get-api-key erhalten. Ohne diese API-Key ist eine Nutzung des Addons nicht möglich.
 
 ### Znuny::CustomerMap::CustomerDataAttributes
+
 Hiermit wird festgelegt aus welchen Attributen Ihrer Kundenbenutzer-Datenbenk (CustomerUser) die für die Ermittlung er Koordinaten notwendigen Informationen bezogen werden. Tragen Sie dazu bitte als Wert den passenden Namen aus der ersten Spalte des Mappings ein. Die Namen der Schlüssel belassen Sie bitte unverändert.
 
 ### Znuny::CustomerMap::RequiredCustomerDataAttributes
+
 Diese Attribute werden mindestens benötigt um um die Koordinaten zu einer Adresse zu ermitteln.
 
 ### Znuny::CustomerMap::CustomerSelection
+
 Diese Einstellung legt fest ob nur die Standorte der Kunden mit offenen Tickets angezeigt werden sollen, oder die von den Kunden zu denen er geschlossene Tickets gibt.
 
 
 ### Daemon::SchedulerCronTaskManager::Task###UpdateCustomerMap
+
 "Schedule" besteht wie bei Cron aus fünf Konfigurationsoptionen.
 
 Die erste steht für Minuten.
@@ -68,4 +73,5 @@ Die vierte Option steht für den Monat. Mögliche Werte: `1-12` sowie `*`.
 Die fünfte Option steht für den Wochentag. Mögliche Werte: `0-6`  sowie `*` wobei `0` Sonntag und `6` Samstag repräsentieren.
 
 ## Hinweise
+
 Eine Darstellung von Kunden, die noch kein Ticket hatten ist nicht möglich. Die Funktion CustomerUserList, die sämtliche Kunden aus der Datenbank holt ([siehe Git Commit](https://github.com/OTRS/otrs/commit/3a59683b3cd8cf5c1008150706d23677116736fc)), wurde aus OTRS entfernt.

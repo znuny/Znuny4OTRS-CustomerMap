@@ -10,6 +10,8 @@ package Kernel::System::GMapsCustomer;
 
 use strict;
 use warnings;
+use utf8;
+
 use Time::HiRes qw(usleep);
 
 our @ObjectDependencies = (
