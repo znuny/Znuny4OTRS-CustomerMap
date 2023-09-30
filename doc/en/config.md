@@ -5,7 +5,7 @@ This key must then be inserted in the SysConfig option `Znuny::CustomerMap::Goog
 
 ## Determine the coordinates of the customer's locations
 
-The OTRS daemon must be running to convert the address data into geocoordinates. It carries out the update daily at 3:45 a. m.
+The Znuny daemon must be running to convert the address data into geocoordinates. It carries out the update daily at 3:45 a. m.
 
 If you want to change this time, you can do so in the SysConfig option `Daemon:: SchedulerCronTaskManager::Task####UpdateCustomerMap` under "Schedule".
 
@@ -21,7 +21,7 @@ Hint:
 Requests to the Google Geocoding API are limited to about 2000 per day.
 The configured fields will be sent as a combined address string to Google to retrieve location data.
 
-This can also be done manually as the OTRS user from the console:
+This can also be done manually as the Znuny user from the console:
 
 ```
     shell> bin/otrs.Console.pl Znuny::CustomerMap::Build
@@ -65,4 +65,4 @@ The fourth option is for the month. Possible values: `1-12` and `*`.
 The fifth option stands for the day of the week. Possible values: `0-6` and `*` where `0` represents Sunday and `6` Saturday.
 
 ## Note
-Since the CustomerUserList function, which retrieves all customers from the database (see Git Commit](https://github.com/OTRS/otrs/commit/3a59683b3cd8cf5c1008150706d23677116736fc)), has been removed from OTRS, it is not possible to display customers without ticket allocation on the map.
+Since the CustomerUserList function, which retrieves all customers from the database (see Git Commit](https://github.com/znuny/Znuny/commit/3a59683b3cd8cf5c1008150706d23677116736fc)), has been removed from Znuny, it is not possible to display customers without ticket allocation on the map.

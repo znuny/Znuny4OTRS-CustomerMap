@@ -5,7 +5,7 @@ Dieser Key ist dann in der SysConfig-Option `Znuny::CustomerMap::GoogleAPIKey` e
 
 ## Koordinaten der Kundenstandorte ermitteln
 
-Für die regelmäßige Umwandlung der Adressdaten ist es notwendig das der OTRS-Daemon läuft. Er führt die Aktualisierung täglich um 3:45 Uhr aus.
+Für die regelmäßige Umwandlung der Adressdaten ist es notwendig das der Znuny-Daemon läuft. Er führt die Aktualisierung täglich um 3:45 Uhr aus.
 
 Über die Änderung der SysConfig-Option `Daemon::SchedulerCronTaskManager::Task###UpdateCustomerMap` ist die Zeit der Ausführung änderbar.
 
@@ -23,7 +23,7 @@ Die Anfragen an die Google-Geocoding-API unterliegen Limitierungen. Details dazu
 
 Die konfigurierten Felder werden als kombinierter Adressstring zur Standortabfrage an Google übertragen.
 
-Die Umwandlung kann über die Konsole als OTRS-Benutzer auch manuell ausgeführt werden:
+Die Umwandlung kann über die Konsole als Znuny-Benutzer auch manuell ausgeführt werden:
 
 ```
     shell> bin/otrs.Console.pl Znuny::CustomerMap::Build
@@ -68,4 +68,4 @@ Die vierte Option steht für den Monat. Mögliche Werte: `1-12` sowie `*`.
 Die fünfte Option steht für den Wochentag. Mögliche Werte: `0-6`  sowie `*` wobei `0` Sonntag und `6` Samstag repräsentieren.
 
 ## Hinweise
-Eine Darstellung von Kunden, die noch kein Ticket hatten ist nicht möglich. Die Funktion CustomerUserList, die sämtliche Kunden aus der Datenbank holt ([siehe Git Commit](https://github.com/OTRS/otrs/commit/3a59683b3cd8cf5c1008150706d23677116736fc)), wurde aus OTRS entfernt.
+Eine Darstellung von Kunden, die noch kein Ticket hatten ist nicht möglich. Die Funktion CustomerUserList, die sämtliche Kunden aus der Datenbank holt ([siehe Git Commit](https://github.com/znuny/Znuny/commit/3a59683b3cd8cf5c1008150706d23677116736fc)), wurde aus Znuny entfernt.
