@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_package version="1.0">
     <Name>Znuny-CustomerMap</Name>
-    <Version>7.2.1</Version>
+    <Version>7.3.1</Version>
     <Framework>7.3.x</Framework>
     <Vendor>Znuny GmbH</Vendor>
     <URL>http://znuny.com/en/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
     <Description Lang="en">Google Maps integraton to show your customers on a map in the dashboard.</Description>
     <Description Lang="de">Google-Maps-Integration zur Anzeige Ihrer Kunden auf einer Karte im Dashboard.</Description>
+    <ChangeLog Version="7.3.1" Date="2025-12-05 00:11:58 +0100">Initial release for Znuny 7.3.</ChangeLog>
     <ChangeLog Version="7.2.1" Date="2025-09-04 08:33:09 +0200">Initial release for Znuny 7.2.</ChangeLog>
     <ChangeLog Version="7.1.1" Date="2024-11-19 08:57:50 +0100">Initial release for Znuny 7.1.</ChangeLog>
     <ChangeLog Version="7.0.1" Date="2023-09-27 09:04:19 +0200">Initial release for Znuny 7.0.</ChangeLog>
